@@ -1,18 +1,17 @@
-package com.tickettoride.client;
+package com.tickettoride.command;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import command.Response;
-import command.Command;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import com.tickettoride.server.ServerCommunicator;
+
+import command.Command;
+import command.Response;
 
 public class ClientCommunicator {
 

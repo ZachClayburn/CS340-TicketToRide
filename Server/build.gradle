@@ -2,7 +2,6 @@ plugins {
     id 'java'
 }
 
-
 sourceCompatibility = 11
 
 repositories {
@@ -11,5 +10,6 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation project(':Common')
 }

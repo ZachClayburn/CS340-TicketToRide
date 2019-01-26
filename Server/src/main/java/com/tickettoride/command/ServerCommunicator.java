@@ -1,4 +1,4 @@
-package command;
+package com.tickettoride.command;
 
 import com.google.gson.Gson;
 
@@ -10,6 +10,9 @@ import java.net.InetSocketAddress;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import command.Command;
+import command.Response;
 
 public class ServerCommunicator {
 
