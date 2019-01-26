@@ -1,4 +1,4 @@
-package com.tickettoride.shared;
+package command;
 
 import com.google.gson.Gson;
 

@@ -1,4 +1,4 @@
-package com.tickettoride.shared;
+package command;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

@@ -1,4 +1,4 @@
-package com.tickettoride.shared;
+package command;
 
 import java.util.ArrayList;
 import java.util.List;
