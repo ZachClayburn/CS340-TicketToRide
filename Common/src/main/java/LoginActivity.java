@@ -74,6 +74,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //implement web socket for login when ready
+                /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
+                startActivity(intent);*/
+
+
             }
         });
         register = (Button) findViewById(R.id.register);
@@ -81,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //implement web socket for register when ready
+                /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
+                startActivity(intent);*/
             }
         });
 
