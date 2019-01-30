@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">Ticket to Ride</string>
+    <string name="app_name">TicketToRide</string>
+    <string name="username_label">User Name: </string>
+    <string name="username_hint">Enter a username.</string>
+    <string name="password_label">Password: </string>
+    <string name="password_hint">Enter a password.</string>
+    <string name="sign_in_label">Login</string>
+    <string name="register_label">Register</string>
+    <string name="player_select">Select the number of players</string>
+    <string name="two_label">2</string>
+    <string name="three_label">3</string>
+    <string name="four_label">4</string>
+    <string name="five_label">5</string>
+    <string name="login_welcome">WELCOME TO TICKET TO RIDE</string>
+    <string name="game_list_item">Game #</string>
+    <string name="game_group">Group Name</string>
+    <string name="group_hint">Enter a group name</string>
+    <string name="create_game">Create Game</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.zachclayburn.tickettoride
+package com.tickettoride
 
 import org.junit.Test
 
