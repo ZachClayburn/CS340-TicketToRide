@@ -44,8 +44,22 @@ public class Database implements AutoCloseable{
             throw new DatabaseException("Database at " + location + " already exists!");
         }
 
-        try (Connection con = DriverManager.getConnection(url)){
-            //Database created!
+        try (var con = DriverManager.getConnection(url);
+             var statement = con.createStatement()){
+
+            statement.executeUpdate("" +
+                    "Create TABLE Sessions(" +
+                    "sessionID TEXT PRIMARY KEY NOT NULL ," +
+                    "userID TEXT NOT NULL," +
+                    "FOREIGN KEY (userID) REFERENCES Users(userID)" +
+                    ");" +
+                    "create table Users\n" +
+                    "(" +
+                    "userID TEXT PRIMARY KEY NOT NULL," +
+                    "userName TEXT NOT NULL," +
+                    "password TEXT NOT NULL" +
+                    ");");
+
         } catch (SQLException e) {
             throw new DatabaseException("Could not create the database!", e);
         }
