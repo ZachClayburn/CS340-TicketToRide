@@ -22,7 +22,6 @@ public class DatabaseTest {
     public void tearDown() throws Exception {
 
         new File(testDatabasePath).delete();
-
     }
 
     @Test
