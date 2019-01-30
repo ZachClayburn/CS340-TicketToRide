@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tickettoride;
+package modelAttributes;
 
 public class Password {
     private String password = "";

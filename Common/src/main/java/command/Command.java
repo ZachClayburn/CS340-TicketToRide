@@ -3,7 +3,6 @@ package command;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Command {
@@ -11,12 +10,12 @@ public class Command {
 
     private String controllerName;
     private String methodName;
-    private ArrayList<String> parametersAsJSONStrings;
-    private ArrayList<String> parameterTypeNames;
+    private List<String> parametersAsJSONStrings;
+    private List<String> parameterTypeNames;
 
     public Command(String controllerName, String methodName, List<Object> parameters) {
-        ArrayList<Object> compactedParameters = ListHelper.compactArray(parameters);
-        ArrayList<String> compactedJSONStringParameters = toJSONStringArrayList(compactedParameters);
+        List<Object> compactedParameters = ListHelper.compactArray(parameters);
+        List<String> compactedJSONStringParameters = toJSONStringList(compactedParameters);
         this.methodName = methodName;
         this.controllerName = controllerName;
         this.parametersAsJSONStrings = compactedJSONStringParameters;
@@ -32,8 +31,8 @@ public class Command {
         return result;
     }
 
-    private ArrayList<String> parameterTypeNames(ArrayList<Object> parameters) {
-        ArrayList<String> parameterTypeNames = new ArrayList<>();
+    private List<String> parameterTypeNames(List<Object> parameters) {
+        List<String> parameterTypeNames = new List<>();
         for(int i = 0; i < parameters.size(); i++) { parameterTypeNames.add(parameters.get(i).getClass().getName()); }
         return parameterTypeNames;
     }
@@ -46,8 +45,8 @@ public class Command {
         return parameters;
     }
 
-    private static ArrayList<String> toJSONStringArrayList(List<Object> parameters) {
-        ArrayList<String> JSONStringParameters = new ArrayList<>();
+    private static List<String> toJSONStringList(List<Object> parameters) {
+        List<String> JSONStringParameters = new List<>();
         for(int i = 0; i < parameters.size(); i++) { JSONStringParameters.add(gson.toJson(parameters.get(i).toString())); }
         return JSONStringParameters;
     }
