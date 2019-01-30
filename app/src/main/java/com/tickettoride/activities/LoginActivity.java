@@ -1,16 +1,17 @@
-package com.bignerdranch.android.tickettoride;
+package com.tickettoride.activities;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
+import com.tickettoride.R;
+
+import modelAttributes.Password;
+import modelAttributes.Username;
 
 public class LoginActivity extends AppCompatActivity {
     private Username user = new Username();
@@ -22,11 +23,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        username = (EditText) findViewById(R.id.username_title);
-        password = (EditText) findViewById(R.id.password_title);
-        login = (Button) findViewById(R.id.sign_in);
-        register = (Button) findViewById(R.id.register);
+        setContentView(R.layout.login);
+        username = findViewById(R.id.username_title);
+        password = findViewById(R.id.password_title);
+        login = findViewById(R.id.sign_in);
+        register = findViewById(R.id.register);
         login.setEnabled(false);
         register.setEnabled(false);
         username.addTextChangedListener(new TextWatcher() {
