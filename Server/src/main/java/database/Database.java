@@ -1,12 +1,13 @@
 package database;
 
+import java.io.Closeable;
 import java.io.File;
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class Database {
+public class Database implements AutoCloseable{
 
     static {
         try {
@@ -17,6 +18,20 @@ public class Database {
         }
     }
 
+    private static String databaseFile = "src/main/resources/ticketToRide.DB";
+
+    protected Connection connection;
+
+    protected static void setDatabaseFile(String databaseFile) {
+        Database.databaseFile = databaseFile;
+    }
+
+    /**
+     * Creates a new SQLite database file at {@code location} and initialize the tables
+     * @param location The path where you want the database file to be created
+     * @throws DatabaseException If there is an error in creating the database and tables, or if the
+     * database already exists
+     */
     public static void createDatabase(String location) throws DatabaseException {
         final String url = "jdbc:sqlite:" + location;
 
@@ -30,6 +45,37 @@ public class Database {
             throw new DatabaseException("Could not create the database!", e);
         }
 
+    }
+
+    /**
+     * Constructs a new Database object and connects to the database file.
+     */
+    public Database() throws DatabaseException{
+
+        final String url = "jdbc:sqlite:" + databaseFile;
+        try {
+            connection = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+        //FIXME Create DAOs here
+    }
+
+    /**
+     * Closes the connection to the database, closing the conne
+     * @throws DatabaseException
+     */
+    @Override
+    public void close() throws DatabaseException {
+        try {
+            if (connection != null) {
+                connection.close();
+                connection = null;
+                //FIXME Set all DAOs' ref to connection to null as well
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
     }
 
 

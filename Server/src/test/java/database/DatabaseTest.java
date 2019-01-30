@@ -14,13 +14,15 @@ public class DatabaseTest {
     @Before
     public void setUp() throws Exception {
 
-        Database.createDatabase(testDatabasePath );
+        Database.createDatabase(testDatabasePath);
+        Database.setDatabaseFile(testDatabasePath);
     }
 
     @After
     public void tearDown() throws Exception {
 
         new File(testDatabasePath).delete();
+
     }
 
     @Test
@@ -39,5 +41,16 @@ public class DatabaseTest {
             return;
         }
         fail("Expected exception not thrown!");
+    }
+
+    @Test
+    public void DatabaseCreatedUsingTryWithBlock_WorksProperly() {
+
+        try (var db = new Database()){
+            //If close is called manually, there is no error
+            db.close();
+        } catch (Database.DatabaseException e) {
+            fail();
+        }
     }
 }
