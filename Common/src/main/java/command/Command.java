@@ -3,6 +3,7 @@ package command;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Command {
@@ -32,7 +33,7 @@ public class Command {
     }
 
     private List<String> parameterTypeNames(List<Object> parameters) {
-        List<String> parameterTypeNames = new List<>();
+        List<String> parameterTypeNames = new ArrayList<>();
         for(int i = 0; i < parameters.size(); i++) { parameterTypeNames.add(parameters.get(i).getClass().getName()); }
         return parameterTypeNames;
     }
@@ -46,7 +47,7 @@ public class Command {
     }
 
     private static List<String> toJSONStringList(List<Object> parameters) {
-        List<String> JSONStringParameters = new List<>();
+        List<String> JSONStringParameters = new ArrayList<>();
         for(int i = 0; i < parameters.size(); i++) { JSONStringParameters.add(gson.toJson(parameters.get(i).toString())); }
         return JSONStringParameters;
     }
