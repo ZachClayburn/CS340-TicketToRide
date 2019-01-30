@@ -1,4 +1,6 @@
 package com.tickettoride.models;
 
-public class Lobby implements Lobby {
+import modelInterfaces.ILobby;
+
+public class Lobby implements ILobby {
 }
