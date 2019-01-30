@@ -1,6 +1,5 @@
 package database;
 
-import java.io.Closeable;
 import java.io.File;
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
