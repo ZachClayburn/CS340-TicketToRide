@@ -53,4 +53,19 @@ public class DatabaseTest {
             fail();
         }
     }
+
+    @Test
+    public void DAOAskedForThenConnectionClosed_DAOHasNullConnections() {
+
+        try (var db = new Database()) {
+
+            var dao = db.getSessionDAO();
+
+            db.close();
+
+            assertNull(dao.connection);
+        } catch (Database.DatabaseException e) {
+            fail(e.getMessage());
+        }
+    }
 }

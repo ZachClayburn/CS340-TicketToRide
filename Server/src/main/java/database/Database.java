@@ -1,11 +1,12 @@
 package database;
 
-import java.io.Closeable;
 import java.io.File;
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database implements AutoCloseable{
 
@@ -21,6 +22,10 @@ public class Database implements AutoCloseable{
     private static String databaseFile = "src/main/resources/ticketToRide.DB";
 
     protected Connection connection;
+
+    List<DataAccessObject> DAOs = new ArrayList<>();
+
+    protected SessionDAO sessionDAO;
 
     protected static void setDatabaseFile(String databaseFile) {
         Database.databaseFile = databaseFile;
@@ -58,7 +63,8 @@ public class Database implements AutoCloseable{
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        //FIXME Create DAOs here
+        sessionDAO = new SessionDAO(connection);
+        DAOs.add(sessionDAO);
     }
 
     /**
@@ -71,13 +77,25 @@ public class Database implements AutoCloseable{
             if (connection != null) {
                 connection.close();
                 connection = null;
-                //FIXME Set all DAOs' ref to connection to null as well
+                DAOs.forEach(dataAccessObject -> dataAccessObject.connection = null);
             }
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
     }
 
+    public SessionDAO getSessionDAO() {
+        return sessionDAO;
+    }
+
+    static abstract class DataAccessObject {
+
+        protected Connection connection;
+
+        public DataAccessObject(Connection connection) {
+            this.connection = connection;
+        }
+    }
 
     /**
      * A custom exception for handling all errors relating to the database
