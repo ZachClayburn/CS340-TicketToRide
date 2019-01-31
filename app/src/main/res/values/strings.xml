@@ -11,8 +11,9 @@
     <string name="three_label">3</string>
     <string name="four_label">4</string>
     <string name="five_label">5</string>
+    <string name="game_option">Click a game to join or create a game</string>
     <string name="login_welcome">WELCOME TO TICKET TO RIDE</string>
-    <string name="game_list_item">Game #</string>
+    <string name="game_list_item">Game Name</string>
     <string name="game_group">Group Name</string>
     <string name="group_hint">Enter a group name</string>
     <string name="create_game">Create Game</string>
