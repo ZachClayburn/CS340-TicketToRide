@@ -9,22 +9,22 @@ import java.util.List;
 public class Command {
     private static Gson gson = new Gson();
 
-    private String controllerName;
+    private String facadeName;
     private String methodName;
     private List<String> parametersAsJSONStrings;
     private List<String> parameterTypeNames;
 
-    public Command(String controllerName, String methodName, List<Object> parameters) {
+    public Command(String facadeName, String methodName, List<Object> parameters) {
         List<Object> compactedParameters = ListHelper.compactArray(parameters);
         List<String> compactedJSONStringParameters = toJSONStringList(compactedParameters);
         this.methodName = methodName;
-        this.controllerName = controllerName;
+        this.facadeName = facadeName;
         this.parametersAsJSONStrings = compactedJSONStringParameters;
         this.parameterTypeNames = parameterTypeNames(compactedParameters);
     }
 
     public Object execute() throws Throwable {
-        Class targetClass = Class.forName(controllerName);
+        Class targetClass = Class.forName(facadeName);
         Class[] parameterTypes = parameterTypes();
         Object[] parameters = parameters(parameterTypes);
         Method method = targetClass.getMethod(methodName, parameterTypes);

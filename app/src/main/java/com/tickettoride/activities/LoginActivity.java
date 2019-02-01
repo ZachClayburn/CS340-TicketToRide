@@ -9,7 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.tickettoride.R;
+import com.tickettoride.command.ClientCommunicator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import command.Command;
 import modelAttributes.Password;
 import modelAttributes.Username;
 
@@ -74,18 +80,24 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //implement web socket for login when ready
+                try {
+                    List<Object> parameters = new ArrayList(Arrays.asList(user, pass));
+                    Command command = new Command("sessionFacade", "create", parameters);
+                    ClientCommunicator.SINGLETON.send(command);
+                } catch (Throwable t) { }
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
-
-
             }
         });
         register = (Button) findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //implement web socket for register when ready
+                try {
+                    List<Object> parameters = new ArrayList(Arrays.asList(user, pass));
+                    Command command = new Command("userFacade", "create", parameters);
+                    ClientCommunicator.SINGLETON.send(command);
+                } catch (Throwable t) { }
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
             }
