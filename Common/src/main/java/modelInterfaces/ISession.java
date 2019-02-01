@@ -1,4 +1,4 @@
 package modelInterfaces;
 
-public interface Session {
+public interface ISession {
 }

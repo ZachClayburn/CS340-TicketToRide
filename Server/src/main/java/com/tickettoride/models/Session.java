@@ -1,6 +1,8 @@
 package com.tickettoride.models;
 
-import modelInterfaces.Session;
+import modelInterfaces.ISession;
 
-public class Session implements Session {
+public class Session implements ISession {
+    public Session(User user) {
+    }
 }

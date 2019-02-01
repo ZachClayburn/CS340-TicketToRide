@@ -1,4 +1,4 @@
 package modelInterfaces;
 
-public interface Game {
+public interface IUser {
 }

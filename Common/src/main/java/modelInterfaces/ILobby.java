@@ -1,4 +1,4 @@
 package modelInterfaces;
 
-public interface Lobby {
+public interface ILobby {
 }
