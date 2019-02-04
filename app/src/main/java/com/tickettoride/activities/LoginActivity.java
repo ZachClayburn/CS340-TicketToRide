@@ -21,8 +21,8 @@ import modelAttributes.Password;
 import modelAttributes.Username;
 
 public class LoginActivity extends AppCompatActivity {
-    private Username user = new Username();
-    private Password pass = new Password();
+    private Username user = new Username("");
+    private Password pass = new Password("");
     private EditText username;
     private EditText password;
     private Button login;
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     List<Object> parameters = Arrays.asList(user, pass);
                     Command command = new Command("sessionFacade", "create", parameters);
-                    ClientCommunicator.SINGLETON.send(command);
+                    ClientCommunicator.getSingleton().send(command);
                 } catch (Throwable t) { }
                 */
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     List<Object> parameters = Arrays.asList(user, pass);
                     Command command = new Command("userFacade", "create", parameters);
-                    ClientCommunicator.SINGLETON.send(command);
+                    ClientCommunicator.getSingleton().send(command);
                 } catch (Throwable t) { }
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/

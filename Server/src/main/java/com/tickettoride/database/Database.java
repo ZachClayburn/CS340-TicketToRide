@@ -26,6 +26,7 @@ public class Database implements AutoCloseable{
     List<DataAccessObject> DAOs = new ArrayList<>();
 
     protected SessionDAO sessionDAO;
+    protected UserDAO userDAO;
 
     protected static void setDatabaseFile(String databaseFile) {
         Database.databaseFile = databaseFile;
@@ -56,7 +57,7 @@ public class Database implements AutoCloseable{
                     "create table Users\n" +
                     "(" +
                     "userID TEXT PRIMARY KEY NOT NULL," +
-                    "userName TEXT NOT NULL," +
+                    "userName TEXT NOT NULL UNIQUE," +
                     "password TEXT NOT NULL" +
                     ");");
 
@@ -74,11 +75,14 @@ public class Database implements AutoCloseable{
         final String url = "jdbc:sqlite:" + databaseFile;
         try {
             connection = DriverManager.getConnection(url);
+            connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
         sessionDAO = new SessionDAO(connection);
         DAOs.add(sessionDAO);
+        userDAO = new UserDAO(connection);
+        DAOs.add(userDAO);
     }
 
     /**
@@ -100,6 +104,18 @@ public class Database implements AutoCloseable{
 
     public SessionDAO getSessionDAO() {
         return sessionDAO;
+    }
+
+    public UserDAO getUserDAO() {
+        return userDAO;
+    }
+
+    public void commit() throws DatabaseException {
+        try {
+            connection.commit();
+        } catch (SQLException e) {
+            throw new DatabaseException("Can not commit transaction!", e);
+        }
     }
 
     static abstract class DataAccessObject {

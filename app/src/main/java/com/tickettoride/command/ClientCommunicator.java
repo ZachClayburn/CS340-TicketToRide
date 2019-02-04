@@ -58,7 +58,7 @@ public class ClientCommunicator {
         }
     }
 
-    public static ClientCommunicator getSINGLETON() {
+    public static ClientCommunicator getSingleton() {
         return SINGLETON;
     }
 

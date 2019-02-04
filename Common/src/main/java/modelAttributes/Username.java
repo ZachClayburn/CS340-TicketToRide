@@ -10,4 +10,13 @@ public class Username {
     public String getUsername() {
         return username;
     }
+
+    public Username(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String toString() {
+        return username;
+    }
 }
