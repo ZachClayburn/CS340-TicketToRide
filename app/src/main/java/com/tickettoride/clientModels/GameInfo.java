@@ -1,17 +1,11 @@
-package com.tickettoride.models;
+package com.tickettoride.clientModels;
 
 import modelInterfaces.IGame;
 
-public class Game implements IGame {
+public class GameInfo implements IGame{ //used for when creating a new game
     private String gameID = "";
     private String groupName = "";
     private int numPlayer = 0;
-
-    public Game(String gameID, String groupName, int numPlayer) {
-        this.gameID = gameID;
-        this.groupName = groupName;
-        this.numPlayer = numPlayer;
-    }
 
     public void setGameID(String gameID) {
         this.gameID = gameID;

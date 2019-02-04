@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.tickettoride.R;
+import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.command.ServerProxy;
+
+
 public class CreateGameActivity extends AppCompatActivity {
     private GameInfo info = new GameInfo();
     private EditText groupName;
@@ -73,9 +78,13 @@ public class CreateGameActivity extends AppCompatActivity {
                 setEnabled();
             }
         });
+
+        // TODO: When you click on a number button, does it unenable other clicked number buttons?
+
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ServerProxy.SINGLETON.createGame(info.getGroupName(), info.getNumPlayer());
                 //implement web socket call back when ready
                  /*Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
                  startActivity(intent);*/

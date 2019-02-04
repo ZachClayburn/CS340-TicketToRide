@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.command.ClientCommunicator;
+import com.tickettoride.command.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,11 +81,14 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ServerProxy.SINGLETON.login(user, pass);
+                /*
                 try {
                     List<Object> parameters = new ArrayList(Arrays.asList(user, pass));
                     Command command = new Command("sessionFacade", "create", parameters);
                     ClientCommunicator.SINGLETON.send(command);
                 } catch (Throwable t) { }
+                */
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
             }
