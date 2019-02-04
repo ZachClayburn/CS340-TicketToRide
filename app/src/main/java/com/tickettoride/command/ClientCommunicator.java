@@ -28,7 +28,7 @@ public class ClientCommunicator {
 
     private ClientCommunicator() {
         try {
-            
+
             mWebSocketClient = new WebSocketClient(new URI("ws://"+websockethost+":"+port), new Draft_6455()) {
 
                 @Override
@@ -54,15 +54,15 @@ public class ClientCommunicator {
                 }
             };
         }catch(URISyntaxException e){
-            
+
         }
     }
 
     public static ClientCommunicator getSINGLETON() {
         return SINGLETON;
     }
-    
-    
+
+
     public void send(Command command){
         String message=gson.toJson(command);
         mWebSocketClient.send(message);

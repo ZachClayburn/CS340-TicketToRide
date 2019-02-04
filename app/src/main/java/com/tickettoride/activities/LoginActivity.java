@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                 ServerProxy.SINGLETON.login(user, pass);
                 /*
                 try {
-                    List<Object> parameters = new ArrayList(Arrays.asList(user, pass));
+                    List<Object> parameters = Arrays.asList(user, pass);
                     Command command = new Command("sessionFacade", "create", parameters);
                     ClientCommunicator.SINGLETON.send(command);
                 } catch (Throwable t) { }
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    List<Object> parameters = new ArrayList(Arrays.asList(user, pass));
+                    List<Object> parameters = Arrays.asList(user, pass);
                     Command command = new Command("userFacade", "create", parameters);
                     ClientCommunicator.SINGLETON.send(command);
                 } catch (Throwable t) { }

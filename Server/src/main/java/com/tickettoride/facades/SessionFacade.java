@@ -20,6 +20,7 @@ public class SessionFacade {
         Session session = new Session(user);
         List<Object> parameters = new ArrayList(Arrays.asList(session));
         Command command = new Command("SessionController", "create", parameters);
-        ServerCommunicator.SINGLETON.send(command);
+//        ServerCommunicator.SINGLETON.send(command);
+        return null;
     }
 }

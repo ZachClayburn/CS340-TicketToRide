@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.tickettoride.R;
+
 
 public class JoinGameActivity extends AppCompatActivity {
     private TextView gameName;
