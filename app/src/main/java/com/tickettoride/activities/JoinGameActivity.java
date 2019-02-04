@@ -1,10 +1,11 @@
-package com.bignerdranch.android.tickettoride;
+package com.tickettoride.activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,16 @@ public class JoinGameActivity extends AppCompatActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
-    private ArrayList<GameInfo> games;
+    private ArrayList<GameInfo> games = new ArrayList<>(); //need an arraylist from database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join_game);
+
         //gameName = (TextView) findViewById(R.id.game_list);
         gameList = (RecyclerView) findViewById(R.id.recycler_view);
+        gameList.setLayoutManager(new LinearLayoutManager(this));
         createGame = (Button) findViewById(R.id.create_game);
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +72,17 @@ public class JoinGameActivity extends AppCompatActivity {
            super(view);
            gameName = (TextView) view.findViewById(R.id.game_list);
         }
-        public void bind(GameInfo game) {
+        public void bind(final GameInfo game) {
             this.game = game;
             gameName.setText(game.getGroupName());
+            gameName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
+
+                    startActivity(intent);
+                }
+            });
         }
         @Override
         public void onClick(View view) {

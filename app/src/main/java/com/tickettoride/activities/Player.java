@@ -1,4 +1,4 @@
-package com.bignerdranch.android.tickettoride;
+package com.tickettoride.activities;
 
 public class Player {
     private String username;
