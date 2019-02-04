@@ -20,33 +20,37 @@ public class ClientCommunicator {
 
     private WebSocketClient mWebSocketClient;
     protected static Gson gson = new Gson();
+    //TODO: change the websockethost to the actual host IP (probably 10.0.0.2 if I remember right)
+    private String websockethost="websockethost";
+    private String port= "8080";
 
     private static ClientCommunicator SINGLETON = new ClientCommunicator();
 
     private ClientCommunicator() {
         try {
-            //change the websockethost to the actual host IP (probably 10.0.0.2 if I remember right)
-            mWebSocketClient = new WebSocketClient(new URI("ws://websockethost:8080"), new Draft_6455()) {
+            
+            mWebSocketClient = new WebSocketClient(new URI("ws://"+websockethost+":"+port), new Draft_6455()) {
 
                 @Override
                 public void onMessage(String message) {
                     Response response=gson.fromJson(message, Response.class);
-                    //send it off to whatever callback method will handle the response
+                    //TODO: send it off to whatever callback method will handle the response
+                    //NOTE: might have to switch threads to do so, not sure.
                 }
 
                 @Override
                 public void onOpen(ServerHandshake handshake) {
-
+                    //whatever we want to do. log opening, etc
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-
+                    //whatever we want to do. log closing, try to reconnect, etc
                 }
 
                 @Override
                 public void onError(Exception ex) {
-
+                    //however we want to handle errors on the websocket (usually IO)
                 }
             };
         }catch(URISyntaxException e){
@@ -57,6 +61,7 @@ public class ClientCommunicator {
     public static ClientCommunicator getSINGLETON() {
         return SINGLETON;
     }
+    
     
     public void send(Command command){
         String message=gson.toJson(command);

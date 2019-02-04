@@ -85,9 +85,10 @@ public class ServerCommunicator extends WebSocketServer {
     @Override
     public void onMessage( WebSocket conn, String message ){
         UUID connid=connectionManager.getConnectionId(conn);
-        Command command=gson.fromJson(message,Command.class);
-        //then figure out who to send this to for the back end logic 
-        //and how to bundle the connid with the parameters of command.execute
+        
+        Command command=new Command(message,connid);
+        //TODO: figure out who to send this to for the back end logic 
+        
     }
     /**
      * Called when errors occurs. If an error causes the websocket connection to fail {@link #onClose(WebSocket, int, String, boolean)} will be called additionally.<br>
@@ -99,7 +100,7 @@ public class ServerCommunicator extends WebSocketServer {
      **/
     @Override
     public void onError( WebSocket conn, Exception ex ){
-        
+        System.out.println(ex.getMessage());
     }
     /**
      * Callback for binary messages received from the remote host
@@ -176,24 +177,22 @@ public class ServerCommunicator extends WebSocketServer {
     private class ConnectionManager{
         
         private Map<UUID,WebSocket> connections;
-        private Map<WebSocket,UUID> connectionids;
         private RoomManager roomManagerInstance;
         
         public ConnectionManager(){
             connections=new HashMap<>();
-            connectionids=new HashMap<>();
             roomManagerInstance=new RoomManager();
         }
         
         public void addConnection(WebSocket conn){
             UUID connid = UUID.randomUUID();
+            conn.setAttachment(connid);
             connections.put(connid,conn);
-            connectionids.put(conn,connid);
             roomManagerInstance.addConnectionToEntrance(connid);
         }
         
         public void removeConnection(WebSocket conn){
-            UUID connid = connectionids.remove(conn);
+            UUID connid = conn.<UUID>getAttachment();
             connections.remove(connid);
             roomManagerInstance.removeConnection(connid);
         }
@@ -203,7 +202,7 @@ public class ServerCommunicator extends WebSocketServer {
         }
         
         public UUID getConnectionId(WebSocket conn){
-            return connectionids.get(conn);
+            return conn.<UUID>getAttachment();
         }
         
         public List<WebSocket> getConnectionsOfRoom(UUID roomid){

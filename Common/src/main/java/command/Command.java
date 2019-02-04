@@ -2,9 +2,12 @@ package command;
 
 import com.google.gson.Gson;
 
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Command {
     private static Gson gson = new Gson();
@@ -22,13 +25,44 @@ public class Command {
         this.parametersAsJSONStrings = compactedJSONStringParameters;
         this.parameterTypeNames = parameterTypeNames(compactedParameters);
     }
+    
+    //main use is putting the connid in on server side. 
+    // DO NOT USE ON CLIENT
+    public Command(String jsonMessage,UUID connid){
+        Command temp=gson.fromJson(jsonMessage,Command.class);
+        this.methodName=temp.methodName;
+        this.facadeName=temp.facadeName;
+        this.parametersAsJSONStrings=temp.parametersAsJSONStrings;
+        this.parameterTypeNames=temp.parameterTypeNames;
+        this.parametersAsJSONStrings.add(0,gson.toJson(connid.toString()));
+        this.parameterTypeNames.add(0,connid.getClass().getName());
+    }
 
     public Object execute() throws Throwable {
-        Class targetClass = Class.forName(facadeName);
-        Class[] parameterTypes = parameterTypes();
-        Object[] parameters = parameters(parameterTypes);
-        Method method = targetClass.getMethod(methodName, parameterTypes);
-        Object result = method.invoke(targetClass, parameters);
+        Object result = null;
+        
+        try {
+            Class targetClass = Class.forName(facadeName);
+            Class[] parameterTypes = parameterTypes();
+            Object[] parameters = parameters(parameterTypes);
+            Method method = targetClass.getMethod(methodName, parameterTypes);
+            result = method.invoke(targetClass, parameters);
+            //System.err.println("got to system call");
+        } catch (NoSuchMethodException | SecurityException e) {
+            System.out.println("ERROR: Could not find the method " + methodName + ", or, there was a security error");
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            System.err.println("Illegal accesss while trying to execute the method " + methodName);
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.out.println("ERROR: Illegal argument while trying to find the method " + methodName);
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            System.err.println("Illegal accesss while trying to execute the method " + methodName);
+            //e.printStackTrace();
+            throw e.getCause();
+        }
+
         return result;
     }
 
