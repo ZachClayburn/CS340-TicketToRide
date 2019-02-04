@@ -10,6 +10,9 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.command.ServerProxy;
+
+
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 
@@ -84,7 +87,6 @@ public class CreateGameActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GameFacadeProxy.SINGLETON.createGame(info.getGroupName(), info.getNumPlayer());
                 //implement web socket call back when ready
                  /*Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
                  startActivity(intent);*/

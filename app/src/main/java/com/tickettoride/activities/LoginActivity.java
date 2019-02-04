@@ -13,6 +13,7 @@ import com.tickettoride.command.ClientCommunicator;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.facadeProxies.UserFacadeProxy;
+import com.tickettoride.command.ServerProxy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,9 +84,12 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ServerProxy.SINGLETON.login(user, pass);
+                /*
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
+                */
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
             }
