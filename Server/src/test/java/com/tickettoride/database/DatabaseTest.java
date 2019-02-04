@@ -1,4 +1,4 @@
-package database;
+package com.tickettoride.database;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package database;
+package com.tickettoride.database;
 
 import java.io.File;
 import java.security.PrivilegedActionException;
