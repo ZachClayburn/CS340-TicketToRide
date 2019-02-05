@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 
 public class JoinGameActivity extends AppCompatActivity {
-    //private TextView gameName;
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
@@ -27,8 +26,6 @@ public class JoinGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join_game);
-
-        //gameName = (TextView) findViewById(R.id.game_list);
         gameList = (RecyclerView) findViewById(R.id.recycler_view);
         gameList.setLayoutManager(new LinearLayoutManager(this));
         createGame = (Button) findViewById(R.id.create_game);
@@ -65,7 +62,7 @@ public class JoinGameActivity extends AppCompatActivity {
             return listOfGames.size();
         }
     }
-    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class Holder extends RecyclerView.ViewHolder {
         TextView gameName;
         GameInfo game;
         public Holder(View view) {
@@ -79,15 +76,9 @@ public class JoinGameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-
                     startActivity(intent);
                 }
             });
-        }
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-            startActivity(intent);
         }
     }
 }

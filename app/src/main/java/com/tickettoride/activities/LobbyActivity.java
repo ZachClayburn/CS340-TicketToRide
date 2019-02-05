@@ -22,9 +22,9 @@ public class LobbyActivity extends AppCompatActivity{
         gameID = (TextView) findViewById(R.id.game_id);
         numPlayers = (TextView) findViewById(R.id.num_player);
         startGame = (Button) findViewById(R.id.start_game);
-        //gameName.setText("Group Name: " + gameInfo.getGroupName());
-        //gameID.setText("Game ID: " + gameInfo.getGameID());
-        //numPlayers.setText("Number of Players: " +gameInfo.getPersonList().size() + "/" + gameInfo.getNumPlayer());
+        gameName.setText("Group Name: " + gameInfo.getGroupName());
+        gameID.setText("Game ID: " + gameInfo.getGameID());
+        numPlayers.setText("Number of Players: " +gameInfo.getPersonList().size() + "/" + gameInfo.getNumPlayer());
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
