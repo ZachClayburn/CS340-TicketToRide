@@ -43,4 +43,26 @@ public class UserDAOTest extends AbstractDatabaseTest{
         }
     }
 
+    @Test
+    public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws Database.DatabaseException {
+
+        final var username = new Username("Username");
+        final var password = new Password("Password");
+        final var testUser = new User(username, password);
+
+        try (var db = new Database()) {
+
+            db.getUserDAO().addUser(testUser);
+            db.commit();
+
+        }
+
+        try (var db = new Database()) {
+
+            var resultUser = db.getUserDAO().getUser(username, password);
+
+            assertEquals(testUser, resultUser);
+        }
+    }
+
 }

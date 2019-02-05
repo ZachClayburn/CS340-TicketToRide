@@ -1,6 +1,9 @@
 package com.tickettoride.database;
 
 import com.tickettoride.models.User;
+import modelAttributes.Password;
+import modelAttributes.Username;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,4 +47,32 @@ public class UserDAO extends Database.DataAccessObject {
         }
     }
 
+    @Nullable
+    public User getUser(Username userName, Password password) throws Database.DatabaseException {
+
+        User user = null;
+
+        String sql = "SELECT * FROM Users WHERE userName = ? AND password = ?";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, userName.toString());
+            statement.setString(2, password.getPassword());
+
+            var result = statement.executeQuery();
+
+            if (result.next()) {
+                var tableUserName = new Username(result.getString("userName"));
+                var tablePassWord = new Password(result.getString("password"));
+                var userID = result.getString("userID");
+
+                user = new User(tableUserName, tablePassWord, userID);
+            }
+
+        } catch (SQLException e) {
+            throw new Database.DatabaseException("Could not retrieve user!", e);
+        }
+
+        return user;
+    }
 }
