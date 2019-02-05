@@ -1,7 +1,11 @@
 language: android
+jdk: openjdk11
+
 android:
   components:
     - build-tools-26.0.3
     - android-28
     - add-on
     - extra
+  licenses:
+    - 'android-sdk-license-.+'
