@@ -17,17 +17,6 @@ public class DatabaseTest extends AbstractDatabaseTest {
     }
 
     @Test
-    public void NewDatabaseRequestedWithNameOfExistingDatabase_DatabaseExceptionThrown() {
-
-        try {
-            Database.createDatabase(testDatabasePath);
-        } catch (Database.DatabaseException dbe) {
-            return;
-        }
-        fail("Expected exception not thrown!");
-    }
-
-    @Test
     public void DatabaseCreatedUsingTryWithBlock_WorksProperly() {
 
         try (var db = new Database()){

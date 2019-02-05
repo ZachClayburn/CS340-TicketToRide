@@ -7,8 +7,24 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserDAO extends Database.DataAccessObject {
+
+    private final String tableCreateString =
+            // language=SQLite
+            "DROP TABLE IF EXISTS Users;" +
+            "CREATE TABLE Users" +
+            "(" +
+            "userID TEXT PRIMARY KEY NOT NULL," +
+            "userName TEXT NOT NULL UNIQUE," +
+            "password TEXT NOT NULL" +
+            ");";
+
     public UserDAO(Connection connection) {
         super(connection);
+    }
+
+    @Override
+    String getTableCreateString() {
+        return tableCreateString;
     }
 
     public void addUser(User user) throws Database.DatabaseException {

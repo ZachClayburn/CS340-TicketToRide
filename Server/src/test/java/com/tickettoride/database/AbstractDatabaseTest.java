@@ -11,8 +11,12 @@ public abstract class AbstractDatabaseTest {
     @Before
     public void setUp() throws Exception {
 
-        Database.createDatabase(testDatabasePath);
         Database.setDatabaseFile(testDatabasePath);
+
+        try (var db = new Database()) {
+            db.createDatabase(testDatabasePath);
+        }
+
     }
 
     @After

@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Database implements AutoCloseable{
 
@@ -38,28 +39,16 @@ public class Database implements AutoCloseable{
      * @throws DatabaseException If there is an error in creating the database and tables, or if the
      * database already exists
      */
-    public static void createDatabase(String location) throws DatabaseException {
+    public void createDatabase(String location) throws DatabaseException {
         final String url = "jdbc:sqlite:" + location;
 
-        if (new File(location).exists()) {
-            throw new DatabaseException("Database at " + location + " already exists!");
-        }
+        try (var statement = connection.createStatement()){
 
-        try (var con = DriverManager.getConnection(url);
-             var statement = con.createStatement()){
+            String sql = DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
-            statement.executeUpdate("" +
-                    "Create TABLE Sessions(" +
-                    "sessionID TEXT PRIMARY KEY NOT NULL ," +
-                    "userID TEXT NOT NULL," +
-                    "FOREIGN KEY (userID) REFERENCES Users(userID)" +
-                    ");" +
-                    "create table Users\n" +
-                    "(" +
-                    "userID TEXT PRIMARY KEY NOT NULL," +
-                    "userName TEXT NOT NULL UNIQUE," +
-                    "password TEXT NOT NULL" +
-                    ");");
+            statement.executeUpdate(sql);
+
+            connection.commit();
 
         } catch (SQLException e) {
             throw new DatabaseException("Could not create the database!", e);
@@ -122,9 +111,11 @@ public class Database implements AutoCloseable{
 
         protected Connection connection;
 
-        public DataAccessObject(Connection connection) {
+        DataAccessObject(Connection connection) {
             this.connection = connection;
         }
+
+        abstract String getTableCreateString();
     }
 
     /**
