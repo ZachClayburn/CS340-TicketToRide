@@ -3,9 +3,13 @@ jdk: openjdk11
 
 android:
   components:
+    - tools
+    - platform-tools
     - build-tools-26.0.3
     - android-28
     - add-on
     - extra
   licenses:
+    - 'android-sdk-preview-license-.+'
     - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
