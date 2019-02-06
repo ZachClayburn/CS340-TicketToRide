@@ -10,7 +10,9 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.command.ClientCommunicator;
-import com.tickettoride.command.ServerProxy;
+import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.facadeProxies.SessionFacadeProxy;
+import com.tickettoride.facadeProxies.UserFacadeProxy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,30 +79,23 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        login = (Button) findViewById(R.id.sign_in);
+        login = findViewById(R.id.sign_in);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServerProxy.SINGLETON.login(user, pass);
-                /*
                 try {
-                    List<Object> parameters = Arrays.asList(user, pass);
-                    Command command = new Command("sessionFacade", "create", parameters);
-                    ClientCommunicator.getSingleton().send(command);
+                    SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
-                */
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
             }
         });
-        register = (Button) findViewById(R.id.register);
+        register = findViewById(R.id.register);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    List<Object> parameters = Arrays.asList(user, pass);
-                    Command command = new Command("userFacade", "create", parameters);
-                    ClientCommunicator.getSingleton().send(command);
+                    UserFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
                 /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/

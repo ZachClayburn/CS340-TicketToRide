@@ -28,7 +28,7 @@ public class Command {
     
     //main use is putting the connid in on server side. 
     // DO NOT USE ON CLIENT
-    public Command(String jsonMessage,UUID connid){
+    public Command(String jsonMessage, UUID connid){
         Command temp=gson.fromJson(jsonMessage,Command.class);
         this.methodName=temp.methodName;
         this.facadeName=temp.facadeName;

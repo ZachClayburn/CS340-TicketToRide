@@ -7,20 +7,26 @@ import com.tickettoride.models.User;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import command.Command;
+import command.Response;
 import modelAttributes.Password;
 import modelAttributes.Username;
 
-public class SessionFacade {
+public class SessionFacade extends BaseFacade {
     public static SessionFacade SINGLETON = new SessionFacade();
 
-    public Session create(Username username, Password password) {
-        User user = User.findBy(username, password);
-        Session session = new Session(user);
-        List<Object> parameters = new ArrayList(Arrays.asList(session));
-        Command command = new Command("SessionController", "create", parameters);
-//        ServerCommunicator.SINGLETON.send(command);
-        return null;
+    public void create(UUID roomID, Username username, Password password) {
+        try {
+            User user = User.findBy(username, password);
+            Session session = new Session(user);
+            List<Object> parameters = new ArrayList();
+            parameters.add(session);
+            Command command = new Command("SessionController", "create", parameters);
+            sendResponseToOne(roomID, command);
+        } catch (Throwable t) {
+            sendResponseToOne(roomID, t);
+        }
     }
 }
