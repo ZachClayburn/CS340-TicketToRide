@@ -11,7 +11,6 @@
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -26,6 +25,24 @@
         </activity>
         <activity
             android:name=".activities.CreateGameActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".activities.LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.LoginActivity"
+                />
+        </activity>
+        <activity
+            android:name=".activities.LobbyActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".activities.LoginActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.LoginActivity"
+                />
+        </activity>
+        <activity
+            android:name=".activities.GameRoom"
             android:label="@string/app_name"
             android:parentActivityName=".activities.LoginActivity">
             <meta-data
