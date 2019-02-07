@@ -88,7 +88,10 @@ public class ServerCommunicator extends WebSocketServer {
         Command command = new Command(message,connid);
         try {
             command.execute();
-        } catch(Throwable throwable) {}
+        } catch (Throwable throwable) {
+            System.out.println(throwable.getMessage());
+            throwable.printStackTrace();
+        }
     }
     /**
      * Called when errors occurs. If an error causes the websocket connection to fail {@link #onClose(WebSocket, int, String, boolean)} will be called additionally.<br>
