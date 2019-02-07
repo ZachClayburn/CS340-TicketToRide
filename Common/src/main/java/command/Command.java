@@ -39,31 +39,11 @@ public class Command {
     }
 
     public Object execute() throws Throwable {
-        Object result = null;
-        
-        try {
-            Class targetClass = Class.forName(facadeName);
-            Class[] parameterTypes = parameterTypes();
-            Object[] parameters = parameters(parameterTypes);
-            Method method = targetClass.getMethod(methodName, parameterTypes);
-            result = method.invoke(targetClass, parameters);
-            //System.err.println("got to system call");
-        } catch (NoSuchMethodException | SecurityException e) {
-            System.out.println("ERROR: Could not find the method " + methodName + ", or, there was a security error");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            System.err.println("Illegal accesss while trying to execute the method " + methodName);
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Illegal argument while trying to find the method " + methodName);
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            System.err.println("Illegal accesss while trying to execute the method " + methodName);
-            //e.printStackTrace();
-            throw e.getCause();
-        }
-
-        return result;
+        Class targetClass = Class.forName(facadeName);
+        Class[] parameterTypes = parameterTypes();
+        Object[] parameters = parameters(parameterTypes);
+        Method method = targetClass.getMethod(methodName, parameterTypes);
+        return method.invoke(targetClass, parameters);
     }
 
     private List<String> parameterTypeNames(List<Object> parameters) {

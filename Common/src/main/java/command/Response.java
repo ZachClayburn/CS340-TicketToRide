@@ -22,6 +22,8 @@ public class Response {
 
     public Boolean hasCommand() { return jsonCommand != null; }
 
+    public String getMessage() { return message; }
+
 //    //much thanks to araknoid on stack overflow for this method, I got close but couldn't quite get it
 //    private Class<? extends Throwable> getExceptionClass(String className) throws ClassNotFoundException {
 //        return (Class<? extends Throwable>) Class.forName(className);

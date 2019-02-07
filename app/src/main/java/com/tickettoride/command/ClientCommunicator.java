@@ -33,17 +33,17 @@ public class ClientCommunicator {
 
                 @Override
                 public void onMessage(String message){
-                    Response response = gson.fromJson(message, Response.class);
-                    if (response.isThrowable()) {
-                        Throwable throwable = response.getException();
-//                        throw throwable;
-                    } else if (response.isCommand()) {
-                        Command command = response.getCommand();
-                        try {
+                    try {
+                        Response response = gson.fromJson(message, Response.class);
+                        if (response.hasCommand()) {
+                            Command command = response.getCommand();
                             command.execute();
-                        } catch (Throwable t) {}
-                    } else {
-                        // Log Message
+                        } else {
+                            System.out.println(response.getMessage());
+                        }
+                    } catch (Throwable throwable) {
+                        System.out.println(throwable.getMessage());
+                        throwable.printStackTrace();
                     }
                 }
 
