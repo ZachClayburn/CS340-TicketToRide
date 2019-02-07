@@ -12,10 +12,10 @@ public class UserFacade extends BaseFacade {
     public void create(UUID roomID, Username username, Password password) {
         try {
             User user = new User(username, password);
-            Command command = buildCommandFromParameters(CONTROLLER_NAME, "create", user);
+            Command command = new Command(CONTROLLER_NAME, "create", user);
             sendResponseToOne(roomID, command);
         } catch (Throwable t) {
-            Command command = buildCommandFromParameters(CONTROLLER_NAME, "error", t);
+            Command command = new Command(CONTROLLER_NAME, "error", t);
             sendResponseToOne(roomID, command);
         }
     }

@@ -23,10 +23,10 @@ public class SessionFacade extends BaseFacade {
         try {
             User user = User.findBy(username, password);
             Session session = new Session(user);
-            Command command = buildCommandFromParameters(CONTROLLER_NAME, "create", session);
+            Command command = new Command(CONTROLLER_NAME, "create", session);
             sendResponseToOne(roomID, command);
         } catch (Throwable throwable) {
-            Command command = buildCommandFromParameters(CONTROLLER_NAME, "error", throwable);
+            Command command = new Command(CONTROLLER_NAME, "error", throwable);
             sendResponseToOne(roomID, command);
         }
     }

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,13 +18,13 @@ public class Command {
     private List<String> parametersAsJSONStrings;
     private List<String> parameterTypeNames;
 
-    public Command(String facadeName, String methodName, List<Object> parameters) {
-        List<Object> compactedParameters = ListHelper.compactArray(parameters);
-        List<String> compactedJSONStringParameters = toJSONStringList(compactedParameters);
+    public Command(String facadeName, String methodName, Object... parameters) {
+        List<Object> commandParameters = new ArrayList(Arrays.asList(parameters));
+        List<String> compactedJSONStringParameters = toJSONStringList(commandParameters);
         this.methodName = methodName;
         this.facadeName = facadeName;
         this.parametersAsJSONStrings = compactedJSONStringParameters;
-        this.parameterTypeNames = parameterTypeNames(compactedParameters);
+        this.parameterTypeNames = parameterTypeNames(commandParameters);
     }
     
     //main use is putting the connid in on server side. 
