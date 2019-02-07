@@ -10,13 +10,6 @@ import java.io.File;
 public class DatabaseTest extends AbstractDatabaseTest {
 
     @Test
-    public void NewDatabaseRequested_NewSQLiteFileExistsOnDisk() {
-        var dbFile = new File(testDatabasePath);
-
-        assertTrue(dbFile.exists());
-    }
-
-    @Test
     public void DatabaseCreatedUsingTryWithBlock_WorksProperly() {
 
         try (var db = new Database()){

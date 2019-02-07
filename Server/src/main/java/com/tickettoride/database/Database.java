@@ -1,6 +1,5 @@
 package com.tickettoride.database;
 
-import java.io.File;
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,18 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Database implements AutoCloseable{
+public class Database implements AutoCloseable {
 
     static {
         try {
-            final String driver = "org.sqlite.JDBC";
+            final String driver = "org.postgresql.Driver";
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private static String databaseFile = "src/main/resources/ticketToRide.DB";
+    private static String databaseAddress = "localhost:5432/tickettoride";
+
+    protected static String databaseUserName = "ttrserver";
+    protected static String databasePassword = "SecretPassword";
 
     protected Connection connection;
 
@@ -29,22 +31,28 @@ public class Database implements AutoCloseable{
     protected SessionDAO sessionDAO;
     protected UserDAO userDAO;
 
-    protected static void setDatabaseFile(String databaseFile) {
-        Database.databaseFile = databaseFile;
+    protected static void setDatabaseAddress(String databaseAddress) {
+        Database.databaseAddress = databaseAddress;
     }
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
-     * @param location The path where you want the database file to be created
      * @throws DatabaseException If there is an error in creating the database and tables, or if the
      * database already exists
      */
-    public void createDatabase(String location) throws DatabaseException {
-        final String url = "jdbc:sqlite:" + location;
+    public void createDatabase() throws DatabaseException {
 
         try (var statement = connection.createStatement()){
 
-            String sql = DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
+            //Language=PostgreSQL
+            String sql = "DO $$ DECLARE" +
+                    "    r RECORD;" +
+                    "BEGIN" +
+                    "    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP" +
+                    "        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';" +
+                    "    END LOOP;" +
+                    "END $$;";
+            sql += DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
             statement.executeUpdate(sql);
 
@@ -61,17 +69,17 @@ public class Database implements AutoCloseable{
      */
     public Database() throws DatabaseException{
 
-        final String url = "jdbc:sqlite:" + databaseFile;
+        final String url = "jdbc:postgresql://" + databaseAddress;
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url, databaseUserName, databasePassword);
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new DatabaseException(e);
         }
-        sessionDAO = new SessionDAO(connection);
-        DAOs.add(sessionDAO);
         userDAO = new UserDAO(connection);
         DAOs.add(userDAO);
+        sessionDAO = new SessionDAO(connection);
+        DAOs.add(sessionDAO);
     }
 
     /**

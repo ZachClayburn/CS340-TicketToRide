@@ -29,7 +29,8 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
         }
 
-        try (var connection = DriverManager.getConnection("jdbc:sqlite:" + this.testDatabasePath)){
+        try (var connection = DriverManager.getConnection("jdbc:postgresql://" + this.testDatabasePath,
+                Database.databaseUserName, Database.databasePassword)){
             var results = connection.prepareStatement("select * from Users").executeQuery();
 
             assertTrue(results.next());

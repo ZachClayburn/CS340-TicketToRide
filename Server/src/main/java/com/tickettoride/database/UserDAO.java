@@ -12,8 +12,7 @@ import java.sql.SQLException;
 public class UserDAO extends Database.DataAccessObject {
 
     private final String tableCreateString =
-            // language=SQLite
-            "DROP TABLE IF EXISTS Users;" +
+            // language=PostgreSQL
             "CREATE TABLE Users" +
             "(" +
             "userID TEXT PRIMARY KEY NOT NULL," +
@@ -40,7 +39,7 @@ public class UserDAO extends Database.DataAccessObject {
             statement.setString(2, user.getUsername().toString());
             statement.setString(3, user.getPassword().toString());
 
-            statement.execute();
+            statement.execute();//FIXME Check if this returns false and throw an error
 
         } catch (SQLException e) {
             throw new Database.DatabaseException("Could not add new user to Database!", e);
