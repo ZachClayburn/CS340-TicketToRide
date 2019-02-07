@@ -15,18 +15,19 @@ import modelAttributes.Password;
 import modelAttributes.Username;
 
 public class SessionFacade extends BaseFacade {
+
+    public static final String CONTROLLER_NAME = "SessionController";
     public static SessionFacade SINGLETON = new SessionFacade();
 
     public void create(UUID roomID, Username username, Password password) {
         try {
             User user = User.findBy(username, password);
             Session session = new Session(user);
-            List<Object> parameters = new ArrayList();
-            parameters.add(session);
-            Command command = new Command("SessionController", "create", parameters);
+            Command command = buildCommandFromParameters(CONTROLLER_NAME, "create", session);
             sendResponseToOne(roomID, command);
-        } catch (Throwable t) {
-            sendResponseToOne(roomID, t);
+        } catch (Throwable throwable) {
+            Command command = buildCommandFromParameters(CONTROLLER_NAME, "error", throwable);
+            sendResponseToOne(roomID, command);
         }
     }
 }
