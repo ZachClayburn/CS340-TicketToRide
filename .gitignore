@@ -302,3 +302,6 @@ gradle-app.setting
 **/build/
 
 # End of https://www.gitignore.io/api/android,androidstudio,intellij,java,gradle
+.idea/dataSources.xml
+.idea/sqldialects.xml
+Server/src/main/resources/ticketToRide.DB

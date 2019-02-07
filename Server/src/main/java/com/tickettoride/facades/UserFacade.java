@@ -18,8 +18,8 @@ public class UserFacade {
         User user = new User(username, password);
         List<Object> parameters = new ArrayList(Arrays.asList(user));
         Command command = new Command("UserController", "create", parameters);
-        ServerCommunicator.SINGLETON.send(command);
+//        ServerCommunicator.SINGLETON.send(command);
     }
 }
 
-}
+
