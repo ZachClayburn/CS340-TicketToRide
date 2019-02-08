@@ -90,7 +90,8 @@ public class LoginActivity extends AppCompatActivity {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
                 */
-                /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
+                /*TODO: does this need to be uncommented?
+                Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
                 startActivity(intent);*/
             }
         });

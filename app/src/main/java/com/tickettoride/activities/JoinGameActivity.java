@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.clientModels.User;
+import com.tickettoride.command.ServerProxy;
 
 import java.util.ArrayList;
 
@@ -27,8 +29,7 @@ public class JoinGameActivity extends AppCompatActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
-    private GameIndex index = GameIndex.SINGLETON;
-    private ArrayList<GameInfo> games = index.getGameIndex(); //need an arraylist from database
+    private ArrayList<GameInfo> games = GameIndex.SINGLETON.getGameIndex();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     public void updateUI() {
-        games = index.getGameIndex();
+        games = GameIndex.SINGLETON.getGameIndex();
         adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
     }
@@ -89,6 +90,7 @@ public class JoinGameActivity extends AppCompatActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    ServerProxy.SINGLETON.joinGame(User.SINGLETON.getUserID(), game.getGameID());
                     Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("gameID", game.getGameID());
