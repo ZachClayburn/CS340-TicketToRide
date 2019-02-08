@@ -14,15 +14,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.GameIndex;
+import com.tickettoride.clientModels.GameInfo;
 
 import java.util.ArrayList;
+
+
+import java.util.List;
 
 
 public class JoinGameActivity extends AppCompatActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
-    private ArrayList<GameInfo> games = new ArrayList<>(); //need an arraylist from database
+    private GameIndex index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,11 @@ public class JoinGameActivity extends AppCompatActivity {
             }
         });
         adapter = new Adapter(this, games);
+        gameList.setAdapter(adapter);
+    }
+
+    public void updateUI() {
+        adapter = new Adapter(index.getGameIndex());
         gameList.setAdapter(adapter);
     }
 
