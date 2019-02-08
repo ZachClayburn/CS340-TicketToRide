@@ -9,10 +9,15 @@ import java.util.UUID;
 import command.Command;
 import modelAttributes.Password;
 import modelAttributes.Username;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SessionFacade extends BaseFacade {
 
     public static final String CONTROLLER_NAME = "SessionController";
+
+    private static final Logger logger = LogManager.getLogger(SessionFacade.class.getName());
+
     public static SessionFacade SINGLETON = new SessionFacade();
 
     public void create(UUID roomID, Username username, Password password) {
@@ -30,9 +35,10 @@ public class SessionFacade extends BaseFacade {
     public Session create_session(User user) throws Database.DatabaseException {
         Database database = new Database();
         SessionDAO dao = database.getSessionDAO();
-        Session session = dao.createSession(user);
+        //FIXME Incorrect argument type
+        //Session session = dao.createSession(user);
         database.commit();
         database.close();
-        return session;
+        return null;
     }
 }

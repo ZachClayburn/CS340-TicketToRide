@@ -4,6 +4,8 @@ import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.User;
 import modelAttributes.Password;
 import modelAttributes.Username;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
@@ -11,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class UserDAO extends Database.DataAccessObject {
+
+    private static final Logger logger = LogManager.getLogger(UserDAO.class.getName());
 
     private final String tableCreateString =
             // language=PostgreSQL
@@ -38,7 +42,10 @@ public class UserDAO extends Database.DataAccessObject {
             statement.setString(3, user.getPassword().toString());
             Boolean result = statement.execute();
             if (!result) throw new DatabaseException("Could not add new user to Database!");
-        } catch (SQLException e) { throw new DatabaseException("Could not add new user to Database!", e); }
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not add new user to Database!", e);
+        }
     }
 
     @Nullable
@@ -56,7 +63,8 @@ public class UserDAO extends Database.DataAccessObject {
                 user = new User(tableUserName, tablePassWord, userID);
             }
         } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve user!", e);
+            logger.catching(e);
+            throw new Database.DatabaseException("Could not retrieve user!", e);
         }
         return user;
     }

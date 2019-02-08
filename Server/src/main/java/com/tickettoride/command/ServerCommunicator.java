@@ -2,10 +2,6 @@ package com.tickettoride.command;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -16,10 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ClientHandshake;
@@ -31,6 +25,8 @@ import command.Response;
 
 //to start the server just call run()
 public class ServerCommunicator extends WebSocketServer {
+
+    private static Logger logger = LogManager.getLogger(ServerCommunicator.class.getName());
 
     private static final int SERVER_PORT_NUMBER = 8080;
     private static final int MAX_WAITING_CONNECTIONS = 10;
@@ -49,7 +45,8 @@ public class ServerCommunicator extends WebSocketServer {
             try {
                 INSTANCE = new ServerCommunicator(SERVER_PORT_NUMBER);
             }catch(UnknownHostException e){
-                
+                logger.error("Could not start ServerCommunicator! ", e);
+
             }
         }
         return INSTANCE;
@@ -408,46 +405,10 @@ public class ServerCommunicator extends WebSocketServer {
         
         
     }
-    
-//
-//    private HttpHandler commandHandler = new HttpHandler() {
-//        @Override
-//        public void handle(HttpExchange exchange) throws IOException {
-//            Command command = buildCommandFromExchange(exchange);
-//            Response response;
-//            try { response = new Response(command.execute()); }
-//            catch (Throwable t) {
-//                Throwable cause = t.getCause();
-//                response = new Response(cause);
-//            }
-//            sendResponse(exchange, response);
-//        }
-//    };
-//
-//    private Command buildCommandFromExchange(HttpExchange exchange) throws  IOException {
-//        InputStreamReader inputStreamReader = new InputStreamReader(exchange.getRequestBody());
-//        Command command = gson.fromJson(inputStreamReader, Command.class);
-//        inputStreamReader.close();
-//        return command;
-//    }
-//
-//    private void sendResponse(HttpExchange exchange, Response response) throws IOException {
-//        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
-//        OutputStreamWriter outputStreamWriter =
-//                new OutputStreamWriter(exchange.getResponseBody());
-//        gson.toJson(response, outputStreamWriter);
-//        outputStreamWriter.close();
-//    };
-//
-//    public static int getServerPortNumber() {
-//        return SERVER_PORT_NUMBER;
-//    }
-//
+
     public static void main(String[] args) {
         try {
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {}
     }
-//
-//    public static final String COMMAND_DESIGNATOR = "/command";
 }

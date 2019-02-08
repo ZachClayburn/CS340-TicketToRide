@@ -1,14 +1,21 @@
 package com.tickettoride.facades;
-        import com.tickettoride.database.Database;
-        import com.tickettoride.database.SessionDAO;
-        import com.tickettoride.database.UserDAO;
-        import com.tickettoride.models.User;
-        import java.util.UUID;
-        import command.Command;
-        import modelAttributes.Password;
-        import modelAttributes.Username;
+
+import com.tickettoride.database.Database;
+import com.tickettoride.database.SessionDAO;
+import com.tickettoride.database.UserDAO;
+import com.tickettoride.models.User;
+import java.util.UUID;
+import command.Command;
+import modelAttributes.Password;
+import modelAttributes.Username;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UserFacade extends BaseFacade {
+
+    private static final Logger logger = LogManager.getLogger(UserFacade.class.getName());
+
     public static UserFacade SINGLETON = new UserFacade();
     public static String CONTROLLER_NAME = "UserController";
 
