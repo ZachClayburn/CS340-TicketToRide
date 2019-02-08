@@ -27,7 +27,8 @@ public class JoinGameActivity extends AppCompatActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
-    private GameIndex index;
+    private GameIndex index = GameIndex.SINGLETON;
+    private ArrayList<GameInfo> games = index.getGameIndex(); //need an arraylist from database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,8 @@ public class JoinGameActivity extends AppCompatActivity {
     }
 
     public void updateUI() {
-        adapter = new Adapter(index.getGameIndex());
+        games = index.getGameIndex();
+        adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
     }
 
@@ -88,6 +90,9 @@ public class JoinGameActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("gameID", game.getGameID());
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
