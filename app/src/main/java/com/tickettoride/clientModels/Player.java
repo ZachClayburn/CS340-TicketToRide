@@ -6,7 +6,7 @@ import modelAttributes.Username;
 import modelInterfaces.IUser;
 
 // Generic Player
-public class Player implements IUser {
+public class Player {
     private Username username;
     private UUID userID;
 

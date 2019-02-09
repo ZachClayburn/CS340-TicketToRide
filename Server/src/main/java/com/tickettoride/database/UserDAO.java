@@ -68,4 +68,24 @@ public class UserDAO extends Database.DataAccessObject {
         }
         return user;
     }
+
+    @Nullable
+    public User getUser(String id) throws DatabaseException {
+        User user = null;
+        String sql = "SELECT * FROM Users WHERE userID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, id);
+            var result = statement.executeQuery();
+            if (result.next()) {
+                var tableUserName = new Username(result.getString("userName"));
+                var tablePassWord = new Password(result.getString("password"));
+                var userID = result.getString("userID");
+                user = new User(tableUserName, tablePassWord, userID);
+            }
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new Database.DatabaseException("Could not retrieve user!", e);
+        }
+        return user;
+    }
 }

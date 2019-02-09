@@ -1,12 +1,16 @@
 package com.tickettoride.models;
 
-public class Player {
-    User user = null;
-    Game game = null;
+import java.util.UUID;
 
-    public Player(User user, Game game) {
+public class Player {
+    private User user = null;
+    private Game game = null;
+    private UUID playerID = null;
+
+    public Player(User user, Game game, UUID playerID) {
         this.user = user;
         this.game = game;
+        this.playerID = playerID;
     }
 
     public User getUser() {
@@ -23,5 +27,13 @@ public class Player {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public String getPlayerID() {
+        return playerID.toString();
+    }
+
+    public void setPlayerID(UUID playerID) {
+        this.playerID = playerID;
     }
 }

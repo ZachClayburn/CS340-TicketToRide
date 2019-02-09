@@ -4,9 +4,10 @@ import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.models.Game;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
+import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
 
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class GameFacade {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
+            User user = database.getUserDAO().getUser(userID);
+            Player player = new Player(user, game, UUID.randomUUID());
         }
         try {
             Command command = new Command("GameController", "createGame", game);
