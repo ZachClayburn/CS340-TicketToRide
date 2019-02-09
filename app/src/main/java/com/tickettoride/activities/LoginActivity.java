@@ -1,5 +1,6 @@
 package com.tickettoride.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,15 +8,19 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.command.ClientCommunicator;
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.facadeProxies.UserFacadeProxy;
+import com.tickettoride.command.ServerProxy;
 
 import modelAttributes.Password;
 import modelAttributes.Username;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends MyBaseActivity {
     private Username user = new Username("");
     private Password pass = new Password("");
     private EditText username;
@@ -76,15 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SessionFacadeProxy.SINGLETON.create(user, pass);
-                /*
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
-                */
-                /*TODO: does this need to be uncommented?
-                Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
-                startActivity(intent);*/
+
             }
         });
         register = findViewById(R.id.register);
@@ -94,8 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     UserFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
-                /*Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
-                startActivity(intent);*/
+
             }
         });
 
@@ -110,5 +109,12 @@ public class LoginActivity extends AppCompatActivity {
             login.setEnabled(false);
             register.setEnabled(false);
         }
+    }
+    public void moveToJoin() {
+        Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
+        startActivity(intent);
+    }
+    public void loginError() {
+        Toast.makeText(this, R.string.login_error, Toast.LENGTH_SHORT).show();
     }
 }

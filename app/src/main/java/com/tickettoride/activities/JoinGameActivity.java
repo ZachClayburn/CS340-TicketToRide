@@ -11,17 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.GameInfo;
 import com.tickettoride.clientModels.User;
-import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.command.ServerProxy;
+import com.tickettoride.facadeProxies.SessionFacadeProxy;
 
 import java.util.ArrayList;
 
 
-public class JoinGameActivity extends AppCompatActivity {
+import java.util.List;
+
+public class JoinGameActivity extends MyBaseActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
@@ -86,14 +90,21 @@ public class JoinGameActivity extends AppCompatActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    GameFacadeProxy.SINGLETON.joinGame(User.SINGLETON.getUserID(), game.getGameID());
-                    Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("gameID", game.getGameID());
-                    intent.putExtras(bundle);
-                    startActivity(intent);
+                    //join game method server facade
                 }
             });
         }
+        public void moveToLobbyJoin() {
+            Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("gameID", game.getGameID());
+            intent.putExtras(bundle);
+            startActivity(intent);
+        }
+
     }
+    public void JoinError() {
+        Toast.makeText(this ,R.string.join_game_error, Toast.LENGTH_SHORT).show();
+    }
+
 }

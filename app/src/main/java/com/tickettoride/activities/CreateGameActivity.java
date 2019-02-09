@@ -1,5 +1,6 @@
 package com.tickettoride.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -10,12 +11,14 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameInfo;
-import com.tickettoride.clientModels.User;
+import com.tickettoride.command.ServerProxy;
+
 
 import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.facadeProxies.SessionFacadeProxy;
 
 
-public class CreateGameActivity extends AppCompatActivity {
+public class CreateGameActivity extends MyBaseActivity {
     private GameInfo info = new GameInfo();
     private EditText groupName;
     private Button two;
@@ -86,13 +89,17 @@ public class CreateGameActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GameFacadeProxy.SINGLETON.createGame(info.getGroupName(), info.getMaxPlayer(), User.SINGLETON.getUserID());
-                //implement web socket call back when ready
-                 /*Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
-                 startActivity(intent);*/
+                try {
+                    //create game facade proxy
+                } catch (Throwable t) { }
+
             }
         });
 
+    }
+    public void moveToLobbyCreate() {
+        Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
+        startActivity(intent);
     }
     public void setEnabled() {
         //if username and password fields have characters, login and register buttons are enabled

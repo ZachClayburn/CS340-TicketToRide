@@ -13,11 +13,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class UserFacade extends BaseFacade {
-
-    private static final Logger logger = LogManager.getLogger(UserFacade.class.getName());
-
-    public static UserFacade SINGLETON = new UserFacade();
-    public static String CONTROLLER_NAME = "UserController";
+    private static UserFacade SINGLETON = new UserFacade();
+    private static String CONTROLLER_NAME = "UserController";
+    public static UserFacade getSingleon() {
+        return SINGLETON;
+    }
+    private UserFacade() {}
 
     public void create(UUID roomID, Username username, Password password) {
         try {
