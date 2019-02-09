@@ -7,8 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.tickettoride.R;
+import com.tickettoride.clientModels.GameIndex;
+import com.tickettoride.clientModels.GameInfo;
+
 public class LobbyActivity extends AppCompatActivity{
-    private GameInfo gameInfo; //needs game info from database
+    private GameInfo gameInfo;
+    private GameIndex index = GameIndex.SINGLETON;
     private TextView gameName;
     private TextView gameID;
     private TextView numPlayers;
@@ -18,13 +23,18 @@ public class LobbyActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lobby);
         Intent i = getIntent();
+
+        // Retrieve gameInfo from bundle
+        Bundle bundle = getIntent().getExtras();
+        gameInfo = index.findGame(bundle.getString("gameID"));
+
         gameName = (TextView) findViewById(R.id.group_name);
         gameID = (TextView) findViewById(R.id.game_id);
         numPlayers = (TextView) findViewById(R.id.num_player);
         startGame = (Button) findViewById(R.id.start_game);
         gameName.setText("Group Name: " + gameInfo.getGroupName());
         gameID.setText("Game ID: " + gameInfo.getGameID());
-        numPlayers.setText("Number of Players: " +gameInfo.getPersonList().size() + "/" + gameInfo.getNumPlayer());
+        numPlayers.setText("Number of Players: " + gameInfo.getNumPlayer() + "/" + gameInfo.getMaxPlayer());
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,4 +44,7 @@ public class LobbyActivity extends AppCompatActivity{
         });
     }
 
+    public void updateUI(){
+        numPlayers.setText("Number of Players: " + gameInfo.getNumPlayer() + "/" + gameInfo.getMaxPlayer());
+    }
 }
