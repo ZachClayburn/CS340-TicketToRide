@@ -10,7 +10,7 @@ import java.util.UUID;
 public class User implements IUser {
 
     public static User findBy(Username username, Password password) {
-        //TODO Implement Database Find User
+//        Implement Database Find User
         return new User(username, password);
     }
 

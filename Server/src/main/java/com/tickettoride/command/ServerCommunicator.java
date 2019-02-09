@@ -39,7 +39,7 @@ public class ServerCommunicator extends WebSocketServer {
     private static ServerCommunicator INSTANCE=null;
     private static ConnectionManager connectionManager=null;
 
-    private ServerCommunicator(int port)throws UnknownHostException {
+    private ServerCommunicator(int port) throws UnknownHostException {
         super( new InetSocketAddress( port ) );
         connectionManager=new ConnectionManager();
     }
@@ -84,11 +84,14 @@ public class ServerCommunicator extends WebSocketServer {
      **/
     @Override
     public void onMessage( WebSocket conn, String message ){
-        UUID connid=connectionManager.getConnectionId(conn);
-        
-        Command command=new Command(message,connid);
-        //TODO: figure out who to send this to for the back end logic 
-        
+        UUID connid = connectionManager.getConnectionId(conn);
+        Command command = new Command(message,connid);
+        try {
+            command.execute();
+        } catch (Throwable throwable) {
+            System.out.println(throwable.getMessage());
+            throwable.printStackTrace();
+        }
     }
     /**
      * Called when errors occurs. If an error causes the websocket connection to fail {@link #onClose(WebSocket, int, String, boolean)} will be called additionally.<br>
@@ -440,9 +443,11 @@ public class ServerCommunicator extends WebSocketServer {
 //        return SERVER_PORT_NUMBER;
 //    }
 //
-//    public static void main(String[] args) {
-//        new ServerCommunicator().run();
-//    }
+    public static void main(String[] args) {
+        try {
+            ServerCommunicator.getINSTANCE().run();
+        } catch (Throwable t) {}
+    }
 //
 //    public static final String COMMAND_DESIGNATOR = "/command";
 }

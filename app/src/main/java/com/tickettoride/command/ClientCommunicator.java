@@ -21,10 +21,10 @@ public class ClientCommunicator {
     private WebSocketClient mWebSocketClient;
     protected static Gson gson = new Gson();
     //TODO: change the websockethost to the actual host IP (probably 10.0.0.2 if I remember right)
-    private String websockethost="websockethost";
-    private String port= "8080";
+    private String websockethost = "websockethost";
+    private String port = "8080";
 
-    private static ClientCommunicator SINGLETON = new ClientCommunicator();
+    public static ClientCommunicator SINGLETON = new ClientCommunicator();
 
     private ClientCommunicator() {
         try {
@@ -32,10 +32,19 @@ public class ClientCommunicator {
             mWebSocketClient = new WebSocketClient(new URI("ws://"+websockethost+":"+port), new Draft_6455()) {
 
                 @Override
-                public void onMessage(String message) {
-                    Response response=gson.fromJson(message, Response.class);
-                    //TODO: send it off to whatever callback method will handle the response
-                    //NOTE: might have to switch threads to do so, not sure.
+                public void onMessage(String message){
+                    try {
+                        Response response = gson.fromJson(message, Response.class);
+                        if (response.hasCommand()) {
+                            Command command = response.getCommand();
+                            command.execute();
+                        } else {
+                            System.out.println(response.getMessage());
+                        }
+                    } catch (Throwable throwable) {
+                        System.out.println(throwable.getMessage());
+                        throwable.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -53,16 +62,11 @@ public class ClientCommunicator {
                     //however we want to handle errors on the websocket (usually IO)
                 }
             };
-        }catch(URISyntaxException e){
-
+        } catch(URISyntaxException e){
+            
         }
     }
-
-    public static ClientCommunicator getSingleton() {
-        return SINGLETON;
-    }
-
-
+    
     public void send(Command command){
         String message=gson.toJson(command);
         mWebSocketClient.send(message);

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,18 +18,18 @@ public class Command {
     private List<String> parametersAsJSONStrings;
     private List<String> parameterTypeNames;
 
-    public Command(String facadeName, String methodName, List<Object> parameters) {
-        List<Object> compactedParameters = ListHelper.compactArray(parameters);
-        List<String> compactedJSONStringParameters = toJSONStringList(compactedParameters);
+    public Command(String facadeName, String methodName, Object... parameters) {
+        List<Object> commandParameters = new ArrayList(Arrays.asList(parameters));
+        List<String> compactedJSONStringParameters = toJSONStringList(commandParameters);
         this.methodName = methodName;
         this.facadeName = facadeName;
         this.parametersAsJSONStrings = compactedJSONStringParameters;
-        this.parameterTypeNames = parameterTypeNames(compactedParameters);
+        this.parameterTypeNames = parameterTypeNames(commandParameters);
     }
     
     //main use is putting the connid in on server side. 
     // DO NOT USE ON CLIENT
-    public Command(String jsonMessage,UUID connid){
+    public Command(String jsonMessage, UUID connid){
         Command temp=gson.fromJson(jsonMessage,Command.class);
         this.methodName=temp.methodName;
         this.facadeName=temp.facadeName;
@@ -39,31 +40,11 @@ public class Command {
     }
 
     public Object execute() throws Throwable {
-        Object result = null;
-        
-        try {
-            Class targetClass = Class.forName(facadeName);
-            Class[] parameterTypes = parameterTypes();
-            Object[] parameters = parameters(parameterTypes);
-            Method method = targetClass.getMethod(methodName, parameterTypes);
-            result = method.invoke(targetClass, parameters);
-            //System.err.println("got to system call");
-        } catch (NoSuchMethodException | SecurityException e) {
-            System.out.println("ERROR: Could not find the method " + methodName + ", or, there was a security error");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            System.err.println("Illegal accesss while trying to execute the method " + methodName);
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Illegal argument while trying to find the method " + methodName);
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            System.err.println("Illegal accesss while trying to execute the method " + methodName);
-            //e.printStackTrace();
-            throw e.getCause();
-        }
-
-        return result;
+        Class targetClass = Class.forName(facadeName);
+        Class[] parameterTypes = parameterTypes();
+        Object[] parameters = parameters(parameterTypes);
+        Method method = targetClass.getMethod(methodName, parameterTypes);
+        return method.invoke(targetClass, parameters);
     }
 
     private List<String> parameterTypeNames(List<Object> parameters) {
