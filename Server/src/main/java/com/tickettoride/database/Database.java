@@ -29,7 +29,7 @@ public class Database implements AutoCloseable {
         }
     }
 
-    static DatabaseParameters parameters;
+    protected DatabaseParameters parameters;
 
     private static Logger logger = LogManager.getLogger(Database.class.getName());
 
@@ -78,8 +78,7 @@ public class Database implements AutoCloseable {
     public Database() throws DatabaseException{
 
         Gson gson = new Gson();
-        ClassLoader cl = Database.class.getClassLoader();
-        ClassLoader cl2 = this.getClass().getClassLoader();
+        ClassLoader cl = this.getClass().getClassLoader();
         URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
         InputStream in = null;
         try {

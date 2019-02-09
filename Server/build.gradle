@@ -1,6 +1,9 @@
 plugins {
     id 'java'
+    id 'idea'
 }
+
+idea.module.outputDir file("src/main/resources")
 
 sourceCompatibility = 10
 
