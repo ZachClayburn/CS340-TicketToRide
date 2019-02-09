@@ -86,8 +86,7 @@ public class ServerCommunicator extends WebSocketServer {
         try {
             command.execute();
         } catch (Throwable throwable) {
-            System.out.println(throwable.getMessage());
-            throwable.printStackTrace();
+            logger.error(throwable);
         }
     }
     /**
