@@ -22,4 +22,9 @@
     <string name="game_id">Game ID: </string>
     <string name="num_players">Number of Players: </string>
     <string name="game_room">Have fun...</string>
+    <string name="login_error">Username or password is incorrect</string>
+    <string name="register_error">Username is already taken</string>
+    <string name="game_welcome">Welcome to the game...</string>
+    <string name="start_game_error">Need more than 1 player</string>
+    <string name="join_game_error">Game has max number of players</string>
 </resources>
