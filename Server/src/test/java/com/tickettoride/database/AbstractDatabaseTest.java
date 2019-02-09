@@ -12,8 +12,6 @@ public abstract class AbstractDatabaseTest {
     @Before
     public void setUp() throws Exception {
 
-        Database.setDatabaseAddress(testDatabasePath);
-
         try (var db = new Database()) {
             db.createDatabase();
         }
@@ -32,7 +30,7 @@ public abstract class AbstractDatabaseTest {
                 "END $$;";
 
         try (var connection = DriverManager.getConnection("jdbc:postgresql://" + this.testDatabasePath,
-                Database.databaseUserName, Database.databasePassword)) {
+                Database.parameters.getServerUserName(), Database.parameters.getServerPassword())) {
             connection.prepareStatement(sql).execute();
         }
     }

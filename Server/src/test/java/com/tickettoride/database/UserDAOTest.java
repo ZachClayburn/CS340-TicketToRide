@@ -31,14 +31,14 @@ public class UserDAOTest extends AbstractDatabaseTest{
         }
 
         try (var connection = DriverManager.getConnection("jdbc:postgresql://" + this.testDatabasePath,
-                Database.databaseUserName, Database.databasePassword)){
+                Database.parameters.getServerUserName(), Database.parameters.getServerPassword())){
             var results = connection.prepareStatement("select * from Users").executeQuery();
 
             assertTrue(results.next());
 
             assertEquals(testUser.getUsername().toString(), results.getString("username"));
             assertEquals(testUser.getPassword().toString(), results.getString("password"));
-            assertEquals(testUser.getUserID().toString(), results.getString("userID"));
+            assertEquals(testUser.getUserID().toString(),   results.getString("userID"));
 
             assertFalse(results.next());
 

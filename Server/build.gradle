@@ -8,6 +8,21 @@ repositories {
     mavenCentral()
 }
 
+task printClasspath {
+    doLast {
+        println sourceSets.main.runtimeClasspath.each{thing -> println thing}
+        println sourceSets.test.runtimeClasspath.each{thing -> println thing}
+        }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
     implementation 'com.google.code.gson:gson:2.8.5'
