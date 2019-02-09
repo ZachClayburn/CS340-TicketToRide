@@ -91,8 +91,7 @@ public class JoinGameActivity extends AppCompatActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ServerProxy.SINGLETON.joinGame(User.SINGLETON.getUserID(), game.getGameID());
-
+                    //join game method server facade
                 }
             });
         }
