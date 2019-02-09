@@ -4,6 +4,7 @@ public interface IGame {
     String gameID = "";
     String groupName = "";
     int numPlayer = 0;
+    int maxPlayer = 5;
 
     void setGameID(String gameID);
     String getGameID();

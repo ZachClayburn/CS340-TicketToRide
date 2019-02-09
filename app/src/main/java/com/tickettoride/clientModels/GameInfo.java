@@ -48,6 +48,7 @@ public class GameInfo implements IGame{ //used for when creating a new game
 
     public void addPlayer(Player player){
         players.add(player);
+        numPlayer += 1;
         lobbyUI.updateUI();
     }
 
