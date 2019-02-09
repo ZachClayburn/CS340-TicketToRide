@@ -6,8 +6,6 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 
-import com.tickettoride.R;
-
 public class GameRoom extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
