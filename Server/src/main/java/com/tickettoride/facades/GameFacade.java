@@ -18,28 +18,26 @@ import java.util.UUID;
 import command.Command;
 import command.Response;
 
-public class GameFacade {
+public class GameFacade extends BaseFacade{
     public void createGame(UUID connID, String groupName, int maxPlayers, String userID) throws Database.DatabaseException {
         String gameID = UUID.randomUUID().toString();
         Game game = new Game(gameID, groupName, 1, maxPlayers);
         try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
-            dao.addGame(game);
+            database.getGameDAO().addGame(game);
             User user = database.getUserDAO().getUser(userID);
             Player player = new Player(user, game, UUID.randomUUID());
+            database.getPlayerDAO().addNewPlayer(player);
         }
         try {
-            Command command = new Command("GameController", "createGame", game);
-            Response response = new Response(command); //TODO: fix this
-            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
+            Command command = new Command("GameController", "createGame");
+            sendResponseToOne(connID, command);
         } catch (Throwable t) {
-            Response response = new Response(t.getMessage());
-            ServerCommunicator.getINSTANCE().sendToOne(connID, response);
+            Command command = new Command("GameController", "errorCreate", t);
+            sendResponseToOne(connID, command);
         }
     }
 
     public void joinGame(UUID connID, String userID, String gameID) throws Database.DatabaseException {
-        // TODO: update game to include user as a player
         Game game = null;
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
@@ -47,15 +45,18 @@ public class GameFacade {
 
             game.setNumPlayer(game.getNumPlayer() + 1);
             dao.increasePlayerCount(gameID, game.getNumPlayer());
+
+            User user = database.getUserDAO().getUser(userID);
+            Player player = new Player(user, game, UUID.randomUUID());
+            database.getPlayerDAO().addNewPlayer(player);
         }
         try {
-            Command command = new Command("GameController", "joinGame", game);
-            Response response = new Response(command); //TODO: fix this
-            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
-            ServerCommunicator.getINSTANCE().sendToOne(connID,response);
+            Command command = new Command("GameController", "joinGame");
+            sendResponseToOne(connID, command);
+            sendResponseToMainLobby(command);
         } catch (Throwable t) {
-            Response response = new Response(t.getMessage());
-            ServerCommunicator.getINSTANCE().sendToOne(connID, response);
+            Command command = new Command("GameController", "errorJoin", t);
+            sendResponseToOne(connID, command);
         }
     }
 }

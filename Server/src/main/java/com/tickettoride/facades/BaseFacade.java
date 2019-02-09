@@ -17,4 +17,9 @@ public abstract class BaseFacade {
         Response response = new Response(command);
         ServerCommunicator.getINSTANCE().sendToRoom(roomID, response);
     }
+
+    protected void sendResponseToMainLobby(Command command) {
+        Response response = new Response(command);
+        ServerCommunicator.getINSTANCE().sendToMainLobby(response);
+    }
 }
