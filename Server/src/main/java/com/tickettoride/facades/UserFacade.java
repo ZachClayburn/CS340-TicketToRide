@@ -24,20 +24,19 @@ public class UserFacade extends BaseFacade {
     }
 
     public User find_user(Username username, Password password) throws Database.DatabaseException {
-        Database database = new Database();
-        UserDAO dao = database.getUserDAO();
-        User user = dao.getUser(username, password);
-        database.close();
-        return user;
+        try (Database database = new Database()) {
+            UserDAO dao = database.getUserDAO();
+            return dao.getUser(username, password);
+        }
     }
 
     public User create_user(Username username, Password password) throws Database.DatabaseException {
-        Database database = new Database();
-        UserDAO dao = database.getUserDAO();
-        User user = new User(username, password);
-        dao.addUser(user);
-        database.commit();
-        database.close();
-        return user;
+        try (Database database = new Database()) {
+            UserDAO dao = database.getUserDAO();
+            User user = new User(username, password);
+            dao.addUser(user);
+            database.commit();
+            return user;
+        }
     }
 }
