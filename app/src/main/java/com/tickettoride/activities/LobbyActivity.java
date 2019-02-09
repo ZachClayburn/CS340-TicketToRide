@@ -12,7 +12,7 @@ import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.GameInfo;
 
-public class LobbyActivity extends AppCompatActivity{
+public class LobbyActivity extends MyBaseActivity{
     private GameInfo gameInfo;
     private GameIndex index = GameIndex.SINGLETON;
     private TextView gameName;

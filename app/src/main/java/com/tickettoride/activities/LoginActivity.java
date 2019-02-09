@@ -20,7 +20,7 @@ import com.tickettoride.command.ServerProxy;
 import modelAttributes.Password;
 import modelAttributes.Username;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends MyBaseActivity {
     private Username user = new Username("");
     private Password pass = new Password("");
     private EditText username;

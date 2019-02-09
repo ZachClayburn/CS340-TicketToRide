@@ -25,8 +25,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
-public class JoinGameActivity extends AppCompatActivity {
+public class JoinGameActivity extends MyBaseActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;

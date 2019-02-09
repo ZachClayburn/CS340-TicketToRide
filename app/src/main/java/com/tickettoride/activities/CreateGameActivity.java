@@ -18,7 +18,7 @@ import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 
 
-public class CreateGameActivity extends AppCompatActivity {
+public class CreateGameActivity extends MyBaseActivity {
     private GameInfo info = new GameInfo();
     private EditText groupName;
     private Button two;
