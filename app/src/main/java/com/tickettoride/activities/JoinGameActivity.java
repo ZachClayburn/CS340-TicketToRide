@@ -16,6 +16,7 @@ import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.GameInfo;
 import com.tickettoride.clientModels.User;
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 import java.util.ArrayList;
 
@@ -85,7 +86,7 @@ public class JoinGameActivity extends AppCompatActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ServerProxy.SINGLETON.joinGame(User.SINGLETON.getUserID(), game.getGameID());
+                    GameFacadeProxy.SINGLETON.joinGame(User.SINGLETON.getUserID(), game.getGameID());
                     Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("gameID", game.getGameID());

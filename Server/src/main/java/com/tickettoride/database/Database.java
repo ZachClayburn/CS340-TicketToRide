@@ -36,6 +36,8 @@ public class Database implements AutoCloseable {
 
     protected SessionDAO sessionDAO;
     protected UserDAO userDAO;
+    protected GameDAO gameDAO;
+    protected PlayerDAO playerDAO;
 
     protected static void setDatabaseAddress(String databaseAddress) {
         Database.databaseAddress = databaseAddress;
@@ -88,6 +90,10 @@ public class Database implements AutoCloseable {
         DAOs.add(userDAO);
         sessionDAO = new SessionDAO(connection);
         DAOs.add(sessionDAO);
+        gameDAO = new GameDAO(connection);
+        DAOs.add(gameDAO);
+        playerDAO = new PlayerDAO(connection);
+        DAOs.add(playerDAO);
     }
 
     /**
@@ -115,6 +121,10 @@ public class Database implements AutoCloseable {
     public UserDAO getUserDAO() {
         return userDAO;
     }
+
+    public GameDAO getGameDAO() {return gameDAO;}
+
+    public PlayerDAO getPlayerDAO() {return playerDAO;}
 
     public void commit() throws DatabaseException {
         try {

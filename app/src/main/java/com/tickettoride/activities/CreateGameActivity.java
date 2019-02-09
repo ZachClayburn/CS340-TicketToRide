@@ -10,6 +10,9 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.clientModels.User;
+
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 
 public class CreateGameActivity extends AppCompatActivity {
@@ -52,28 +55,28 @@ public class CreateGameActivity extends AppCompatActivity {
         two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setNumPlayer(2);
+                info.setMaxPlayer(2);
                 setEnabled();
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setNumPlayer(3);
+                info.setMaxPlayer(3);
                 setEnabled();
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setNumPlayer(4);
+                info.setMaxPlayer(4);
                 setEnabled();
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setNumPlayer(5);
+                info.setMaxPlayer(5);
                 setEnabled();
             }
         });
@@ -83,6 +86,7 @@ public class CreateGameActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GameFacadeProxy.SINGLETON.createGame(info.getGroupName(), info.getMaxPlayer(), User.SINGLETON.getUserID());
                 //implement web socket call back when ready
                  /*Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
                  startActivity(intent);*/

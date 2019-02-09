@@ -42,6 +42,10 @@ public class GameInfo implements IGame{ //used for when creating a new game
 
     public int getMaxPlayer(){return maxPlayer;}
 
+    public void setMaxPlayer(int num) {
+        maxPlayer = num;
+    }
+
     public void addPlayer(Player player){
         players.add(player);
         lobbyUI.updateUI();
