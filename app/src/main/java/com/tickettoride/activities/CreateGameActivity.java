@@ -10,10 +10,6 @@ import android.widget.EditText;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameInfo;
-import com.tickettoride.command.ServerProxy;
-
-
-import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 
 public class CreateGameActivity extends AppCompatActivity {

@@ -2,6 +2,7 @@ package com.tickettoride.facades;
 
 import com.tickettoride.database.Database;
 import com.tickettoride.database.SessionDAO;
+import com.tickettoride.database.UserDAO;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 import java.util.UUID;
@@ -33,12 +34,12 @@ public class SessionFacade extends BaseFacade {
     }
 
     public Session create_session(User user) throws Database.DatabaseException {
-        Database database = new Database();
-        SessionDAO dao = database.getSessionDAO();
-        //FIXME Incorrect argument type
-        //Session session = dao.createSession(user);
-        database.commit();
-        database.close();
-        return null;
+        try (Database database = new Database()) {
+            Session session = new Session(user);
+            SessionDAO dao = database.getSessionDAO();
+            dao.createSession(session);
+            database.commit();
+            return session;
+        }
     }
 }

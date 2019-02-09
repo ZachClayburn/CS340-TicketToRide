@@ -17,6 +17,7 @@ public class Command {
     private String methodName;
     private List<String> parametersAsJSONStrings;
     private List<String> parameterTypeNames;
+    private final String GET_SINGLETON_METHOD_NAME = "getSingleton";
 
     public Command(String facadeName, String methodName, Object... parameters) {
         List<Object> commandParameters = new ArrayList(Arrays.asList(parameters));
@@ -41,10 +42,12 @@ public class Command {
 
     public Object execute() throws Throwable {
         Class targetClass = Class.forName(facadeName);
+        Method getSingletonMethod = targetClass.getMethod(GET_SINGLETON_METHOD_NAME);
+        Object singleton = getSingletonMethod.invoke(targetClass);
         Class[] parameterTypes = parameterTypes();
-        Object[] parameters = parameters(parameterTypes);
         Method method = targetClass.getMethod(methodName, parameterTypes);
-        return method.invoke(targetClass, parameters);
+        Object[] parameters = parameters(parameterTypes);
+        return method.invoke(singleton, parameters);
     }
 
     private List<String> parameterTypeNames(List<Object> parameters) {
