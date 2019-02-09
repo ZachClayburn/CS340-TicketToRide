@@ -97,8 +97,8 @@ public class Database implements AutoCloseable {
     }
 
     /**
-     * Closes the connection to the database, closing the conne
-     * @throws DatabaseException
+     * Closes the connection to the database, closing the connection
+     * @throws DatabaseException If an error occurs in the adding process
      */
     @Override
     public void close() throws DatabaseException {
