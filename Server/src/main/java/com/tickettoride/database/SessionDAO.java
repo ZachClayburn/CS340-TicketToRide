@@ -1,14 +1,17 @@
 package com.tickettoride.database;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.Session;
-import com.tickettoride.models.User;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.UUID;
 
 public class SessionDAO extends Database.DataAccessObject {
+
+    private static final Logger logger = LogManager.getLogger(SessionDAO.class.getName());
 
     private final String tableCreateString =
             // language=PostgreSQL

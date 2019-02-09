@@ -2,6 +2,9 @@ package com.tickettoride.facades;
 
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.models.Game;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.tickettoride.models.User;
 
 import java.util.ArrayList;
@@ -12,6 +15,9 @@ import java.util.UUID;
 import command.Response;
 
 public class GameFacade {
+
+    private static final Logger logger = LogManager.getLogger(GameFacade.class.getName());
+
     public void createGame(String name, int numPlayers) {
         // TODO: Database stuff to make game, retrieve user info
         User creator = null;

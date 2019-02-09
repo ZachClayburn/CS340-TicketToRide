@@ -1,5 +1,8 @@
 package com.tickettoride.database;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,8 +19,11 @@ public class Database implements AutoCloseable {
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            System.exit(1);
         }
     }
+
+    private static Logger logger = LogManager.getLogger(Database.class.getName());
 
     private static String databaseAddress = "localhost:5432/tickettoride";
 
@@ -59,6 +65,7 @@ public class Database implements AutoCloseable {
             connection.commit();
 
         } catch (SQLException e) {
+            logger.catching(e);
             throw new DatabaseException("Could not create the database!", e);
         }
 
@@ -74,6 +81,7 @@ public class Database implements AutoCloseable {
             connection = DriverManager.getConnection(url, databaseUserName, databasePassword);
             connection.setAutoCommit(false);
         } catch (SQLException e) {
+            logger.catching(e);
             throw new DatabaseException(e);
         }
         userDAO = new UserDAO(connection);
@@ -95,6 +103,7 @@ public class Database implements AutoCloseable {
                 DAOs.forEach(dataAccessObject -> dataAccessObject.connection = null);
             }
         } catch (SQLException e) {
+            logger.catching(e);
             throw new DatabaseException(e);
         }
     }
@@ -111,6 +120,7 @@ public class Database implements AutoCloseable {
         try {
             connection.commit();
         } catch (SQLException e) {
+            logger.catching(e);
             throw new DatabaseException("Can not commit transaction!", e);
         }
     }
