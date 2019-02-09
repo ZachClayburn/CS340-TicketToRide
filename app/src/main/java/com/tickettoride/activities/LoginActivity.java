@@ -9,17 +9,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.tickettoride.R;
-import com.tickettoride.command.ClientCommunicator;
-import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.facadeProxies.UserFacadeProxy;
-import com.tickettoride.command.ServerProxy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import command.Command;
 import modelAttributes.Password;
 import modelAttributes.Username;
 
@@ -84,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServerProxy.SINGLETON.login(user, pass);
+                SessionFacadeProxy.SINGLETON.create(user, pass);
                 /*
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
