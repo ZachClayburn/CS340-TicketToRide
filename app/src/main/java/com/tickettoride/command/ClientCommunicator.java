@@ -3,15 +3,11 @@ package com.tickettoride.command;
 import com.google.gson.Gson;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
-
-//import java.io.IOException;
-//import java.io.InputStreamReader;
-//import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import android.util.Log;
 
 import command.Command;
 import command.Response;
@@ -42,8 +38,7 @@ public class ClientCommunicator {
                             System.out.println(response.getMessage());
                         }
                     } catch (Throwable throwable) {
-                        System.out.println(throwable.getMessage());
-                        throwable.printStackTrace();
+                        Log.e(throwable.getStackTrace().toString(), throwable.getMessage());
                     }
                 }
 

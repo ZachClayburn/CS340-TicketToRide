@@ -1,25 +1,24 @@
 package com.tickettoride.facades;
-
-import com.tickettoride.command.ServerCommunicator;
-import com.tickettoride.database.Database;
-import com.tickettoride.database.GameDAO;
 import com.tickettoride.models.Game;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
-import command.Command;
-import command.Response;
+public class GameFacade {
 
-public class GameFacade extends BaseFacade{
-    public void createGame(UUID connID, String groupName, int maxPlayers, String userID) throws Database.DatabaseException {
+    private static final Logger logger = LogManager.getLogger(GameFacade.class.getName());
+    private static GameFacade SINGLETON = new GameFacade();
+    public static GameFacade getSingleton() {
+        return SINGLETON;
+    }
+    private GameFacade() {}
+
+    public void createGame(String name, int numPlayers) {
+        // TODO: Database stuff to make game, retrieve user info
+        User creator = null;
         String gameID = UUID.randomUUID().toString();
         Game game = new Game(gameID, groupName, 1, maxPlayers);
         Player player = null;

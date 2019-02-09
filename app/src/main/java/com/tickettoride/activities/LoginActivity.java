@@ -81,12 +81,9 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServerProxy.SINGLETON.login(user, pass);
-
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
-
             }
         });
         register = findViewById(R.id.register);
