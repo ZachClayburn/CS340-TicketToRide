@@ -89,9 +89,8 @@ public class CreateGameActivity extends AppCompatActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ServerProxy.SINGLETON.createGame(info.getGroupName(), info.getNumPlayer());
                 try {
-                    //SessionFacadeProxy.SINGLETON.create(user, pass);
+                    //create game facade proxy
                 } catch (Throwable t) { }
 
             }
