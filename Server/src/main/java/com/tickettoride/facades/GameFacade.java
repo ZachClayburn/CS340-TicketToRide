@@ -23,28 +23,28 @@ public class GameFacade {
         User creator = null;
         String gameID = UUID.randomUUID().toString();
         Game game = new Game(gameID, name, numPlayers, creator);
-        try {
-            Response response = new Response(game);
-            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
-        } catch (Throwable t) {
-            Response response = new Response(t);
-            //TODO: where to get connID from
-            ServerCommunicator.getINSTANCE().sendToOne(null, response);
-        }
+//        try {
+//            Response response = new Response(game);
+//            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
+//        } catch (Throwable t) {
+//            Response response = new Response(t);
+//            //TODO: where to get connID from
+//            ServerCommunicator.getINSTANCE().sendToOne(null, response);
+//        }
     }
 
     public void joinGame(String userID, String gameID){
         // TODO: Retrieve Game info from database, update game to include user as a player
         Game game = null;
         game.setNumPlayer(game.getNumPlayer() + 1);
-        try {
-            Response response = new Response(game);
-            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
-            ServerCommunicator.getINSTANCE().sendToOne(null,response);
-        } catch (Throwable t) {
-            Response response = new Response(t);
-            //TODO: where to get connID from
-            ServerCommunicator.getINSTANCE().sendToOne(null, response);
-        }
+//        try {
+//            Response response = new Response(game);
+//            ServerCommunicator.getINSTANCE().sendToMainLobby(response);
+//            ServerCommunicator.getINSTANCE().sendToOne(null,response);
+//        } catch (Throwable t) {
+//            Response response = new Response(t);
+//            //TODO: where to get connID from
+//            ServerCommunicator.getINSTANCE().sendToOne(null, response);
+//        }
     }
 }
