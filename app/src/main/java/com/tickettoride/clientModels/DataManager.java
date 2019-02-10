@@ -9,9 +9,7 @@ public class DataManager {
     private GameInfo gameInfo;
     
     
-    private DataManager(){
-        session = Session.SINGLETON;
-    }
+    private DataManager(){ }
 
     public static DataManager getSINGLETON() {
         return SINGLETON;
