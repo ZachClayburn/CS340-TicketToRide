@@ -26,15 +26,12 @@ public class SessionDAO extends Database.DataAccessObject {
         super(connection);
     }
 
-    public void createSession(Session session) throws DatabaseException {
-        String sql = "INSERT into Sessions (userID, sessionID) VALUES (?, ?)";
+    public void createSession(Session session) throws SQLException {
+        String sql = "INSERT INTO Sessions (userID, sessionID) VALUES (?, ?)";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, session.getUser().getUserID().toString());
             statement.setString(2, session.getSessionID().toString());
-            Boolean result = statement.execute();
-            if (!result) throw new DatabaseException("Could not add new session to Database!");
-        } catch (SQLException e) {
-            throw new DatabaseException("Could not add new session to Database!", e);
+            statement.executeUpdate();
         }
     }
 

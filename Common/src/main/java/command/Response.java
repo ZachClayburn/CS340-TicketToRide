@@ -3,8 +3,6 @@ package command;
 import com.google.gson.Gson;
 
 public class Response {
-    private Gson gson;
-
     private String jsonCommand = null;
     private String message = null;
 
@@ -13,10 +11,12 @@ public class Response {
     }
 
     public Response(Command command) {
+        Gson gson = new Gson();
         this.jsonCommand = gson.toJson(command);
     }
 
     public Command getCommand() {
+        Gson gson = new Gson();
         return gson.fromJson(jsonCommand, Command.class);
     }
 
