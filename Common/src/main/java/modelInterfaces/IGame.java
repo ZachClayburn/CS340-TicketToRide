@@ -1,13 +1,15 @@
 package modelInterfaces;
 
+import java.util.UUID;
+
 public interface IGame {
-    String gameID = "";
+    UUID gameID = null;
     String groupName = "";
     int numPlayer = 0;
     int maxPlayer = 5;
 
-    void setGameID(String gameID);
-    String getGameID();
+    void setGameID(UUID gameID);
+    UUID getGameID();
     void setGroupName(String groupName);
 
     String getGroupName();

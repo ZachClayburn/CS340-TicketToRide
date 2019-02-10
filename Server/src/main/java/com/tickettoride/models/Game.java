@@ -1,17 +1,18 @@
 package com.tickettoride.models;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import modelInterfaces.IGame;
 
 public class Game implements IGame {
-    private String gameID = "";
+    private UUID gameID = null;
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;
     private ArrayList<User> players = new ArrayList<>();
 
-    public Game(String gameID, String groupName, int numPlayer, int maxPlayer, User creator) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, User creator) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.numPlayer = numPlayer;
@@ -19,18 +20,18 @@ public class Game implements IGame {
         players.add(creator);
     }
 
-    public Game(String gameID, String groupName, int numPlayer, int maxPlayer) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.numPlayer = numPlayer;
         this.maxPlayer = maxPlayer;
     }
 
-    public void setGameID(String gameID) {
+    public void setGameID(UUID gameID) {
         this.gameID = gameID;
     }
 
-    public String getGameID() {
+    public UUID getGameID() {
         return gameID;
     }
 

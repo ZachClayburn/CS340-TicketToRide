@@ -27,8 +27,8 @@ public class GameIndex {
         return gameIndex;
     }
 
-    public void addGames(ArrayList<GameInfo> newGames) {
-        gameIndex.addAll(newGames);
+    public void addGame(GameInfo newGame) {
+        gameIndex.add(newGame);
         indexUI.updateUI();
     }
 

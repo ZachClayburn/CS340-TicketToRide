@@ -6,7 +6,7 @@ public class DataManager {
     private Session session;
     private Player player;
     private GameIndex gameIndex;
-    private GameInfo gameInfo;
+    private GameInfo curGame;
     
     
     private DataManager(){
@@ -22,11 +22,11 @@ public class DataManager {
     }
 
     public GameInfo getGameInfo() {
-        return gameInfo;
+        return curGame;
     }
 
     public Player getPlayer() {
-        return player;
+        return curPlayer;
     }
 
     public Session getSession() {
@@ -38,11 +38,11 @@ public class DataManager {
     }
 
     public void setGameInfo(GameInfo gameInfo) {
-        this.gameInfo = gameInfo;
+        this.curGame = gameInfo;
     }
 
     public void setPlayer(Player player) {
-        this.player = player;
+        this.curPlayer = player;
     }
 
     public void setSession(Session session) {

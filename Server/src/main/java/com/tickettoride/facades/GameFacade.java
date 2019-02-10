@@ -14,28 +14,31 @@ public class GameFacade extends BaseFacade {
     public static GameFacade getSingleton() { return SINGLETON; }
     private GameFacade() {}
 
-    public void createGame(UUID connID, String groupName, int maxPlayers, String userID) throws Database.DatabaseException {
-        // TODO: Database stuff to make game, retrieve user info
+    public void create(UUID connID, String groupName, int maxPlayers, String sessionID) throws Database.DatabaseException {
         User creator = null;
-        String gameID = UUID.randomUUID().toString();
+        UUID gameID = UUID.randomUUID();
         Game game = new Game(gameID, groupName, 1, maxPlayers);
         Player player = null;
         try (Database database = new Database()) {
             database.getGameDAO().addGame(game);
-            User user = database.getUserDAO().getUser(userID);
+            User user = database.getUserDAO().getUser(sessionID); // TODO: Get user info from sessionID
             player = new Player(user, game, UUID.randomUUID());
             database.getPlayerDAO().addNewPlayer(player);
         }
         try {
-            Command command = new Command("GameController", "createGame", player, game);
+            Command command = new Command(
+                    "GameController", "create",
+                    player.getPlayerID(), player.getUser().getUserID(),
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
             sendResponseToOne(connID, command);
+            sendResponseToMainLobby(command);
         } catch (Throwable t) {
             Command command = new Command("GameController", "errorCreate", t);
             sendResponseToOne(connID, command);
         }
     }
 
-    public void joinGame(UUID connID, String userID, String gameID) throws Database.DatabaseException {
+    public void join(UUID connID, String sessionID, String gameID) throws Database.DatabaseException {
         Game game = null;
         Player player = null;
         try (Database database = new Database()) {
@@ -45,12 +48,15 @@ public class GameFacade extends BaseFacade {
             game.setNumPlayer(game.getNumPlayer() + 1);
             dao.increasePlayerCount(gameID, game.getNumPlayer());
 
-            User user = database.getUserDAO().getUser(userID);
+            User user = database.getUserDAO().getUser(sessionID); // TODO: Retrieve userID from sessionID info
             player = new Player(user, game, UUID.randomUUID());
             database.getPlayerDAO().addNewPlayer(player);
         }
         try {
-            Command command = new Command("GameController", "joinGame", player, game);
+            Command command = new Command(
+                    "GameController", "join",
+                    player.getPlayerID(), player.getUser().getUserID(),
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
             sendResponseToOne(connID, command);
             sendResponseToMainLobby(command);
         } catch (Throwable t) {
