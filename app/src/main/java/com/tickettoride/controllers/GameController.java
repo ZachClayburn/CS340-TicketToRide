@@ -19,14 +19,15 @@ public class GameController extends BaseController {
     private GameController() {}
 
     public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, int numPlayer, int maxPlayer) {
-        CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
-        Player player = new Player(gameID, sessionID, playerID);
-        GameInfo game = new GameInfo(gameID, groupName, numPlayer, maxPlayer, player);
-        DataManager.SINGLETON.setGameInfo(game);
-        DataManager.SINGLETON.setPlayer(player);
-        DataManager.SINGLETON.getGameIndex().addGame(game);
-        createGameActivity.moveToLobbyCreate();
-
+        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+            CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
+            Player player = new Player(gameID, sessionID, playerID);
+            GameInfo game = new GameInfo(gameID, groupName, numPlayer, maxPlayer, player);
+            DataManager.SINGLETON.setGameInfo(game);
+            DataManager.SINGLETON.setPlayer(player);
+            DataManager.SINGLETON.getGameIndex().addGame(game);
+            createGameActivity.moveToLobbyCreate();
+        }
         LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
         lobbyActivity.updateUI();
     }
