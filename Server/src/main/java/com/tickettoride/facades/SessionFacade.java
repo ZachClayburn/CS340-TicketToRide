@@ -24,7 +24,7 @@ public class SessionFacade extends BaseFacade {
         try {
             User user = UserFacade.getSingleon().find_user(username, password);
             Session session = create_session(user);
-            Command command = new Command(CONTROLLER_NAME, "create", session);
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID());
             sendResponseToOne(roomID, command);
         } catch (Throwable throwable) {
             Command command = new Command(CONTROLLER_NAME, "error", throwable);

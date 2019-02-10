@@ -3,6 +3,7 @@ package com.tickettoride.facades;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.database.UserDAO;
+import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 import java.util.UUID;
 import command.Command;
@@ -14,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 public class UserFacade extends BaseFacade {
     private static UserFacade SINGLETON = new UserFacade();
-    private static String CONTROLLER_NAME = "UserController";
+    private static String CONTROLLER_NAME = "SessionController";
     public static UserFacade getSingleon() {
         return SINGLETON;
     }
@@ -23,7 +24,8 @@ public class UserFacade extends BaseFacade {
     public void create(UUID roomID, Username username, Password password) {
         try {
             User user = create_user(username , password);
-            Command command = new Command(CONTROLLER_NAME, "create", user);
+            Session session = SessionFacade.getSingleton().create_session(user);
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID());
             sendResponseToOne(roomID, command);
         } catch (Throwable t) {
             Command command = new Command(CONTROLLER_NAME, "error", t);
