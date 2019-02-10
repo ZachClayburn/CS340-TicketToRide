@@ -80,22 +80,16 @@ public class Database implements AutoCloseable {
     public Database() throws DatabaseException{
 
         Gson gson = new Gson();
-        ClassLoader cl = this.getClass().getClassLoader();
         URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
         InputStream in = null;
         try {
             in = fileurl.openStream();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        Reader reader = null;
-        if (in != null) {
-            reader = new InputStreamReader(in);
-        } else {
-            System.err.println("No databaseParams.json present!");
             System.exit(1);
         }
+
+        Reader reader = new InputStreamReader(in);
 
         parameters =  gson.fromJson(reader, DatabaseParameters.class);
 
