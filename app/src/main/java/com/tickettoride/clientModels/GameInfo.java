@@ -1,9 +1,5 @@
 package com.tickettoride.clientModels;
 
-import android.content.Context;
-
-import com.tickettoride.activities.LobbyActivity;
-
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -15,7 +11,6 @@ public class GameInfo implements IGame{ //used for when creating a new game
     private int maxPlayer = 5;
     private int numPlayer = 1;
     private ArrayList<Player> players = new ArrayList();
-    private LobbyActivity lobbyUI = new LobbyActivity();
 
     public GameInfo(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player) {
         this.gameID = gameID;
@@ -60,10 +55,6 @@ public class GameInfo implements IGame{ //used for when creating a new game
     public void addPlayer(Player player){
         players.add(player);
         numPlayer += 1;
-        lobbyUI.updateUI();
     }
 
-    public void setLobbyUI(Context c){
-        lobbyUI = (LobbyActivity)c;
-    }
 }

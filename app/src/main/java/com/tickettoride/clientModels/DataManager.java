@@ -4,7 +4,7 @@ public class DataManager {
     
     public static DataManager SINGLETON=new DataManager();
     private Session session;
-    private Player curPlayer;
+    private Player curPlayer = null;
     private GameIndex gameIndex;
     private GameInfo curGame;
     

@@ -28,7 +28,7 @@ public class GameFacade extends BaseFacade {
         try {
             Command command = new Command(
                     "GameController", "create",
-                    player.getPlayerID(), player.getUser().getUserID(),
+                    player.getPlayerID(), sessionID,
                     game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
             sendResponseToOne(connID, command);
             sendResponseToMainLobby(command);
@@ -55,7 +55,7 @@ public class GameFacade extends BaseFacade {
         try {
             Command command = new Command(
                     "GameController", "join",
-                    player.getPlayerID(), player.getUser().getUserID(), game.getGameID());
+                    player.getPlayerID(), sessionID, game.getGameID());
             sendResponseToOne(connID, command);
             sendResponseToMainLobby(command);
         } catch (Throwable t) {

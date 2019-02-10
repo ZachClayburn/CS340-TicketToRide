@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public class Player {
     private UUID gameID;
-    private UUID sessionID;
+    private String sessionID;
     private UUID playerID;
 
-    public Player(UUID gameID, UUID sessionID, UUID playerID) {
+    public Player(UUID gameID, String sessionID, UUID playerID) {
         this.gameID = gameID;
         this.sessionID = sessionID;
         this.playerID = playerID;
@@ -21,11 +21,11 @@ public class Player {
         this.gameID = gameID;
     }
 
-    public UUID getSessionID() {
+    public String getSessionID() {
         return sessionID;
     }
 
-    public void setSessionID(UUID sessionID) {
+    public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
     }
 
