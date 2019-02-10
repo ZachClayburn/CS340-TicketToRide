@@ -5,6 +5,7 @@ import com.tickettoride.command.ClientCommunicator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import command.Command;
 
@@ -23,9 +24,9 @@ public class GameFacadeProxy {
         } catch(Throwable t){}
     }
 
-    public void join(String userID, String gameID){
+    public void join(String sessionID, String gameID){
         try {
-            List<Object> parameters = new ArrayList(Arrays.asList(userID, gameID));
+            List<Object> parameters = new ArrayList(Arrays.asList(sessionID, gameID));
             Command command = new Command("GameFacade", "join", parameters);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t) {}

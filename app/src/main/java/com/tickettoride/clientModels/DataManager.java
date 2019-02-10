@@ -4,14 +4,12 @@ public class DataManager {
     
     public static DataManager SINGLETON=new DataManager();
     private Session session;
-    private Player player;
+    private Player curPlayer;
     private GameIndex gameIndex;
     private GameInfo curGame;
     
     
-    private DataManager(){
-        session = Session.SINGLETON;
-    }
+    private DataManager(){}
 
     public static DataManager getSINGLETON() {
         return SINGLETON;

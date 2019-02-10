@@ -57,7 +57,7 @@ public class LobbyActivity extends MyBaseActivity{
         numPlayers.setText("Number of Players: " + gameInfo.getNumPlayer() + "/" + gameInfo.getMaxPlayer());
     }
     public void moveToGame() {
-        Intent intent = new Intent(LobbyActivity.this, GameRoom.class);
+        Intent intent = new Intent(LobbyActivity.this, GameRoomActivity.class);
         startActivity(intent);
     }
     public void startGameError() {
