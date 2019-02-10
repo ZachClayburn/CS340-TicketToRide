@@ -7,6 +7,8 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import android.os.AsyncTask;
 import android.util.Log;
 
 import command.Command;
@@ -16,7 +18,6 @@ public class ClientCommunicator {
 
     private WebSocketClient mWebSocketClient;
     protected static Gson gson = new Gson();
-    //TODO: change the websockethost to the actual host IP (probably 10.0.0.2 if I remember right)
     private String websockethost = "10.0.2.2";
     private String port = "80";
 
@@ -44,28 +45,40 @@ public class ClientCommunicator {
 
                 @Override
                 public void onOpen(ServerHandshake handshake) {
-                    //whatever we want to do. log opening, etc
+                    Log.i("WebSocket", "Handshake Successful");
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    //whatever we want to do. log closing, try to reconnect, etc
+                    Log.i("WebSocket", "Close");
                 }
 
                 @Override
                 public void onError(Exception ex) {
-                    //however we want to handle errors on the websocket (usually IO)
+                    Log.e("WebSocket", "Error");
+                    Log.e("WebSocket", ex.getMessage());
+                    Log.e("WebSocket", ex.getStackTrace().toString());
                 }
             };
+
+            mWebSocketClient.connect();
         } catch(URISyntaxException e){
             
         }
     }
     
     public void send(Command command){
-        String message=gson.toJson(command);
-        mWebSocketClient.send(message);
-        Log.d(command.toString(), "Sending Command to Server");
+        try {
+            Log.i("ClientCommunicator", "Send");
+            String message=gson.toJson(command);
+            mWebSocketClient.send(message);
+            Log.i("ClientCommunicator", "Sent Command to Server");
+        } catch (Exception t) {
+            Log.e("ClientCommunicator", t.getMessage());
+            Log.e("ClientCommunicator", t.getStackTrace().toString());
+            throw t;
+        }
+
     }
 
     //    public Response send(Command command) throws Throwable {

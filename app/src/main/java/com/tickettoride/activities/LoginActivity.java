@@ -88,7 +88,7 @@ public class LoginActivity extends MyBaseActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("")
+                Log.i("onClick", "Caught in Register Click Event");
                 try {
                     UserFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
