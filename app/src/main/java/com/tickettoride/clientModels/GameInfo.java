@@ -17,9 +17,15 @@ public class GameInfo implements IGame{ //used for when creating a new game
     private ArrayList<Player> players = new ArrayList();
     private LobbyActivity lobbyUI = new LobbyActivity();
 
-    public GameInfo(UUID gameID, String groupName, int numPlayer, int maxPlayer) {
-
+    public GameInfo(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player) {
+        this.gameID = gameID;
+        this.groupName = groupName;
+        this.numPlayer = numPlayer;
+        this.maxPlayer = maxPlayer;
+        players.add(player);
     }
+
+    public GameInfo(){}
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;

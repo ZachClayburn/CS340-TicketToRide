@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
@@ -87,7 +88,7 @@ public class CreateGameActivity extends MyBaseActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer(), DataManager.SINGLETON.getUser().getUserID());
+                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer(), DataManager.SINGLETON.getSession().getSessionId());
                 } catch (Throwable t) { }
 
             }
@@ -106,5 +107,9 @@ public class CreateGameActivity extends MyBaseActivity {
         else {
             createGame.setEnabled(false);
         }
+    }
+
+    public void createError() {
+        Toast.makeText(this, R.string.create_game_error, Toast.LENGTH_SHORT).show();
     }
 }
