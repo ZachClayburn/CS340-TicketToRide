@@ -1,8 +1,14 @@
 package com.tickettoride.database;
 
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Paths;
 import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,12 +29,9 @@ public class Database implements AutoCloseable {
         }
     }
 
+    protected DatabaseParameters parameters;
+
     private static Logger logger = LogManager.getLogger(Database.class.getName());
-
-    private static String databaseAddress = "localhost:5432/tickettoride";
-
-    protected static String databaseUserName = "ttrserver";
-    protected static String databasePassword = "SecretPassword";
 
     protected Connection connection;
 
@@ -38,10 +41,6 @@ public class Database implements AutoCloseable {
     protected UserDAO userDAO;
     protected GameDAO gameDAO;
     protected PlayerDAO playerDAO;
-
-    protected static void setDatabaseAddress(String databaseAddress) {
-        Database.databaseAddress = databaseAddress;
-    }
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
@@ -78,14 +77,39 @@ public class Database implements AutoCloseable {
      */
     public Database() throws DatabaseException{
 
-        final String url = "jdbc:postgresql://" + databaseAddress;
+        Gson gson = new Gson();
+        ClassLoader cl = this.getClass().getClassLoader();
+        URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
+        InputStream in = null;
         try {
-            connection = DriverManager.getConnection(url, databaseUserName, databasePassword);
+            in = fileurl.openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Reader reader = null;
+        if (in != null) {
+            reader = new InputStreamReader(in);
+        } else {
+            System.err.println("No databaseParams.json present!");
+            System.exit(1);
+        }
+
+        parameters =  gson.fromJson(reader, DatabaseParameters.class);
+
+
+        final String url = "jdbc:postgresql://" + parameters.getServerAddress();
+
+        try {
+            connection = DriverManager.getConnection(url,
+                    parameters.getServerUserName(), parameters.getServerPassword());
             connection.setAutoCommit(false);
+
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException(e);
         }
+
         userDAO = new UserDAO(connection);
         DAOs.add(userDAO);
         sessionDAO = new SessionDAO(connection);
@@ -97,8 +121,8 @@ public class Database implements AutoCloseable {
     }
 
     /**
-     * Closes the connection to the database, closing the conne
-     * @throws DatabaseException
+     * Closes the connection to the database, closing the connection
+     * @throws DatabaseException If an error occurs in the adding process
      */
     @Override
     public void close() throws DatabaseException {
@@ -144,6 +168,34 @@ public class Database implements AutoCloseable {
         }
 
         abstract String getTableCreateString();
+    }
+
+    static class DatabaseParameters {
+
+        private String URL;
+        private Integer port;
+        private String databaseName;
+        private String username;
+        private String password;
+
+        public String getServerAddress(){
+            return URL + ":" + port + "/" + databaseName;
+        }
+
+        public String getServerUserName() {
+            return username;
+        }
+
+        public String getServerPassword() {
+            return password;
+        }
+
+    }
+
+    public static void main(String[] args) throws DatabaseException {
+        try (var db = new Database()) {
+            db.createDatabase();
+        }
     }
 
     /**

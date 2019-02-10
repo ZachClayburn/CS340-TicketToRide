@@ -1,11 +1,29 @@
 plugins {
     id 'java'
+    id 'idea'
 }
+
+idea.module.outputDir file("src/main/resources")
 
 sourceCompatibility = 10
 
 repositories {
     mavenCentral()
+}
+
+task printClasspath {
+    doLast {
+        println sourceSets.main.runtimeClasspath.each{thing -> println thing}
+        println sourceSets.test.runtimeClasspath.each{thing -> println thing}
+        }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
 }
 
 dependencies {

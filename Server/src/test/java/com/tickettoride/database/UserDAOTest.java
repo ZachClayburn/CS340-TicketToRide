@@ -3,7 +3,9 @@ package com.tickettoride.database;
 import com.tickettoride.models.User;
 import modelAttributes.Password;
 import modelAttributes.Username;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.postgresql.util.PSQLException;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -12,32 +14,38 @@ import static org.junit.Assert.*;
 
 public class UserDAOTest extends AbstractDatabaseTest{
 
+    private final Username username = new Username("Username");
+    private final Password password = new Password("Password");
+    private final User testUser = new User(username, password);
+
+
     @Test
     public void UserAddedToDatabase_UserExistsInDatabase() throws Database.DatabaseException, SQLException {
 
-        final String userName = "UName";
-        final String passWord = "PWord";
-        final var testUser = new User(new Username(userName), new Password(passWord));
+        String address = "jdbc:postgresql://";
+        String username;
+        String password;
 
         try (var db = new Database()) {
 
-            db.getUserDAO().addUser(testUser);
+            address += db.parameters.getServerAddress();
+            username = db.parameters.getServerUserName();
+            password = db.parameters.getServerPassword();
 
-            var con = db.connection;
+            db.getUserDAO().addUser(testUser);
 
             db.commit();
 
         }
 
-        try (var connection = DriverManager.getConnection("jdbc:postgresql://" + this.testDatabasePath,
-                Database.databaseUserName, Database.databasePassword)){
+        try (var connection = DriverManager.getConnection(address, username, password)){
             var results = connection.prepareStatement("select * from Users").executeQuery();
 
             assertTrue(results.next());
 
             assertEquals(testUser.getUsername().toString(), results.getString("username"));
             assertEquals(testUser.getPassword().toString(), results.getString("password"));
-            assertEquals(testUser.getUserID().toString(), results.getString("userID"));
+            assertEquals(testUser.getUserID().toString(),   results.getString("userID"));
 
             assertFalse(results.next());
 
@@ -47,9 +55,6 @@ public class UserDAOTest extends AbstractDatabaseTest{
     @Test
     public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws Database.DatabaseException {
 
-        final var username = new Username("Username");
-        final var password = new Password("Password");
-        final var testUser = new User(username, password);
 
         try (var db = new Database()) {
 
@@ -64,6 +69,34 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
             assertEquals(testUser, resultUser);
         }
+    }
+
+    @Test
+    public void AttemptedToAddDuplicateUserToDatabase_ThrowsProperException() throws Throwable {
+
+        boolean didFail = false;
+
+        try (var db = new Database()){
+
+            db.getUserDAO().addUser(testUser);
+            db.commit();
+
+        } catch (Database.DatabaseException e) {
+            fail(e.getMessage());
+        }
+
+        try (var db = new Database()){
+            db.getUserDAO().addUser(testUser);
+        } catch (Database.DatabaseException e) {
+            var cause = e.getCause();
+            if (cause instanceof PSQLException)
+                didFail = true;
+            else
+                throw cause;
+        }
+
+        assertTrue(didFail);
+
     }
 
 }
