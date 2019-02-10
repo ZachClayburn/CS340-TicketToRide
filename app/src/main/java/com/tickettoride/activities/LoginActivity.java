@@ -1,7 +1,6 @@
 package com.tickettoride.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,11 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.command.ClientCommunicator;
-import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.facadeProxies.UserFacadeProxy;
-import com.tickettoride.command.ServerProxy;
 
 import modelAttributes.Password;
 import modelAttributes.Username;

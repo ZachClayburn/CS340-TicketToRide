@@ -117,9 +117,7 @@ public class ServerCommunicator extends WebSocketServer {
     //send response to a single connection (login, register, reconnect, etc)
     public void sendToOne(UUID connid, Response response){
         WebSocket conn=connectionManager.getConnection(connid);
-        if(conn == null){
-            return;
-        }
+        if (conn == null) { return; }
         sendToOne(conn,response);
     }
     
