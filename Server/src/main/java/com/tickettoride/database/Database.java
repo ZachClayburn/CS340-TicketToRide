@@ -49,6 +49,8 @@ public class Database implements AutoCloseable {
      */
     public void createDatabase() throws DatabaseException {
 
+        System.out.println("Creating database " + parameters.databaseName);
+
         try (var statement = connection.createStatement()){
 
             //Language=PostgreSQL

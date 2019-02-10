@@ -3,7 +3,13 @@ plugins {
     id 'idea'
 }
 
-idea.module.outputDir file("src/main/resources")
+idea.module.outputDir file("build/resources/main")
+
+idea {
+    module {
+
+    }
+}
 
 sourceCompatibility = 10
 
@@ -13,8 +19,7 @@ repositories {
 
 task printClasspath {
     doLast {
-        println sourceSets.main.runtimeClasspath.each{thing -> println thing}
-        println sourceSets.test.runtimeClasspath.each{thing -> println thing}
+        println idea.module.resourceDirs
         }
 }
 
