@@ -1,6 +1,7 @@
 package com.tickettoride.command;
 
 import com.google.gson.Gson;
+import com.tickettoride.database.Database;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -405,6 +406,11 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static void main(String[] args) {
         try {
+            try (Database database = new Database()) {
+                database.resetDatabase();
+            } catch (Throwable t) {
+                logger.catching(t);
+            }
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {}
     }

@@ -47,7 +47,7 @@ public class Database implements AutoCloseable {
      * @throws DatabaseException If there is an error in creating the database and tables, or if the
      * database already exists
      */
-    public void createDatabase() throws DatabaseException {
+    public void resetDatabase() throws DatabaseException {
 
         try (var statement = connection.createStatement()){
 
@@ -194,7 +194,7 @@ public class Database implements AutoCloseable {
 
     public static void main(String[] args) throws DatabaseException {
         try (var db = new Database()) {
-            db.createDatabase();
+            db.resetDatabase();
         }
     }
 

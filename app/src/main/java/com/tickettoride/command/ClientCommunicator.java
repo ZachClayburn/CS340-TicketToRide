@@ -65,6 +65,7 @@ public class ClientCommunicator {
     public void send(Command command){
         String message=gson.toJson(command);
         mWebSocketClient.send(message);
+        Log.d(command.toString(), "Sending Command to Server");
     }
 
     //    public Response send(Command command) throws Throwable {

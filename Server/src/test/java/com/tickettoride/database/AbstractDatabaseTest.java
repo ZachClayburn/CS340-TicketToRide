@@ -14,7 +14,7 @@ public abstract class AbstractDatabaseTest {
     public void setUp() throws Exception {
 
         try (var db = new Database()) {
-            db.createDatabase();
+            db.resetDatabase();
         }
 
     }
