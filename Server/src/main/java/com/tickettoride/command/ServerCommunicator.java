@@ -29,7 +29,7 @@ public class ServerCommunicator extends WebSocketServer {
 
     private static Logger logger = LogManager.getLogger(ServerCommunicator.class.getName());
 
-    private static final int SERVER_PORT_NUMBER = 80;
+    private static final int SERVER_PORT_NUMBER = 8090;
     private static final int MAX_WAITING_CONNECTIONS = 10;
     private static Gson gson = new Gson();
     
@@ -415,6 +415,9 @@ public class ServerCommunicator extends WebSocketServer {
                 logger.catching(t);
             }
             ServerCommunicator.getINSTANCE().run();
-        } catch (Throwable t) {}
+        } catch (Throwable t) {
+            logger.fatal("",t);
+            System.exit(1);
+        }
     }
 }
