@@ -8,8 +8,6 @@ import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import android.os.AsyncTask;
 import android.util.Log;
 
 import command.Command;

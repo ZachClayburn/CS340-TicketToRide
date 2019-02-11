@@ -1,5 +1,6 @@
 package com.tickettoride.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +25,7 @@ public class LoginActivity extends MyBaseActivity {
     private EditText password;
     private Button login;
     private Button register;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public class LoginActivity extends MyBaseActivity {
         register = findViewById(R.id.register);
         login.setEnabled(false);
         register.setEnabled(false);
+        context = this;
         username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -111,7 +114,25 @@ public class LoginActivity extends MyBaseActivity {
         Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
         startActivity(intent);
     }
+    public Runnable loginErrorRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(context, R.string.login_error, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    public Runnable createErrorRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(context, R.string.register_error, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     public void loginError() {
-        Toast.makeText(this, R.string.login_error, Toast.LENGTH_SHORT).show();
+        runOnUiThread(loginErrorRunnable);
+    }
+
+    public void createError() {
+        runOnUiThread(createErrorRunnable);
     }
 }
