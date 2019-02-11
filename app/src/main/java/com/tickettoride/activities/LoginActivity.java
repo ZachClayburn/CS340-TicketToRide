@@ -135,4 +135,9 @@ public class LoginActivity extends MyBaseActivity {
     public void createError() {
         runOnUiThread(createErrorRunnable);
     }
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
 }

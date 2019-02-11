@@ -101,4 +101,11 @@ public class JoinGameActivity extends MyBaseActivity {
         Toast.makeText(this ,R.string.join_game_error, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(JoinGameActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
 }

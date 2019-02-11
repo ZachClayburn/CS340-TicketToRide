@@ -59,4 +59,5 @@ public class LobbyActivity extends MyBaseActivity{
         Toast.makeText(this ,R.string.start_game_error, Toast.LENGTH_SHORT).show();
 
     }
+
 }
