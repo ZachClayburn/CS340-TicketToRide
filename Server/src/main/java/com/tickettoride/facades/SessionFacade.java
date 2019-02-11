@@ -1,4 +1,5 @@
 package com.tickettoride.facades;
+import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.models.Session;
@@ -24,16 +25,17 @@ public class SessionFacade extends BaseFacade {
 
     private static Logger logger = LogManager.getLogger(SessionFacade.class.getName());
 
-    public void create(UUID roomID, Username username, Password password) {
+    public void create(UUID connID, Username username, Password password) {
         try {
             User user = UserFacade.getSingleton().find_user(username, password);
             Session session = create_session(user);
             Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID());
-            sendResponseToOne(roomID, command);
+            ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
+            sendResponseToOne(connID, command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "loginError");
-            sendResponseToOne(roomID, command);
+            sendResponseToOne(connID, command);
         }
     }
 
