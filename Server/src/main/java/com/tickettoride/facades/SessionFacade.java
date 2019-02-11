@@ -2,10 +2,12 @@ package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.SessionDAO;
+import com.tickettoride.models.Game;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import command.Command;
@@ -29,7 +31,8 @@ public class SessionFacade extends BaseFacade {
         try {
             User user = UserFacade.getSingleton().find_user(username, password);
             Session session = create_session(user);
-            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID());
+            ArrayList<Game> games = GameFacade.getSingleton().allGames();
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), games);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             sendResponseToOne(connID, command);
         } catch (Throwable throwable) {

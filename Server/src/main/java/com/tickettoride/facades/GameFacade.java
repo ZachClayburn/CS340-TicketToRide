@@ -1,4 +1,5 @@
 package com.tickettoride.facades;
+import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.database.PlayerDAO;
@@ -11,6 +12,7 @@ import com.tickettoride.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import command.Command;
@@ -28,6 +30,8 @@ public class GameFacade extends BaseFacade {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
             Player player = createPlayer(user, game);
+            ServerCommunicator.getINSTANCE().addRoom(game.getGameID());
+            ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
                 "GameController", "create",
                 player.getPlayerID(), sessionID,
@@ -48,6 +52,7 @@ public class GameFacade extends BaseFacade {
             User user = UserFacade.getSingleton().find_user(session);
             Player player = createPlayer(user, game);
             updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
+            ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
                     CONTROLLER_NAME, "join",
                     player.getPlayerID(), sessionID, game.getGameID());
@@ -76,6 +81,13 @@ public class GameFacade extends BaseFacade {
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
             return game;
+        }
+    }
+
+    public ArrayList<Game> allGames() throws Database.DatabaseException {
+        try (Database database = new Database()) {
+            GameDAO dao = database.getGameDAO();
+            return dao.allGames();
         }
     }
 

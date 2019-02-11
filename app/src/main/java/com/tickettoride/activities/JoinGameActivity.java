@@ -13,9 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.GameIndex;
-import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.clientModels.Game;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class JoinGameActivity extends MyBaseActivity {
     private RecyclerView gameList;
     private Button createGame;
     private Adapter adapter;
-    private ArrayList<GameInfo> games = GameIndex.SINGLETON.getGameIndex();
+    private ArrayList<Game> games = GameIndex.SINGLETON.getGameIndex();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +50,9 @@ public class JoinGameActivity extends MyBaseActivity {
     }
 
     public class Adapter extends RecyclerView.Adapter<Holder> {
-        private ArrayList<GameInfo> listOfGames;
+        private ArrayList<Game> listOfGames;
         private LayoutInflater inflater;
-        public Adapter(Context context, ArrayList<GameInfo> listOfGames) {
+        public Adapter(Context context, ArrayList<Game> listOfGames) {
             this.listOfGames = listOfGames;
             inflater = LayoutInflater.from(context);
         }
@@ -64,7 +63,7 @@ public class JoinGameActivity extends MyBaseActivity {
         }
         @Override
         public void onBindViewHolder(Holder holder, int position) {
-            GameInfo game = listOfGames.get(position);
+            Game game = listOfGames.get(position);
             holder.bind(game);
         }
         @Override
@@ -74,12 +73,12 @@ public class JoinGameActivity extends MyBaseActivity {
     }
     public class Holder extends RecyclerView.ViewHolder {
         TextView gameName;
-        GameInfo game;
+        Game game;
         public Holder(View view) {
            super(view);
            gameName = (TextView) view.findViewById(R.id.game_list);
         }
-        public void bind(final GameInfo game) {
+        public void bind(final Game game) {
             this.game = game;
             gameName.setText(game.getGroupName());
             gameName.setOnClickListener(new View.OnClickListener() {

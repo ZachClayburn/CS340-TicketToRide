@@ -1,18 +1,19 @@
 package com.tickettoride.clientModels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import modelInterfaces.IGame;
 
-public class GameInfo implements IGame{ //used for when creating a new game
+public class Game implements IGame, Serializable { //used for when creating a new game
     private UUID gameID = null;
     private String groupName = "";
     private int maxPlayer = 5;
     private int numPlayer = 1;
     private ArrayList<Player> players = new ArrayList();
 
-    public GameInfo(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.numPlayer = numPlayer;
@@ -20,7 +21,7 @@ public class GameInfo implements IGame{ //used for when creating a new game
         players.add(player);
     }
 
-    public GameInfo(){}
+    public Game(){}
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
@@ -56,5 +57,4 @@ public class GameInfo implements IGame{ //used for when creating a new game
         players.add(player);
         numPlayer += 1;
     }
-
 }

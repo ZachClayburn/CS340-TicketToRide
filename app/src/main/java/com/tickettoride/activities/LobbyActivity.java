@@ -2,18 +2,17 @@ package com.tickettoride.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.GameIndex;
-import com.tickettoride.clientModels.GameInfo;
 
 public class LobbyActivity extends MyBaseActivity{
-    private GameInfo gameInfo;
+    private Game game;
     private GameIndex index = GameIndex.SINGLETON;
     private TextView gameName;
     private TextView gameID;
@@ -23,19 +22,15 @@ public class LobbyActivity extends MyBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lobby);
-        Intent i = getIntent();
-
-        // Retrieve gameInfo from bundle
-        Bundle bundle = getIntent().getExtras();
-        gameInfo = index.findGame(bundle.getString("gameID"));
+        this.game = (Game) getIntent().getSerializableExtra("game");
 
         gameName = (TextView) findViewById(R.id.group_name);
         gameID = (TextView) findViewById(R.id.game_id);
         numPlayers = (TextView) findViewById(R.id.num_player);
         startGame = (Button) findViewById(R.id.start_game);
-        gameName.setText("Group Name: " + gameInfo.getGroupName());
-        gameID.setText("Game ID: " + gameInfo.getGameID());
-        numPlayers.setText("Number of Players: " + gameInfo.getNumPlayer() + "/" + gameInfo.getMaxPlayer());
+        gameName.setText("Group Name: " + game.getGroupName());
+        gameID.setText("Game ID: " + game.getGameID());
+        numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
         setEnabled();
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +40,7 @@ public class LobbyActivity extends MyBaseActivity{
         });
     }
     public void setEnabled() {
-        if (gameInfo.getNumPlayer() <= 1 || gameInfo.getNumPlayer() > 5) {
+        if (game.getNumPlayer() <= 1 || game.getNumPlayer() > 5) {
             startGame.setEnabled(false);
         }
         else {
@@ -54,7 +49,7 @@ public class LobbyActivity extends MyBaseActivity{
     }
     public void updateUI(){
         setEnabled();
-        numPlayers.setText("Number of Players: " + gameInfo.getNumPlayer() + "/" + gameInfo.getMaxPlayer());
+        numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
     }
     public void moveToGame() {
         Intent intent = new Intent(LobbyActivity.this, GameRoomActivity.class);

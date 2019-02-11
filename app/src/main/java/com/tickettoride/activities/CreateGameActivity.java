@@ -10,15 +10,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.clientModels.Game;
 
 
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 
 public class CreateGameActivity extends MyBaseActivity {
-    private GameInfo info = new GameInfo();
+    private Game info = new Game();
     private EditText groupName;
     private Button two;
     private Button three;
@@ -95,8 +94,9 @@ public class CreateGameActivity extends MyBaseActivity {
         });
 
     }
-    public void moveToLobbyCreate() {
+    public void moveToLobbyCreate(Game game) {
         Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
+        intent.putExtra("game", game);
         startActivity(intent);
     }
     public void setEnabled() {

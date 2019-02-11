@@ -169,6 +169,8 @@ public class ServerCommunicator extends WebSocketServer {
         setConnectionLostTimeout(0);
         setConnectionLostTimeout(100);
     }
+
+    public void addRoom(UUID roomID) { connectionManager.addRoom(roomID); }
     
 
     private class ConnectionManager{
@@ -180,7 +182,9 @@ public class ServerCommunicator extends WebSocketServer {
             connections=new HashMap<>();
             roomManagerInstance=new RoomManager();
         }
-        
+
+        public void addRoom(UUID roomID) { roomManagerInstance.addRoom(roomID); }
+
         public void addConnection(WebSocket conn){
             UUID connid = UUID.randomUUID();
             conn.setAttachment(connid);
@@ -365,7 +369,7 @@ public class ServerCommunicator extends WebSocketServer {
                 if(oldroomid==null || rooms.get(newroomid)==null){
                     return false;
                 }
-                Room oldroom=rooms.get(oldroomid);
+                Room oldroom = rooms.get(oldroomid);
                 oldroom.removeConnectionId(connid);
                 addToRoom(connid,newroomid);
                 return true;
