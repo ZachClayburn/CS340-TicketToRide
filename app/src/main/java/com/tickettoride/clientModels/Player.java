@@ -1,13 +1,14 @@
 package com.tickettoride.clientModels;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Player {
+public class Player implements Serializable {
     private UUID gameID;
-    private String sessionID;
+    private UUID sessionID;
     private UUID playerID;
 
-    public Player(UUID gameID, String sessionID, UUID playerID) {
+    public Player(UUID gameID, UUID sessionID, UUID playerID) {
         this.gameID = gameID;
         this.sessionID = sessionID;
         this.playerID = playerID;
@@ -21,11 +22,11 @@ public class Player {
         this.gameID = gameID;
     }
 
-    public String getSessionID() {
+    public UUID getSessionID() {
         return sessionID;
     }
 
-    public void setSessionID(String sessionID) {
+    public void setSessionID(UUID sessionID) {
         this.sessionID = sessionID;
     }
 

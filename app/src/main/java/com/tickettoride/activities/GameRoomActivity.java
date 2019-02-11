@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 
-public class GameRoomActivity extends AppCompatActivity {
+public class GameRoomActivity extends MyBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_room);

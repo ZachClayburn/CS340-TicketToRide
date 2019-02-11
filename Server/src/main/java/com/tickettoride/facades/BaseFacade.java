@@ -8,14 +8,14 @@ import command.Command;
 import command.Response;
 
 public abstract class BaseFacade {
-    protected void sendResponseToOne(UUID roomID, Command command) {
+    protected void sendResponseToOne(UUID connID, Command command) {
         Response response = new Response(command);
-        ServerCommunicator.getINSTANCE().sendToOne(roomID, response);
+        ServerCommunicator.getINSTANCE().sendToOne(connID, response);
     }
 
-    protected void sendResponseToRoom(UUID roomID, Command command) {
+    protected void sendResponseToRoom(UUID connID, Command command) {
         Response response = new Response(command);
-        ServerCommunicator.getINSTANCE().sendToRoom(roomID, response);
+        ServerCommunicator.getINSTANCE().sendToRoom(connID, response);
     }
 
     protected void sendResponseToMainLobby(Command command) {

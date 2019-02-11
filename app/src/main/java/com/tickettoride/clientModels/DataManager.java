@@ -2,14 +2,16 @@ package com.tickettoride.clientModels;
 
 public class DataManager {
     
-    public static DataManager SINGLETON=new DataManager();
+    public static DataManager SINGLETON = new DataManager();
     private Session session;
-    private Player curPlayer = null;
+    private Player curPlayer;
+    private Game curGame;
     private GameIndex gameIndex;
-    private GameInfo curGame;
     
     
-    private DataManager(){ }
+    private DataManager () {
+        this.gameIndex = GameIndex.SINGLETON;
+    }
 
 
     public static DataManager getSINGLETON() {
@@ -20,7 +22,7 @@ public class DataManager {
         return gameIndex;
     }
 
-    public GameInfo getGameInfo() {
+    public Game getGame() {
         return curGame;
     }
 
@@ -36,8 +38,8 @@ public class DataManager {
         this.gameIndex = gameIndex;
     }
 
-    public void setGameInfo(GameInfo gameInfo) {
-        this.curGame = gameInfo;
+    public void setGame(Game game) {
+        this.curGame = game;
     }
 
     public void setPlayer(Player player) {

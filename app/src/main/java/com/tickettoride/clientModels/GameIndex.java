@@ -1,39 +1,37 @@
 package com.tickettoride.clientModels;
 
 import android.content.Context;
-import android.icu.text.TimeZoneFormat;
 
 import com.tickettoride.activities.JoinGameActivity;
 
 import java.util.ArrayList;
 
+import modelInterfaces.IGame;
+
 
 public class GameIndex {
-    private ArrayList<GameInfo> gameIndex;
-    private ArrayList<GameInfo> fullGames;
+    private ArrayList<Game> gameIndex;
+    private ArrayList<Game> fullGames;
     private JoinGameActivity indexUI;
     public static GameIndex SINGLETON = new GameIndex();
 
     private GameIndex(){
-        gameIndex = new ArrayList<GameInfo>();
-        fullGames = new ArrayList<GameInfo>();
+        gameIndex = new ArrayList<Game>();
+        fullGames = new ArrayList<Game>();
     }
 
     public void setIndexUI(Context c){
         indexUI = (JoinGameActivity)c;
     }
 
-    public ArrayList<GameInfo> getGameIndex() {
+    public ArrayList<Game> getGameIndex() {
         return gameIndex;
     }
 
-    public void addGame(GameInfo newGame) {
-        gameIndex.add(newGame);
-        indexUI.updateUI();
-    }
+    public void addGame(Game newGame) { gameIndex.add(newGame); }
 
-    public GameInfo findGame(String gameID) {
-        for (GameInfo game: gameIndex) {
+    public Game findGame(String gameID) {
+        for (Game game: gameIndex) {
             if (game.getGameID().equals(gameID)) {
                 return game;
             }
@@ -43,8 +41,8 @@ public class GameIndex {
 
     // Move game to list of full games so it doesn't show up on the UI
     public void makeGameUnavailable(String gameID) {
-        GameInfo fullGame = null;
-        for (GameInfo game: gameIndex) {
+        Game fullGame = null;
+        for (Game game: gameIndex) {
             if (game.getGameID().equals(gameID)) {
                 break;
             }
@@ -52,5 +50,12 @@ public class GameIndex {
         fullGames.add(fullGame);
         gameIndex.remove(fullGame);
         indexUI.updateUI();
+    }
+
+    public void addGames(ArrayList<IGame> games) {
+//        for (IGame game : games) {
+//            Game newGame = new Game(game);
+//            fullGames.add(newGame);
+//        }
     }
 }
