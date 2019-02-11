@@ -80,6 +80,7 @@ public class Database implements AutoCloseable {
     public Database() throws DatabaseException{
 
         Gson gson = new Gson();
+        var cl = Database.class.getClassLoader();
         URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
         InputStream in = null;
         try {
