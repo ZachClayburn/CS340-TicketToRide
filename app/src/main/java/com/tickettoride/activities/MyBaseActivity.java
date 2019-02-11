@@ -8,12 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.tickettoride.application.MyApplication;
 import com.tickettoride.clientModels.ApplicationContextManager;
+import com.tickettoride.command.ClientCommunicator;
 
 public class MyBaseActivity extends AppCompatActivity {
     protected MyApplication mMyApp;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ClientCommunicator.SINGLETON.connect();
         mMyApp = (MyApplication) this.getApplicationContext();
         ApplicationContextManager.SINGLETON.setMyApplication((mMyApp));
     }
