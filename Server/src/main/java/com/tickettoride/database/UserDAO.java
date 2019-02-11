@@ -69,11 +69,11 @@ public class UserDAO extends Database.DataAccessObject {
     }
 
     @Nullable
-    public User getUser(String id) throws DatabaseException {
+    public User getUserByID(UUID id) throws DatabaseException {
         User user = null;
         String sql = "SELECT * FROM Users WHERE userID = ?";
         try (var statement = connection.prepareStatement(sql)) {
-            statement.setString(1, id);
+            statement.setString(1, id.toString());
             var result = statement.executeQuery();
             if (result.next()) {
                 var tableUserName = new Username(result.getString("userName"));
@@ -88,19 +88,21 @@ public class UserDAO extends Database.DataAccessObject {
         return user;
     }
 
-    public User getUser(UUID sessionID) throws DatabaseException{
-        String userID = "";
+    public User getUserBySessionID(UUID sessionID) throws DatabaseException{
+        User user = null;
+        UUID userID;
         String sql = "SELECT userID FROM Sessions WHERE sessionID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, sessionID.toString());
             var result = statement.executeQuery();
             if (result.next()) {
                 var tableUserID = result.getString("userID");
-                userID = tableUserID;
+                userID = UUID.fromString(tableUserID);
+                user = getUserByID(userID);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve session!", e);
         }
-        return getUser(userID);
+        return user;
     }
 }
