@@ -53,7 +53,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
     }
 
     @Test
-    public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws Database.DatabaseException {
+    public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws Database.DatabaseException, SQLException {
 
 
         try (var db = new Database()) {

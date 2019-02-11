@@ -30,6 +30,7 @@ public class ClientCommunicator {
 
                 @Override
                 public void onMessage(String message){
+                    Log.i("ClientCommunicator", "Received Message From Server: " + message);
                     try {
                         Response response = gson.fromJson(message, Response.class);
                         if (response.hasCommand()) {
@@ -39,7 +40,7 @@ public class ClientCommunicator {
                             System.out.println(response.getMessage());
                         }
                     } catch (Throwable throwable) {
-                        Log.e(throwable.getStackTrace().toString(), throwable.getMessage());
+                        Log.e("ClientCommunicator", throwable.getMessage(), throwable);
                     }
                 }
 
@@ -69,7 +70,6 @@ public class ClientCommunicator {
     
     public void send(Command command){
         try {
-            Log.i("ClientCommunicator", "Send");
             String message=gson.toJson(command);
             mWebSocketClient.send(message);
             Log.i("ClientCommunicator", "Sent Command to Server");

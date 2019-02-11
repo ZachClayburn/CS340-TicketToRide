@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.UUID;
 
 public class Command {
-    private static Gson gson = new Gson();
+    protected static Gson gson = new Gson();
 
-    private String facadeName;
-    private String methodName;
-    private List<String> parametersAsJSONStrings;
-    private List<String> parameterTypeNames;
-    private final String GET_SINGLETON_METHOD_NAME = "getSingleton";
+    protected String facadeName;
+    protected String methodName;
+    protected List<String> parametersAsJSONStrings;
+    protected List<String> parameterTypeNames;
+    protected final String GET_SINGLETON_METHOD_NAME = "getSingleton";
 
     public Command(String facadeName, String methodName, Object... parameters) {
-        List<Object> commandParameters = new ArrayList(Arrays.asList(parameters));
+        List<Object> commandParameters = Arrays.asList(parameters);
         List<String> compactedJSONStringParameters = toJSONStringList(commandParameters);
         this.methodName = methodName;
         this.facadeName = facadeName;
@@ -36,27 +36,34 @@ public class Command {
         this.facadeName=temp.facadeName;
         this.parametersAsJSONStrings=temp.parametersAsJSONStrings;
         this.parameterTypeNames=temp.parameterTypeNames;
-        this.parametersAsJSONStrings.add(0,gson.toJson(connid.toString()));
+        this.parametersAsJSONStrings.add(0,gson.toJson(connid));
         this.parameterTypeNames.add(0,connid.getClass().getName());
     }
 
-    public Object execute() throws Throwable {
-        Class targetClass = Class.forName(facadeName);
-        Method getSingletonMethod = targetClass.getMethod(GET_SINGLETON_METHOD_NAME);
-        Object singleton = getSingletonMethod.invoke(targetClass);
-        Class[] parameterTypes = parameterTypes();
-        Method method = targetClass.getMethod(methodName, parameterTypes);
-        Object[] parameters = parameters(parameterTypes);
-        return method.invoke(singleton, parameters);
+    public void execute() throws Throwable {
+        try {
+            Class targetClass = null;
+            try { targetClass = Class.forName("com.tickettoride.facades." + facadeName); }
+            catch (ClassNotFoundException e) {}
+            if (targetClass == null) targetClass = Class.forName("com.tickettoride.controllers." + facadeName);
+            Method getSingletonMethod = targetClass.getMethod(GET_SINGLETON_METHOD_NAME);
+            Object singleton = getSingletonMethod.invoke(targetClass);
+            Class[] parameterTypes = parameterTypes();
+            Method method = targetClass.getMethod(methodName, parameterTypes);
+            Object[] parameters = parameters(parameterTypes);
+            method.invoke(singleton, parameters);
+        } catch (InvocationTargetException e) {
+            throw e.getCause();
+        }
     }
 
-    private List<String> parameterTypeNames(List<Object> parameters) {
+    protected List<String> parameterTypeNames(List<Object> parameters) {
         List<String> parameterTypeNames = new ArrayList<>();
         for(int i = 0; i < parameters.size(); i++) { parameterTypeNames.add(parameters.get(i).getClass().getName()); }
         return parameterTypeNames;
     }
 
-    private Object[] parameters(Class[] parameterTypes) {
+    protected Object[] parameters(Class[] parameterTypes) {
         Object[] parameters = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
             parameters[i] = gson.fromJson(parametersAsJSONStrings.get(i), parameterTypes[i]);
@@ -64,19 +71,19 @@ public class Command {
         return parameters;
     }
 
-    private static List<String> toJSONStringList(List<Object> parameters) {
+    protected static List<String> toJSONStringList(List<Object> parameters) {
         List<String> JSONStringParameters = new ArrayList<>();
-        for(int i = 0; i < parameters.size(); i++) { JSONStringParameters.add(gson.toJson(parameters.get(i).toString())); }
+        for(int i = 0; i < parameters.size(); i++) { JSONStringParameters.add(gson.toJson(parameters.get(i))); }
         return JSONStringParameters;
     }
 
-    private Class[] parameterTypes() throws ClassNotFoundException {
+    protected Class[] parameterTypes() throws ClassNotFoundException {
         Class[] parameterTypes = new Class[parameterTypeNames.size()];
         for (int i = 0; i < parameterTypeNames.size(); i++) { parameterTypes[i] = getClassFor(parameterTypeNames.get(i)); }
         return parameterTypes;
     }
 
-    private static final Class<?> getClassFor(String className) throws ClassNotFoundException {
+    protected static final Class<?> getClassFor(String className) throws ClassNotFoundException {
         Class<?> result;
         switch (className) {
             case "boolean" : result = boolean.class; break;

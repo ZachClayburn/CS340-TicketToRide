@@ -7,6 +7,7 @@ import modelAttributes.Username;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
+import org.postgresql.core.SqlCommand;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +35,7 @@ public class UserDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
-    public void addUser(User user) throws DatabaseException {
+    public void addUser(User user) throws SQLException {
         final String sql = "INSERT INTO Users (userID, userName, password) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, user.getUserID().toString());
@@ -42,10 +43,6 @@ public class UserDAO extends Database.DataAccessObject {
             statement.setString(3, user.getPassword().toString());
 
             statement.executeUpdate();
-
-        } catch (SQLException e) {
-            logger.catching(e);
-            throw new DatabaseException("Could not add new user to Database!", e);
         }
     }
 

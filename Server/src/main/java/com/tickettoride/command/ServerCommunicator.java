@@ -86,7 +86,7 @@ public class ServerCommunicator extends WebSocketServer {
         try {
             command.execute();
         } catch (Throwable throwable) {
-            logger.error(throwable);
+            logger.error(throwable.getMessage(), throwable);
         }
     }
     /**
@@ -112,25 +112,29 @@ public class ServerCommunicator extends WebSocketServer {
     
     //send response to a single connection (login, register, reconnect, etc)
     public void sendToOne(UUID connid, Response response){
+        logger.info("Sending to One Connection ID: " + connid.toString());
         WebSocket conn=connectionManager.getConnection(connid);
         if (conn == null) { return; }
         sendToOne(conn,response);
     }
     
     //send response to the room that the specific connection is in
-    public void sendToConnectionRoom(UUID connid, Response response){
+    public void sendToConnectionRoom(UUID connid, Response response) {
+        logger.info("Sending to Room for Connection ID: " + connid.toString());
         List<WebSocket> conns = connectionManager.getRoomConnections(connid);
         sendToMany(conns,response);
     }
     
     //send response to the room with the roomid (
     public void sendToRoom(UUID roomid, Response response){
+        logger.info("Sending to Room Id: " + roomid.toString());
         List<WebSocket> conns = connectionManager.getConnectionsOfRoom(roomid);
         sendToMany(conns,response);
     }
     
     //send updates to main lobby (new games created, game lobbies updated, etc)
     public void sendToMainLobby(Response response){
+        logger.info("Sending to Room Main Lobby");
         List<WebSocket> conns = connectionManager.getConnectionsOfMainLobby();
         sendToMany(conns,response);
     }
@@ -406,9 +410,6 @@ public class ServerCommunicator extends WebSocketServer {
             } catch (Throwable t) {
                 logger.catching(t);
             }
-            System.out.println("Hello");
-            logger.info("Hello");
-            logger.info(ServerCommunicator.getINSTANCE().getPort());
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {}
     }
