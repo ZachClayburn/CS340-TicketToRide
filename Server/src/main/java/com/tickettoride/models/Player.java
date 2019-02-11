@@ -7,10 +7,10 @@ public class Player {
     private Game game = null;
     private UUID playerID = null;
 
-    public Player(User user, Game game, UUID playerID) {
+    public Player(User user, Game game) {
         this.user = user;
         this.game = game;
-        this.playerID = playerID;
+        this.playerID = UUID.randomUUID();
     }
 
     public User getUser() {

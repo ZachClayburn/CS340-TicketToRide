@@ -1,6 +1,4 @@
 package com.tickettoride.facades;
-
-import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.models.Session;
@@ -19,9 +17,11 @@ public class SessionFacade extends BaseFacade {
 
     public static final String CONTROLLER_NAME = "SessionController";
     private static SessionFacade SINGLETON = new SessionFacade();
+
     public static SessionFacade getSingleton() {
         return SINGLETON;
     }
+
     private static Logger logger = LogManager.getLogger(SessionFacade.class.getName());
 
     public void create(UUID roomID, Username username, Password password) {

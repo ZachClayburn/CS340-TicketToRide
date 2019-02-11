@@ -6,32 +6,40 @@ import java.util.UUID;
 import modelInterfaces.IGame;
 
 public class Game implements IGame {
-    private String gameID = null;
+    private UUID gameID = null;
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;
     private ArrayList<User> players = new ArrayList<>();
 
-    public Game(String gameID, String groupName, int numPlayer, int maxPlayer, User creator) {
-        this.gameID = gameID;
+    public Game(String groupName, int maxPlayer, User creator) {
+        this.gameID = UUID.randomUUID();
         this.groupName = groupName;
-        this.numPlayer = numPlayer;
+        this.numPlayer = 1;
         this.maxPlayer = maxPlayer;
         players.add(creator);
     }
 
-    public Game(String gameID, String groupName, int numPlayer, int maxPlayer) {
-        this.gameID = gameID;
+    public Game(String groupName, int maxPlayer) {
+        this.gameID = UUID.randomUUID();
         this.groupName = groupName;
-        this.numPlayer = numPlayer;
+        this.numPlayer = 1;
         this.maxPlayer = maxPlayer;
     }
 
-    public void setGameID(String gameID) {
+    public Game(UUID gameID, String groupName, int maxPlayer, int numPlayer) {
+        this.gameID = gameID;
+        this.groupName = groupName;
+        this.maxPlayer = maxPlayer;
+        this.numPlayer = numPlayer;
+    }
+
+
+    public void setGameID(UUID gameID) {
         this.gameID = gameID;
     }
 
-    public String getGameID() {
+    public UUID getGameID() {
         return gameID;
     }
 

@@ -12,6 +12,7 @@ import org.postgresql.core.SqlCommand;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class UserDAO extends Database.DataAccessObject {
 
@@ -85,5 +86,21 @@ public class UserDAO extends Database.DataAccessObject {
             throw new Database.DatabaseException("Could not retrieve user!", e);
         }
         return user;
+    }
+
+    public User getUser(UUID sessionID) throws DatabaseException{
+        String userID = "";
+        String sql = "SELECT userID FROM Sessions WHERE sessionID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, sessionID.toString());
+            var result = statement.executeQuery();
+            if (result.next()) {
+                var tableUserID = result.getString("userID");
+                userID = tableUserID;
+            }
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve session!", e);
+        }
+        return getUser(userID);
     }
 }

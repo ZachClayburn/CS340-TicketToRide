@@ -1,5 +1,7 @@
 package com.tickettoride.facadeProxies;
 
+import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.Session;
 import com.tickettoride.command.ClientCommunicator;
 
 import java.util.ArrayList;
@@ -16,18 +18,18 @@ public class GameFacadeProxy {
 
     private GameFacadeProxy() { }
 
-    public void create(String name, int maxPlayers, String userID){
+    public void create(String name, int maxPlayers){
+        Session session = DataManager.getSINGLETON().getSession();
         try{
-            List<Object> parameters = new ArrayList(Arrays.asList(name, maxPlayers, userID));
-            Command command = new Command("GameFacade", "create", parameters);
+            Command command = new Command("GameFacade", "create", session.getSessionId(), name, maxPlayers);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t){}
     }
 
     public void join(String sessionID, String gameID){
+        Session session = DataManager.getSINGLETON().getSession();
         try {
-            List<Object> parameters = new ArrayList(Arrays.asList(sessionID, gameID));
-            Command command = new Command("GameFacade", "join", parameters);
+            Command command = new Command("GameFacade", "join", session.getSessionId(), gameID);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t) {}
     }

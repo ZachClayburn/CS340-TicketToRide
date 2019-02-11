@@ -35,22 +35,6 @@ public class SessionDAO extends Database.DataAccessObject {
         }
     }
 
-    public String getUserFromSession(String sessionID) throws DatabaseException{
-        String userID = "";
-        String sql = "SELECT userID FROM Sessions WHERE sessionID = ?";
-        try (var statement = connection.prepareStatement(sql)) {
-            statement.setString(1, sessionID);
-            var result = statement.executeQuery();
-            if (result.next()) {
-                var tableUserID = result.getString("userID");
-                userID = tableUserID;
-            }
-        } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve session!", e);
-        }
-        return userID;
-    }
-
     @Override
     String getTableCreateString() {
         return tableCreateString;
