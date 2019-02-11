@@ -16,7 +16,12 @@ public class SessionController extends BaseController {
         loginActivity.moveToJoin();
     }
 
-    public void error(Throwable throwable) {
+    public void createError() {
+        LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
+        loginActivity.createError();
+    }
+
+    public void loginError() {
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.loginError();
     }

@@ -32,7 +32,7 @@ public class SessionFacade extends BaseFacade {
             sendResponseToOne(roomID, command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "error", throwable);
+            Command command = new Command(CONTROLLER_NAME, "loginError");
             sendResponseToOne(roomID, command);
         }
     }

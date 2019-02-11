@@ -33,7 +33,7 @@ public class UserFacade extends BaseFacade {
             sendResponseToOne(roomID, command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "error", throwable);
+            Command command = new Command(CONTROLLER_NAME, "createError");
             sendResponseToOne(roomID, command);
         }
     }
