@@ -9,7 +9,8 @@ public class DataManager {
     private GameInfo curGame;
     
     
-    private DataManager(){}
+    private DataManager(){ }
+
 
     public static DataManager getSINGLETON() {
         return SINGLETON;

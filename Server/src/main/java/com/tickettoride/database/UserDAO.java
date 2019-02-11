@@ -40,8 +40,9 @@ public class UserDAO extends Database.DataAccessObject {
             statement.setString(1, user.getUserID().toString());
             statement.setString(2, user.getUsername().toString());
             statement.setString(3, user.getPassword().toString());
-            Boolean result = statement.execute();
-            if (!result) throw new DatabaseException("Could not add new user to Database!");
+
+            statement.executeUpdate();
+
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not add new user to Database!", e);

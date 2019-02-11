@@ -1,6 +1,7 @@
 package com.tickettoride.command;
 
 import com.google.gson.Gson;
+import com.tickettoride.database.Database;
 
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -42,12 +43,8 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static ServerCommunicator getINSTANCE() {
         if(INSTANCE==null){
-            try {
-                INSTANCE = new ServerCommunicator(SERVER_PORT_NUMBER);
-            }catch(UnknownHostException e){
-                logger.error("Could not start ServerCommunicator! ", e);
-
-            }
+            try { INSTANCE = new ServerCommunicator(SERVER_PORT_NUMBER); }
+            catch(UnknownHostException e){ logger.error("Could not start ServerCommunicator! ", e); }
         }
         return INSTANCE;
     }
@@ -55,6 +52,7 @@ public class ServerCommunicator extends WebSocketServer {
     /** Called after an opening handshake has been performed and the given websocket is ready to be written on. */
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake ){
+        logger.info("Handshake Opened");
         connectionManager.addConnection(conn);
         sendToOne(conn,new Response("connection added"));
     }
@@ -71,6 +69,7 @@ public class ServerCommunicator extends WebSocketServer {
      **/
     @Override
     public void onClose( WebSocket conn, int code, String reason, boolean remote ){
+        logger.info("Connection Closed");
         connectionManager.removeConnection(conn);
         //anything else we need to do to ensure proper removal of authtokens, etc
     }
@@ -81,6 +80,7 @@ public class ServerCommunicator extends WebSocketServer {
      **/
     @Override
     public void onMessage( WebSocket conn, String message ){
+        logger.info("Message Received");
         UUID connid = connectionManager.getConnectionId(conn);
         Command command = new Command(message,connid);
         try {
@@ -99,6 +99,7 @@ public class ServerCommunicator extends WebSocketServer {
      **/
     @Override
     public void onError( WebSocket conn, Exception ex ){
+        logger.info("Error Occurred");
         System.out.println(ex.getMessage());
     }
     /**
@@ -106,12 +107,7 @@ public class ServerCommunicator extends WebSocketServer {
      *
      * @see #onMessage(WebSocket, String)
      **/
-    @Override
-    public void onMessage( WebSocket conn, ByteBuffer message ) {
-        
-    }
-    
-    
+
     //these seven are the ones that will be called by the rest of the server
     
     //send response to a single connection (login, register, reconnect, etc)
@@ -405,6 +401,14 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static void main(String[] args) {
         try {
+            try (Database database = new Database()) {
+                database.resetDatabase();
+            } catch (Throwable t) {
+                logger.catching(t);
+            }
+            System.out.println("Hello");
+            logger.info("Hello");
+            logger.info(ServerCommunicator.getINSTANCE().getPort());
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {}
     }
