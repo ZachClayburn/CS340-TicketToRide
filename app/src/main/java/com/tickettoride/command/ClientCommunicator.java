@@ -2,6 +2,7 @@ package com.tickettoride.command;
 
 import com.google.gson.Gson;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
@@ -24,51 +25,57 @@ public class ClientCommunicator {
     public static ClientCommunicator SINGLETON = new ClientCommunicator();
 
     private ClientCommunicator() {
+    }
+
+    public void connect() {
         try {
+            if (mWebSocketClient == null) {
+                mWebSocketClient = new WebSocketClient(new URI("ws://" + websockethost + ":" + port), new Draft_6455()) {
 
-            mWebSocketClient = new WebSocketClient(new URI("ws://"+websockethost+":"+port), new Draft_6455()) {
-
-                @Override
-                public void onMessage(String message){
-                    Log.i("ClientCommunicator", "Received Message From Server: " + message);
-                    try {
-                        Response response = gson.fromJson(message, Response.class);
-                        if (response.hasCommand()) {
-                            Command command = response.getCommand();
-                            command.execute();
-                        } else {
-                            System.out.println(response.getMessage());
+                    @Override
+                    public void onMessage(String message) {
+                        Log.i("ClientCommunicator", "Received Message From Server: " + message);
+                        try {
+                            Response response = gson.fromJson(message, Response.class);
+                            if (response.hasCommand()) {
+                                Command command = response.getCommand();
+                                command.execute();
+                            } else {
+                                System.out.println(response.getMessage());
+                            }
+                        } catch (Throwable throwable) {
+                            Log.e("ClientCommunicator", throwable.getMessage(), throwable);
                         }
-                    } catch (Throwable throwable) {
-                        Log.e("ClientCommunicator", throwable.getMessage(), throwable);
                     }
-                }
 
-                @Override
-                public void onOpen(ServerHandshake handshake) {
-                    Log.i("WebSocket", "Handshake Successful");
-                }
+                    @Override
+                    public void onOpen(ServerHandshake handshake) {
+                        Log.i("WebSocket", "Handshake Successful");
+                    }
 
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Log.i("WebSocket", "Close");
-                }
+                    @Override
+                    public void onClose(int code, String reason, boolean remote) {
+                        Log.i("WebSocket", "Close");
+                    }
 
-                @Override
-                public void onError(Exception ex) {
-                    Log.e("WebSocket", "Error");
-                    Log.e("WebSocket", ex.getMessage());
-                    Log.e("WebSocket", ex.getStackTrace().toString());
-                }
-            };
-
-            mWebSocketClient.connect();
-        } catch(URISyntaxException e){
-            
+                    @Override
+                    public void onError(Exception ex) {
+                        Log.e("WebSocket", "Error");
+                        Log.e("WebSocket", ex.getMessage());
+                        Log.e("WebSocket", ex.getStackTrace().toString());
+                    }
+                };
+            }
+            if (mWebSocketClient.getConnection().getReadyState() != WebSocket.READYSTATE.OPEN) {
+                mWebSocketClient.connect();
+            }
+        } catch (URISyntaxException e) {
+            Log.e("ClientCommunicator", e.getMessage());
         }
     }
     
     public void send(Command command){
+//        connect();
         try {
             String message=gson.toJson(command);
             mWebSocketClient.send(message);
