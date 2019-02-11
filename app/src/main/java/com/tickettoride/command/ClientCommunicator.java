@@ -65,6 +65,7 @@ public class ClientCommunicator {
                 };
             }
             if (mWebSocketClient.getConnection().getReadyState() != WebSocket.READYSTATE.OPEN) {
+                mWebSocketClient.setReuseAddr( true );
                 mWebSocketClient.connect();
             }
         } catch (URISyntaxException e) {
