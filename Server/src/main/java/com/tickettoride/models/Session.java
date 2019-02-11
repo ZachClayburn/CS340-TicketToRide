@@ -14,6 +14,10 @@ public class Session implements ISession {
         this.sessionID = UUID.randomUUID();
     }
 
+    public Session(UUID sessionID) {
+        this.sessionID = sessionID;
+    }
+
     public User getUser() { return user; }
 
     public UUID getSessionID() { return  sessionID; }

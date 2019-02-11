@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class GameDAO extends Database.DataAccessObject {
 
@@ -43,14 +44,14 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     @Nullable
-    public Game getGame(String gameID) throws DatabaseException {
+    public Game getGame(UUID gameID) throws DatabaseException {
         Game game = null;
         String sql = "SELECT * FROM Games WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
-            statement.setString(1, gameID);
+            statement.setString(1, gameID.toString());
             var result = statement.executeQuery();
             if (result.next()) {
-                var tableGameID = result.getString("GameID");
+                UUID tableGameID = UUID.fromString(result.getString("GameID"));
                 var tableGroupName = result.getString("groupName");
                 var tableNumPlayer = result.getInt("numPlayer");
                 var tableMaxPlayer = result.getInt("maxPlayer");
@@ -62,11 +63,11 @@ public class GameDAO extends Database.DataAccessObject {
         return game;
     }
 
-    public void increasePlayerCount(String gameID, int num) throws DatabaseException {
+    public void updatePlayerCount(UUID gameID, int numberPlayers) throws DatabaseException {
         String sql = "UPDATE Games SET numPlayer = ? WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, num);
-            statement.setString(2, gameID);
+            statement.setInt(1, numberPlayers);
+            statement.setString(2, gameID.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve increase player count!", e);
