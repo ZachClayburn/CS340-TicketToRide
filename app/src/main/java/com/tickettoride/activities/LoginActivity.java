@@ -81,7 +81,6 @@ public class LoginActivity extends MyBaseActivity {
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
                 } catch (Throwable t) { }
-
             }
         });
         register = findViewById(R.id.register);

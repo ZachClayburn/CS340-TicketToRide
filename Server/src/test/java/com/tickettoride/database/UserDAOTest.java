@@ -3,7 +3,6 @@ package com.tickettoride.database;
 import com.tickettoride.models.User;
 import modelAttributes.Password;
 import modelAttributes.Username;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
 
