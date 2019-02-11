@@ -93,6 +93,8 @@ public class Database implements AutoCloseable {
 
         parameters =  gson.fromJson(reader, DatabaseParameters.class);
 
+        logger.info("Connecting to the database with parameter: " + parameters);
+
 
         final String url = "jdbc:postgresql://" + parameters.getServerAddress();
 
@@ -186,6 +188,16 @@ public class Database implements AutoCloseable {
             return password;
         }
 
+        @Override
+        public String toString() {
+            return "DatabaseParameters{" +
+                    "URL='" + URL + '\'' +
+                    ", port=" + port +
+                    ", databaseName='" + databaseName + '\'' +
+                    ", username='" + username + '\'' +
+                    ", password='" + password + '\'' +
+                    '}';
+        }
     }
 
     public static void main(String[] args) throws DatabaseException {

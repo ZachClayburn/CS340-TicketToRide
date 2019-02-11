@@ -306,4 +306,5 @@ gradle-app.setting
 .idea/sqldialects.xml
 
 ## Database Server Parameters ##
-Server/src/**/resources/databaseParams.json
+Server/src/main/resources/databaseParams.json
+Server/src/test/resources/databaseParams.json
