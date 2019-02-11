@@ -1,8 +1,6 @@
 package com.tickettoride.facades;
 
-import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
-import com.tickettoride.database.SessionDAO;
 import com.tickettoride.database.UserDAO;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
@@ -49,7 +47,7 @@ public class UserFacade extends BaseFacade {
         try (Database database = new Database()) {
             UUID sessionID = session.getSessionID();
             UserDAO dao = database.getUserDAO();
-            return dao.getUser(sessionID);
+            return dao.getUserBySessionID(sessionID);
         }
     }
 
