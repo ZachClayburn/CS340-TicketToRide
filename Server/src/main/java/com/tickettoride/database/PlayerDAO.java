@@ -32,7 +32,7 @@ public class PlayerDAO extends Database.DataAccessObject {
     public void addNewPlayer(Player player) throws DatabaseException {
         final String sql = "INSERT INTO Players (playerID, userID, gameID) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1, player.getPlayerID());
+            statement.setString(1, player.getPlayerID().toString());
             statement.setString(2, player.getUser().getUserID().toString());
             statement.setString(3, player.getGame().getGameID().toString());
             statement.executeUpdate();

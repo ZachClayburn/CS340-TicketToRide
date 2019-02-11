@@ -85,7 +85,7 @@ public class JoinGameActivity extends MyBaseActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    GameFacadeProxy.SINGLETON.join(DataManager.getSINGLETON().getSession().getSessionId(), game.getGameID().toString());
+                    GameFacadeProxy.SINGLETON.join(game.getGameID());
                 }
             });
         }

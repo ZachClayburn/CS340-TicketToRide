@@ -22,7 +22,7 @@ public class GameFacade extends BaseFacade {
     private static Logger logger = LogManager.getLogger(GameFacade.class.getName());
     private GameFacade() {}
 
-    public void create(UUID connID, UUID sessionID, String gameName, int maxPlayers) throws Database.DatabaseException {
+    public void create(UUID connID, UUID sessionID, String gameName, Integer maxPlayers) {
         try {
             Game game = createGame(gameName, maxPlayers, sessionID);
             Session session = new Session(sessionID);
@@ -41,7 +41,7 @@ public class GameFacade extends BaseFacade {
       }
     }
 
-    public void join(UUID connID, UUID sessionID, UUID gameID) throws Database.DatabaseException {
+    public void join(UUID connID, UUID sessionID, UUID gameID) {
         try {
             Game game = findGame(gameID);
             Session session = new Session(sessionID);
@@ -68,7 +68,7 @@ public class GameFacade extends BaseFacade {
     }
 
 
-    public Game createGame(String gameName, int maxPlayers, UUID sessionID) throws Database.DatabaseException {
+    public Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws Database.DatabaseException {
         try (Database database = new Database()) {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
@@ -88,7 +88,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void updatePlayerCount(UUID gameID, int playerCount) throws Database.DatabaseException {
+    public void updatePlayerCount(UUID gameID, Integer playerCount) throws Database.DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);

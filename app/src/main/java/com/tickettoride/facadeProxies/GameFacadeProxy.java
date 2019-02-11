@@ -26,7 +26,7 @@ public class GameFacadeProxy {
         } catch(Throwable t){}
     }
 
-    public void join(String sessionID, String gameID){
+    public void join(UUID gameID){
         Session session = DataManager.getSINGLETON().getSession();
         try {
             Command command = new Command("GameFacade", "join", session.getSessionId(), gameID);

@@ -29,8 +29,8 @@ public class Player {
         this.game = game;
     }
 
-    public String getPlayerID() {
-        return playerID.toString();
+    public UUID getPlayerID() {
+        return playerID;
     }
 
     public void setPlayerID(UUID playerID) {

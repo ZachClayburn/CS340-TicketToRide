@@ -12,8 +12,8 @@ public class Session implements ISession {
 
     public Session(UUID sessionId) { this.sessionId = sessionId; }
 
-    public String getSessionId() {
-        return sessionId.toString();
+    public UUID getSessionId() {
+        return sessionId;
     }
 
     public void setSessionId(UUID sessionId) {

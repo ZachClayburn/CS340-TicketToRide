@@ -88,7 +88,7 @@ public class CreateGameActivity extends MyBaseActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer(), DataManager.SINGLETON.getSession().getSessionId());
+                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer());
                 } catch (Throwable t) { }
 
             }
