@@ -1,11 +1,12 @@
 package com.tickettoride.models;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import modelInterfaces.IGame;
 
 public class Game implements IGame {
-    private String gameID = "";
+    private String gameID = null;
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;

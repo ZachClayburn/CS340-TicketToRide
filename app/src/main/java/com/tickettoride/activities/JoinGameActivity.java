@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.GameInfo;
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 import java.util.ArrayList;
 
@@ -83,14 +85,14 @@ public class JoinGameActivity extends MyBaseActivity {
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //join game method server facade
+                    GameFacadeProxy.SINGLETON.join(DataManager.getSINGLETON().getSession().getSessionId(), game.getGameID().toString());
                 }
             });
         }
         public void moveToLobbyJoin() {
             Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("gameID", game.getGameID());
+            bundle.putString("gameID", game.getGameID().toString());
             intent.putExtras(bundle);
             startActivity(intent);
         }

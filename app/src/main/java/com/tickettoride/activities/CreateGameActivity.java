@@ -7,9 +7,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.GameInfo;
+
+
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 
 public class CreateGameActivity extends MyBaseActivity {
@@ -78,13 +83,12 @@ public class CreateGameActivity extends MyBaseActivity {
             }
         });
 
-        // TODO: When you click on a number button, does it unenable other clicked number buttons?
 
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    //create game facade proxy
+                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer(), DataManager.SINGLETON.getSession().getSessionId());
                 } catch (Throwable t) { }
 
             }
@@ -103,5 +107,9 @@ public class CreateGameActivity extends MyBaseActivity {
         else {
             createGame.setEnabled(false);
         }
+    }
+
+    public void createError() {
+        Toast.makeText(this, R.string.create_game_error, Toast.LENGTH_SHORT).show();
     }
 }

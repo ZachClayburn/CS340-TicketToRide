@@ -35,8 +35,7 @@ public class PlayerDAO extends Database.DataAccessObject {
             statement.setString(1, player.getPlayerID());
             statement.setString(2, player.getUser().getUserID().toString());
             statement.setString(3, player.getGame().getGameID());
-            Boolean result = statement.execute();
-            if (!result) throw new DatabaseException("Could not add new game to Database!");
-        } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
+            statement.executeUpdate();
+        } catch (SQLException e) { throw new DatabaseException("Could not add new player to Database!", e); }
     }
 }
