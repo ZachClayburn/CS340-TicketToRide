@@ -36,7 +36,7 @@ public class GameFacade extends BaseFacade {
             sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "errorCreate", t);
+            Command command = new Command(CONTROLLER_NAME, "errorCreate", throwable);
             sendResponseToOne(connID, command);
       }
     }
@@ -55,7 +55,7 @@ public class GameFacade extends BaseFacade {
             sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "errorJoin", t);
+            Command command = new Command(CONTROLLER_NAME, "errorJoin", throwable);
             sendResponseToOne(connID, command);
         }
     }
@@ -84,6 +84,7 @@ public class GameFacade extends BaseFacade {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
             dao.addNewPlayer(player);
+            return player;
         }
     }
 

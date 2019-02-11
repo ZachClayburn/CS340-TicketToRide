@@ -35,7 +35,7 @@ public class GameDAO extends Database.DataAccessObject {
     public void addGame(Game game) throws DatabaseException {
         final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1, game.getGameID());
+            statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
             statement.setInt(3, game.getNumPlayer());
             statement.setInt(4, game.getMaxPlayer());
