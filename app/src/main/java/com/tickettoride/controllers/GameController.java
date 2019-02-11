@@ -1,6 +1,7 @@
 package com.tickettoride.controllers;
 
 import android.app.Activity;
+import android.graphics.Paint;
 
 import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.JoinGameActivity;
@@ -63,5 +64,10 @@ public class GameController extends BaseController {
     public void errorCreate(Throwable t) {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
         createGameActivity.createError();
+    }
+
+    public void errorJoin(Throwable t) {
+        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+        joinGameActivity.JoinError();
     }
 }

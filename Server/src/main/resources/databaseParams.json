@@ -1,0 +1,7 @@
+{
+  "URL":"localhost",
+  "port":5432,
+  "databaseName":"tickettoride",
+  "username":"postgres",
+  "password":"Zexionvi"
+}

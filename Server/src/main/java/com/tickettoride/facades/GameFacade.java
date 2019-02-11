@@ -56,7 +56,7 @@ public class GameFacade extends BaseFacade {
             Command command = new Command(
                     "GameController", "join",
                     player.getPlayerID(), sessionID, game.getGameID());
-            sendResponseToOne(connID, command);
+            //sendResponseToOne(connID, command);
             sendResponseToMainLobby(command);
         } catch (Throwable t) {
             Command command = new Command("GameController", "errorJoin", t);
