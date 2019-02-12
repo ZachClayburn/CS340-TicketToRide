@@ -3,6 +3,7 @@ package com.tickettoride.database;
 import com.tickettoride.models.User;
 import modelAttributes.Password;
 import modelAttributes.Username;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
 
@@ -98,4 +99,46 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
     }
 
+    @Test
+    public void AttemptToAddUserWithEmptyUsername_FailsWithExpectedException() throws Throwable {
+        var badUsername = new Username("");
+        var badUser = new User(badUsername, password);
+
+        boolean didFail = false;
+
+        try (var db = new Database()) {
+
+            db.getUserDAO().addUser(badUser);
+
+        } catch (Database.DatabaseException e) {
+            if (e.getCause() instanceof PSQLException)
+                didFail = true;
+            else
+                throw e.getCause();
+        }
+
+        assertTrue(didFail);
+    }
+
+
+    @Test
+    public void AttemptToAddUserWithEmptyPassword_FailsWithExpectedException() throws Throwable {
+        var badPassword = new Password("");
+        var badUser = new User(username, badPassword);
+
+        boolean didFail = false;
+
+        try (var db = new Database()) {
+
+            db.getUserDAO().addUser(badUser);
+
+        } catch (Database.DatabaseException e) {
+            if (e.getCause() instanceof PSQLException)
+                didFail = true;
+            else
+                throw e.getCause();
+        }
+
+        assertTrue(didFail);
+    }
 }
