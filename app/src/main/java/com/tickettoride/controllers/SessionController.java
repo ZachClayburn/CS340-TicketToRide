@@ -1,4 +1,6 @@
 package com.tickettoride.controllers;
+import android.util.Log;
+
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.LoginActivity;
 import com.tickettoride.clientModels.DataManager;
@@ -8,8 +10,6 @@ import com.tickettoride.clientModels.Session;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import modelInterfaces.IGame;
-
 public class SessionController extends BaseController {
     private static SessionController SINGLETON = new SessionController();
     public static SessionController getSingleton() { return SINGLETON; }
@@ -18,8 +18,9 @@ public class SessionController extends BaseController {
     public void create(UUID sessionId, ArrayList<LinkedTreeMap> linkedTreeGames) {
         Session session = new Session(sessionId);
         DataManager.getSINGLETON().setSession(session);
-        ArrayList<Game> games = buildGames(linkedTreeGames);
+        ArrayList<Game> games = Game.buildGames(linkedTreeGames);
         DataManager.getSINGLETON().getGameIndex().setGames(games);
+        Log.i("SessionController", DataManager.getSINGLETON().getGameIndex().getGameIndex().toString());
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.moveToJoin();
     }
@@ -32,14 +33,5 @@ public class SessionController extends BaseController {
     public void loginError() {
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.loginError();
-    }
-
-    public ArrayList<Game> buildGames(ArrayList<LinkedTreeMap> gameMap) {
-        ArrayList<Game> games = new ArrayList<>();
-        for (LinkedTreeMap singleGameHash : gameMap) {
-            Game game = new Game(singleGameHash);
-            games.add(game);
-        }
-        return games;
     }
 }
