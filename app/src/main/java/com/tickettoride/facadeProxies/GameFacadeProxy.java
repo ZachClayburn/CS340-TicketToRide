@@ -21,7 +21,7 @@ public class GameFacadeProxy {
     public void create(String name, int maxPlayers){
         Session session = DataManager.getSINGLETON().getSession();
         try{
-            Command command = new Command("GameFacade", "create", session.getSessionId(), name, maxPlayers);
+            Command command = new Command(FACADE_NAME, "create", session.getSessionId(), name, maxPlayers);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t){}
     }
@@ -29,8 +29,15 @@ public class GameFacadeProxy {
     public void join(UUID gameID){
         Session session = DataManager.getSINGLETON().getSession();
         try {
-            Command command = new Command("GameFacade", "join", session.getSessionId(), gameID);
+            Command command = new Command(FACADE_NAME, "join", session.getSessionId(), gameID);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t) {}
+    }
+
+    public void leave() {
+        try{
+            Command command = new Command(FACADE_NAME, "leave");
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
     }
 }

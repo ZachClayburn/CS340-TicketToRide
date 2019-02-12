@@ -13,6 +13,7 @@ import com.tickettoride.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -68,10 +69,37 @@ public class GameFacade extends BaseFacade {
         }
     }
 
+    public void leave(UUID connID) {
+        try {
+            //Game game = findGame(gameID);
+            //deletePlayer(sessionID);
+            //int originalPlayerCount = game.getNumPlayer();
+            //updatePlayerCount(game.getGameID(), game.getNumPlayer() - 1);
+            ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
+            /*if (originalPlayerCount == game.getMaxPlayer()) {
+                Command command = new Command(
+                        CONTROLLER_NAME, "leave", game.getGameID());
+                sendResponseToMainLobby(command);
+            }*/
+        } catch (Throwable throwable) {
+            logger.error(throwable.getMessage(), throwable);
+            Command command = new Command(CONTROLLER_NAME, "errorLeave", throwable);
+            sendResponseToOne(connID, command);
+        }
+    }
+
     public Game findGame(UUID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.getGame(gameID);
+        }
+    }
+
+    public void deletePlayer(UUID sessionID) throws Database.DatabaseException, SQLException {
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            dao.deletePlayer(sessionID);
+            database.commit();
         }
     }
 

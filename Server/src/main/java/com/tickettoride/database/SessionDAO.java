@@ -7,6 +7,7 @@ import com.tickettoride.models.Session;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class SessionDAO extends Database.DataAccessObject {
 
@@ -30,6 +31,14 @@ public class SessionDAO extends Database.DataAccessObject {
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, session.getUser().getUserID().toString());
             statement.setString(2, session.getSessionID().toString());
+            statement.executeUpdate();
+        }
+    }
+
+    public void deleteSession(UUID sessionID) throws SQLException {
+        String sql = "DELETE FROM Sessions WHERE sessionID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, sessionID.toString());
             statement.executeUpdate();
         }
     }

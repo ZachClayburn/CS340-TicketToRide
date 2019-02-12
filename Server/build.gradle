@@ -4,7 +4,7 @@ plugins {
     id 'application'
 }
 
-//idea.module.outputDir file("build/resources/main")
+idea.module.outputDir file("src/main/resources")
 
 application {
     mainClassName = 'com.tickettoride.command.ServerCommunicator'

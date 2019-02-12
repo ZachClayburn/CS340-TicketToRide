@@ -45,8 +45,8 @@ public class GameIndex {
     public void makeGameUnavailable(String gameID) {
         Game fullGame = null;
         for (Game game: gameIndex) {
-            if (game.getGameID().toString().equals(gameID)) {
-                break;
+            if (game.getGameID().equals(gameID)) {
+                fullGame = game;
             }
         }
         fullGames.add(fullGame);
@@ -54,6 +54,26 @@ public class GameIndex {
         indexUI.updateUI();
     }
 
+    // Move game to normal gameIndex if someone left
+    public void makeGameAvailable(String gameID) {
+        Game openGame = null;
+        for (Game game: fullGames) {
+            if (game.getGameID().toString().equals(gameID)) {
+                openGame = game;
+                fullGames.remove(openGame);
+                gameIndex.add(openGame);
+                break;
+            }
+        }
+    }
+
+    public void addGames(ArrayList<IGame> games) {
+//        for (IGame game : games) {
+//            Game newGame = new Game(game);
+//            fullGames.add(newGame);
+//        }
+    }
+  
     public void setGames(ArrayList<Game> games) {
         fullGames = games;
         gameIndex = games;
