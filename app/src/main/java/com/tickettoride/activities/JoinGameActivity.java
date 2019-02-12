@@ -13,9 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.Game;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.facadeProxies.SessionFacadeProxy;
 
 import java.util.ArrayList;
 
@@ -103,6 +105,7 @@ public class JoinGameActivity extends MyBaseActivity {
 
     @Override
     public void onBackPressed(){
+        SessionFacadeProxy.SINGLETON.delete(DataManager.SINGLETON.getSession().getSessionId());
         Intent intent = new Intent(JoinGameActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
