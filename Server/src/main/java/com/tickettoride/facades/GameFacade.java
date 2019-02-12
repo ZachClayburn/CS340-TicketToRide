@@ -109,7 +109,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void deletePlayer(UUID sessionID) throws Database.DatabaseException, SQLException {
+    public void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
             dao.deletePlayer(sessionID);

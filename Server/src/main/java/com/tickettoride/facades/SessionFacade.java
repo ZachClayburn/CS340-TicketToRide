@@ -53,7 +53,7 @@ public class SessionFacade extends BaseFacade {
         }
     }
 
-    public void delete(UUID connID, UUID sessionID) throws Database.DatabaseException, SQLException {
+    public void delete(UUID connID, UUID sessionID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             ServerCommunicator.getINSTANCE().moveToLogin(connID);
             SessionDAO dao = database.getSessionDAO();
