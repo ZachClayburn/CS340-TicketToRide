@@ -24,6 +24,7 @@ public class JoinGameActivity extends MyBaseActivity {
     private Button createGame;
     private Adapter adapter;
     private ArrayList<Game> games = GameIndex.SINGLETON.getGameIndex();
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,20 @@ public class JoinGameActivity extends MyBaseActivity {
         });
         adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
+        this.context = this;
     }
 
-    public void updateUI() {
+    public Runnable updateUIRunnable = new Runnable() {
+        @Override
+        public void run() {
         games = GameIndex.SINGLETON.getGameIndex();
-        adapter = new Adapter(this, games);
+        adapter = new Adapter(context, games);
         gameList.setAdapter(adapter);
+        }
+    };
+
+    public void updateUI() {
+        runOnUiThread(updateUIRunnable);
     }
 
     public class Adapter extends RecyclerView.Adapter<Holder> {
