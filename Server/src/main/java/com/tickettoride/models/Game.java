@@ -27,7 +27,7 @@ public class Game implements IGame {
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(UUID gameID, String groupName, int maxPlayer, int numPlayer) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
