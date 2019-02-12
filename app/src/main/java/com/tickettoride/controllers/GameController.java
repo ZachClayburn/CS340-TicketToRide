@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.R;
 import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.JoinGameActivity;
@@ -14,6 +15,7 @@ import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.Player;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class GameController extends BaseController {
@@ -21,9 +23,9 @@ public class GameController extends BaseController {
     public static GameController getSingleton() { return SINGLETON; }
     private GameController() {}
 
-    public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
+    public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Player player = new Player(gameID, sessionID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
         DataManager.SINGLETON.setGame(game);
         DataManager.SINGLETON.setPlayer(player);
         DataManager.SINGLETON.getGameIndex().addGame(game);
@@ -40,9 +42,9 @@ public class GameController extends BaseController {
 
     }
 
-    public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
+    public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Player player = new Player(gameID, sessionID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
         GameIndex.SINGLETON.findGame(game.getGameID().toString()).addPlayer(player);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
@@ -68,6 +70,13 @@ public class GameController extends BaseController {
     public void errorJoin() {
         JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
         joinGameActivity.JoinError();
+    }
+
+    public void leave(ArrayList<LinkedTreeMap> linkedTreeGames) {
+        ArrayList<Game> games = Game.buildGames(linkedTreeGames);
+        DataManager.getSINGLETON().getGameIndex().setGames(games);
+        LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+        lobbyActivity.moveToJoin();
     }
 
     private void moveToLobby(Player player, Game game) {

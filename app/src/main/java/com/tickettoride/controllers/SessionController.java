@@ -20,7 +20,6 @@ public class SessionController extends BaseController {
         DataManager.getSINGLETON().setSession(session);
         ArrayList<Game> games = Game.buildGames(linkedTreeGames);
         DataManager.getSINGLETON().getGameIndex().setGames(games);
-        Log.i("SessionController", DataManager.getSINGLETON().getGameIndex().getGameIndex().toString());
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.moveToJoin();
     }

@@ -77,7 +77,7 @@ public class GameIndex {
   
     public void setGames(ArrayList<Game> games) {
         ArrayList<Game> gameIndex = new ArrayList<>();
-        for (Game game: games) { if (game.getNumPlayer() < game.getMaxPlayer()) gameIndex.add(game); }
+        for (Game game: games) { if (!game.getIsStarted()) gameIndex.add(game); }
         this.fullGames = games;
         this.gameIndex = gameIndex;
     }

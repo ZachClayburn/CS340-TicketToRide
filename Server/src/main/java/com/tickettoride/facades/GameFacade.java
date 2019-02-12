@@ -37,7 +37,7 @@ public class GameFacade extends BaseFacade {
             Command command = new Command(
                 "GameController", "create",
                 player.getPlayerID(), sessionID,
-                game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
+                game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
             sendResponseToOne(connID, command);
             sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
@@ -60,7 +60,7 @@ public class GameFacade extends BaseFacade {
             Command command = new Command(
                     CONTROLLER_NAME, "join",
                     player.getPlayerID(), sessionID,
-                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
             sendResponseToRoom(connID, command);
             if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
@@ -72,16 +72,12 @@ public class GameFacade extends BaseFacade {
 
     public void leave(UUID connID) {
         try {
-            //Game game = findGame(gameID);
             //deletePlayer(sessionID);
             //int originalPlayerCount = game.getNumPlayer();
             //updatePlayerCount(game.getGameID(), game.getNumPlayer() - 1);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
-            /*if (originalPlayerCount == game.getMaxPlayer()) {
-                Command command = new Command(
-                        CONTROLLER_NAME, "leave", game.getGameID());
-                sendResponseToMainLobby(command);
-            }*/
+            Command command = new Command(CONTROLLER_NAME, "leave", allGames());
+            sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorLeave", throwable);

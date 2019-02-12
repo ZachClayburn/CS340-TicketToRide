@@ -29,11 +29,12 @@ public class Game implements IGame {
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
         this.numPlayer = numPlayer;
+        this.isStarted = isStarted;
     }
 
 
@@ -76,4 +77,6 @@ public class Game implements IGame {
     public void setStarted(boolean started) {
         isStarted = started;
     }
+
+    public Boolean IsStarted() { return isStarted; }
 }

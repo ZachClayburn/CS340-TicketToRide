@@ -13,13 +13,15 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     private String groupName = "";
     private int maxPlayer = 1;
     private int numPlayer = 1;
+    private Boolean isStarted;
     private ArrayList<Player> players = new ArrayList();
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player, Boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.numPlayer = numPlayer;
         this.maxPlayer = maxPlayer;
+        this.isStarted = isStarted;
         players.add(player);
     }
 
@@ -30,6 +32,7 @@ public class Game implements IGame, Serializable { //used for when creating a ne
         this.groupName = (String) gameMap.get("groupName");
         this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
         this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
+        this.isStarted = (Boolean) gameMap.get(("isStarted"));
     }
 
 
@@ -62,6 +65,8 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     public void setMaxPlayer(int num) {
         maxPlayer = num;
     }
+
+    public Boolean getIsStarted() { return  isStarted; }
 
     public void addPlayer(Player player){
         players.add(player);

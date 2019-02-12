@@ -109,7 +109,5 @@ public class LobbyActivity extends MyBaseActivity{
 
     public void leaveGame() {
         GameFacadeProxy.SINGLETON.leave();
-        moveToJoin();
     }
-
 }

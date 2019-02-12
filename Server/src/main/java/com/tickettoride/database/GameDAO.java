@@ -60,7 +60,8 @@ public class GameDAO extends Database.DataAccessObject {
                 var tableGroupName = result.getString("groupName");
                 var tableNumPlayer = result.getInt("numPlayer");
                 var tableMaxPlayer = result.getInt("maxPlayer");
-                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer);
+                var tableIsStarted = result.getBoolean("iStarted");
+                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve game!", e);
@@ -89,7 +90,8 @@ public class GameDAO extends Database.DataAccessObject {
               var tableGroupName = results.getString("groupName");
               var tableNumPlayer = results.getInt("numPlayer");
               var tableMaxPlayer = results.getInt("maxPlayer");
-              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer);
+              var tableIsStarted = results.getBoolean("iStarted");
+              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
               games.add(game);
           }
         } catch (SQLException e) {
