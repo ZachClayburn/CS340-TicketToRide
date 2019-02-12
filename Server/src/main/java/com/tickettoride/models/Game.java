@@ -10,8 +10,10 @@ public class Game implements IGame {
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;
-    private ArrayList<User> players = new ArrayList<>();
 
+    private boolean isStarted = false;
+
+    private ArrayList<User> players = new ArrayList<>();
     public Game(String groupName, int maxPlayer, User creator) {
         this.gameID = UUID.randomUUID();
         this.groupName = groupName;
@@ -65,5 +67,13 @@ public class Game implements IGame {
 
     public int getMaxPlayer() {
         return maxPlayer;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
+
+    public void setStarted(boolean started) {
+        isStarted = started;
     }
 }

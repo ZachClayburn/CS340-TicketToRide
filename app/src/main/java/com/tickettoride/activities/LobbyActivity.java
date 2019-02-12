@@ -44,7 +44,7 @@ public class LobbyActivity extends MyBaseActivity{
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //proxy start game method?
+                GameFacadeProxy.SINGLETON.startGame(game); //FIXME Only let the player start a game if there is at least 2 players
             }
         });
     }

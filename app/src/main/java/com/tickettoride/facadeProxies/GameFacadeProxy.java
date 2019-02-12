@@ -1,6 +1,7 @@
 package com.tickettoride.facadeProxies;
 
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.Session;
 import com.tickettoride.command.ClientCommunicator;
 
@@ -39,5 +40,9 @@ public class GameFacadeProxy {
             Command command = new Command(FACADE_NAME, "leave");
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t){}
+    }
+
+    public void startGame(Game game) {
+        Command command = new Command(FACADE_NAME, "start", game.getGameID());
     }
 }

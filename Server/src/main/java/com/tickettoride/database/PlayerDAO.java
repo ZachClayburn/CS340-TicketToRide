@@ -17,7 +17,9 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "(" +
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
-                    "gameID TEXT NOT NULL" + //FIXME Add foreign key constraint and insure correct creation order
+                    "gameID TEXT NOT NULL," +
+                    "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
+                    "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
 
     public PlayerDAO(Connection connection) {

@@ -3,6 +3,8 @@ package com.tickettoride.database;
 import com.tickettoride.models.Game;
 
 import exceptions.DatabaseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
@@ -17,15 +19,18 @@ public class GameDAO extends Database.DataAccessObject {
             // language=PostgreSQL
             "CREATE TABLE Games" +
                     "(" +
-                    "gameID TEXT PRIMARY KEY NOT NULL," +
+                    "gameID TEXT PRIMARY KEY NOT NULL CHECK ( length(gameID) > 0 )," +
                     "groupName TEXT NOT NULL UNIQUE," +
                     "numPlayer NUMERIC NOT NULL," +
-                    "maxPlayer NUMERIC NOT NULL" +
+                    "maxPlayer NUMERIC NOT NULL," +
+                    "iStarted BOOLEAN DEFAULT FALSE" +
                     ");";
 
     public GameDAO(Connection connection) {
         super(connection);
     }
+
+    private Logger logger = LogManager.getLogger(GameDAO.class.getName());
 
     @Override
     String getTableCreateString() {
@@ -91,6 +96,22 @@ public class GameDAO extends Database.DataAccessObject {
             throw new DatabaseException(("Could Not Retrieve Games"));
         }
         return games;
+    }
+
+    public void setGameToStarted(UUID gameID) throws DatabaseException {
+
+        String sql = "UPDATE games SET istarted=TRUE WHERE gameid=?";
+
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(0, gameID.toString());
+
+        } catch (SQLException e) {
+            logger.catching(e);
+
+            throw new DatabaseException("Could not start the game!", e);
+        }
+
     }
 }
 

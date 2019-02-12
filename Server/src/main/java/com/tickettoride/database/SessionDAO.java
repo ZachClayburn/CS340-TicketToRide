@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,12 +27,15 @@ public class SessionDAO extends Database.DataAccessObject {
         super(connection);
     }
 
-    public void createSession(Session session) throws SQLException {
+    public void createSession(Session session) throws DatabaseException {
         String sql = "INSERT INTO Sessions (userID, sessionID) VALUES (?, ?)";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, session.getUser().getUserID().toString());
             statement.setString(2, session.getSessionID().toString());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Error adding session to the database", e);
         }
     }
 
