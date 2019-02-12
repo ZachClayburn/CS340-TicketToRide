@@ -1,11 +1,8 @@
 package com.tickettoride.database;
 
-import org.junit.After;
-import org.junit.Before;
+import exceptions.DatabaseException;
 import org.junit.Test;
 import static org.junit.Assert.*;
-
-import java.io.File;
 
 public class DatabaseTest extends AbstractDatabaseTest {
 
@@ -15,7 +12,7 @@ public class DatabaseTest extends AbstractDatabaseTest {
         try (var db = new Database()){
             //If close is called manually, there is no error
             db.close();
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             fail();
         }
     }
@@ -30,7 +27,7 @@ public class DatabaseTest extends AbstractDatabaseTest {
             db.close();
 
             assertNull(dao.connection);
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             fail(e.getMessage());
         }
     }

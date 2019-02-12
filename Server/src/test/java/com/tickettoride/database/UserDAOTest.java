@@ -1,9 +1,9 @@
 package com.tickettoride.database;
 
 import com.tickettoride.models.User;
+import exceptions.DatabaseException;
 import modelAttributes.Password;
 import modelAttributes.Username;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
 
@@ -20,7 +20,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
 
     @Test
-    public void UserAddedToDatabase_UserExistsInDatabase() throws Database.DatabaseException, SQLException {
+    public void UserAddedToDatabase_UserExistsInDatabase() throws DatabaseException, SQLException {
 
         String address = "jdbc:postgresql://";
         String username;
@@ -53,7 +53,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
     }
 
     @Test
-    public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws Database.DatabaseException, SQLException {
+    public void UserAskedForWithUsernameAndPassword_CorrectUserReturned() throws DatabaseException, SQLException {
 
 
         try (var db = new Database()) {
@@ -81,13 +81,13 @@ public class UserDAOTest extends AbstractDatabaseTest{
             db.getUserDAO().addUser(testUser);
             db.commit();
 
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             fail(e.getMessage());
         }
 
         try (var db = new Database()){
             db.getUserDAO().addUser(testUser);
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             var cause = e.getCause();
             if (cause instanceof PSQLException)
                 didFail = true;
@@ -110,7 +110,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
             db.getUserDAO().addUser(badUser);
 
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             if (e.getCause() instanceof PSQLException)
                 didFail = true;
             else
@@ -132,7 +132,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
             db.getUserDAO().addUser(badUser);
 
-        } catch (Database.DatabaseException e) {
+        } catch (DatabaseException e) {
             if (e.getCause() instanceof PSQLException)
                 didFail = true;
             else

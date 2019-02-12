@@ -38,7 +38,9 @@ public class GameController extends BaseController {
 
     public void join(UUID playerID, UUID sessionID, UUID gameID){
         Player player = new Player(gameID, sessionID, playerID);
-        GameIndex.SINGLETON.findGame(gameID.toString()).addPlayer(player);
+        GameIndex.SINGLETON
+                .findGame(gameID.toString())
+                .addPlayer(player);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);

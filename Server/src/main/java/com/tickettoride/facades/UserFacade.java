@@ -2,6 +2,7 @@ package com.tickettoride.facades;
 
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import exceptions.DatabaseException;
 import com.tickettoride.database.UserDAO;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Session;
@@ -41,14 +42,14 @@ public class UserFacade extends BaseFacade {
         }
     }
 
-    public User find_user(Username username, Password password) throws Database.DatabaseException {
+    public User find_user(Username username, Password password) throws DatabaseException {
         try (Database database = new Database()) {
             UserDAO dao = database.getUserDAO();
             return dao.getUser(username, password);
         }
     }
 
-    public User find_user(Session session) throws Database.DatabaseException {
+    public User find_user(Session session) throws DatabaseException {
         try (Database database = new Database()) {
             UUID sessionID = session.getSessionID();
             UserDAO dao = database.getUserDAO();
@@ -56,7 +57,7 @@ public class UserFacade extends BaseFacade {
         }
     }
 
-    public User create_user(Username username, Password password) throws Database.DatabaseException, SQLException {
+    public User create_user(Username username, Password password) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             UserDAO dao = database.getUserDAO();
             User user = new User(username, password);

@@ -1,9 +1,8 @@
 package com.tickettoride.database;
 
-import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.Game;
-import com.tickettoride.models.User;
 
+import exceptions.DatabaseException;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;

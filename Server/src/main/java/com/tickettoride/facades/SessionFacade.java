@@ -1,6 +1,7 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import exceptions.DatabaseException;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Session;
@@ -42,7 +43,7 @@ public class SessionFacade extends BaseFacade {
         }
     }
 
-    public Session create_session(User user) throws Database.DatabaseException, SQLException {
+    public Session create_session(User user) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             Session session = new Session(user);
             SessionDAO dao = database.getSessionDAO();
