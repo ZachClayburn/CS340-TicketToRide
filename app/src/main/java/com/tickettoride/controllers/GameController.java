@@ -1,5 +1,6 @@
 package com.tickettoride.controllers;
 
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.tickettoride.activities.CreateGameActivity;
@@ -36,24 +37,25 @@ public class GameController extends BaseController {
 
     }
 
-    public void join(UUID playerID, UUID sessionID, UUID gameID){
-        Player player = new Player(gameID, sessionID, playerID);
-        GameIndex.SINGLETON
-                .findGame(gameID.toString())
-                .addPlayer(player);
+    public void join(UUID playerID, UUID sessionID, Game game){
+        Player player = new Player(game.getGameID(), sessionID, playerID);
+        GameIndex.SINGLETON.findGame(game.getGameID().toString()).addPlayer(player);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
-        }
-        // If someone joined your game
-        if (DataManager.SINGLETON.getPlayer().getGameID().equals(gameID)){
-            LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
-            lobbyActivity.updateUI();
-        }
-        // Update game index for all other players
-        else {
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
-            joinGameActivity.updateUI();
+            joinGameActivity.moveToLobbyJoin(game);
+        } else {
+            // If someone joined your game
+            if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+                LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+                lobbyActivity.updateUI();
+            }
+            // Update game index for all other players
+            else {
+                JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+                joinGameActivity.updateUI();
+            }
         }
     }
 
