@@ -52,10 +52,8 @@ public class GameIndex {
         indexUI.updateUI();
     }
 
-    public void addGames(ArrayList<IGame> games) {
-//        for (IGame game : games) {
-//            Game newGame = new Game(game);
-//            fullGames.add(newGame);
-//        }
+    public void setGames(ArrayList<Game> games) {
+        fullGames = games;
+        gameIndex = games;
     }
 }

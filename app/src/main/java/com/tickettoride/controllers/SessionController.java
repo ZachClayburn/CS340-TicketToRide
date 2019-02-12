@@ -1,4 +1,5 @@
 package com.tickettoride.controllers;
+import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.LoginActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Game;
@@ -14,10 +15,11 @@ public class SessionController extends BaseController {
     public static SessionController getSingleton() { return SINGLETON; }
     private SessionController() {}
 
-    public void create(UUID sessionId, ArrayList<Game> games) {
+    public void create(UUID sessionId, ArrayList<LinkedTreeMap> linkedTreeGames) {
         Session session = new Session(sessionId);
         DataManager.getSINGLETON().setSession(session);
-//        DataManager.getSINGLETON().getGameIndex().addGames(games);
+        ArrayList<Game> games = buildGames(linkedTreeGames);
+        DataManager.getSINGLETON().getGameIndex().setGames(games);
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.moveToJoin();
     }
@@ -30,5 +32,14 @@ public class SessionController extends BaseController {
     public void loginError() {
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();
         loginActivity.loginError();
+    }
+
+    public ArrayList<Game> buildGames(ArrayList<LinkedTreeMap> gameMap) {
+        ArrayList<Game> games = new ArrayList<>();
+        for (LinkedTreeMap singleGameHash : gameMap) {
+            Game game = new Game(singleGameHash);
+            games.add(game);
+        }
+        return games;
     }
 }

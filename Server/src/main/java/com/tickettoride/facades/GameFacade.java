@@ -80,6 +80,7 @@ public class GameFacade extends BaseFacade {
             Game game = new Game(gameName, maxPlayers, user);
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
+            database.commit();
             return game;
         }
     }
@@ -96,6 +97,7 @@ public class GameFacade extends BaseFacade {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
             dao.addNewPlayer(player);
+            database.commit();
             return player;
         }
     }

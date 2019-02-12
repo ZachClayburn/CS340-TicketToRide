@@ -409,11 +409,11 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static void main(String[] args) {
         try {
-            try (Database database = new Database()) {
-                database.resetDatabase();
-            } catch (Throwable t) {
-                logger.catching(t);
-            }
+//            try (Database database = new Database()) {
+//                database.resetDatabase();
+//            } catch (Throwable t) {
+//                logger.catching(t);
+//            }
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {}
     }
