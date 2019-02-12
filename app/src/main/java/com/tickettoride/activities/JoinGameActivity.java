@@ -58,6 +58,12 @@ public class JoinGameActivity extends MyBaseActivity {
         runOnUiThread(updateUIRunnable);
     }
 
+    public void moveToLobbyJoin(Game game) {
+        Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
+        intent.putExtra("game", game);
+        startActivity(intent);
+    }
+
     public class Adapter extends RecyclerView.Adapter<Holder> {
         private ArrayList<Game> listOfGames;
         private LayoutInflater inflater;
@@ -79,6 +85,7 @@ public class JoinGameActivity extends MyBaseActivity {
         public int getItemCount() {
             return listOfGames.size();
         }
+
     }
     public class Holder extends RecyclerView.ViewHolder {
         TextView gameName;
@@ -97,14 +104,6 @@ public class JoinGameActivity extends MyBaseActivity {
                 }
             });
         }
-        public void moveToLobbyJoin() {
-            Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("gameID", game.getGameID().toString());
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
-
     }
     public void JoinError() {
         Toast.makeText(this ,R.string.join_game_error, Toast.LENGTH_SHORT).show();

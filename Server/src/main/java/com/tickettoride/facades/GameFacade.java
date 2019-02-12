@@ -53,12 +53,13 @@ public class GameFacade extends BaseFacade {
             User user = UserFacade.getSingleton().find_user(session);
             Player player = createPlayer(user, game);
             updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
+            game.setNumPlayer((game.getNumPlayer() + 1));
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
                     CONTROLLER_NAME, "join",
-                    player.getPlayerID(), sessionID, game);
-            sendResponseToOne(connID, command);
-            sendResponseToMainLobby(command);
+                    player.getPlayerID(), sessionID,
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
+            sendResponseToRoom(connID, command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorJoin", throwable);
@@ -107,6 +108,7 @@ public class GameFacade extends BaseFacade {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
+            database.commit();
         }
     }
 
