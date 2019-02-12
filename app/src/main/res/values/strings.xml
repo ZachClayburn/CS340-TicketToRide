@@ -28,4 +28,5 @@
     <string name="start_game_error">Need more than 1 player</string>
     <string name="join_game_error">Game has max number of players</string>
     <string name="create_game_error">Invalid values for creating game</string>
+    <string name="game_start_message">Party time, the game is starting now!</string>
 </resources>

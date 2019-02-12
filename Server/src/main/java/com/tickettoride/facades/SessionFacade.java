@@ -43,7 +43,7 @@ public class SessionFacade extends BaseFacade {
         }
     }
 
-    public Session create_session(User user) throws DatabaseException, SQLException {
+    public Session create_session(User user) throws DatabaseException {
         try (Database database = new Database()) {
             Session session = new Session(user);
             SessionDAO dao = database.getSessionDAO();

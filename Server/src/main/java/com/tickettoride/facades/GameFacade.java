@@ -89,6 +89,19 @@ public class GameFacade extends BaseFacade {
         }
     }
 
+    public void start(UUID connID, UUID gameID) throws DatabaseException {
+        logger.info("Attempting to start game " + gameID);
+        try (var db = new Database()){
+
+            db.getGameDAO().setGameToStarted(gameID);
+            db.commit();
+        }
+
+        var command = new Command(CONTROLLER_NAME, "start");
+
+        sendResponseToRoom(connID, command);
+    }
+
     public Game findGame(UUID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();

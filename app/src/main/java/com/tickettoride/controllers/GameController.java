@@ -1,8 +1,11 @@
 package com.tickettoride.controllers;
 
+import android.app.Activity;
 import android.graphics.Paint;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 
+import com.tickettoride.R;
 import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.JoinGameActivity;
 import com.tickettoride.activities.LobbyActivity;
@@ -73,16 +76,11 @@ public class GameController extends BaseController {
         createGameActivity.moveToLobbyCreate(game);
     }
 
-    /*public void leave(UUID gameID){
-        Game game = GameIndex.SINGLETON.findGame(gameID.toString());
-        GameIndex.SINGLETON.makeGameAvailable(gameID.toString());
-        if(getCurrentActivity().getClass() == LobbyActivity.class){
-            LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
-            lobbyActivity.moveToJoin();
-        }
-        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
-        joinGameActivity.updateUI();
-    }*/
+    public void start() {
+        Log.i("GAME_CONTROLLER", "Calling Start");
+        LobbyActivity activity = (LobbyActivity) getCurrentActivity();
+        Snackbar.make(activity.findViewById(R.id.lobby_linear_layout), R.string.game_start_message, Snackbar.LENGTH_LONG ).show();
+    }
 
     public void errorLeave(Throwable t){
         Log.i("GameController", "Couldn't leave game");

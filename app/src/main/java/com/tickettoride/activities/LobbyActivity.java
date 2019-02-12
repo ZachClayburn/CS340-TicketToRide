@@ -3,6 +3,7 @@ package com.tickettoride.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,8 @@ public class LobbyActivity extends MyBaseActivity{
     private Button startGame;
     private Context context;
 
+    private static final String TAG = "LOBBY_ACTIVITY";
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lobby);
@@ -44,7 +47,8 @@ public class LobbyActivity extends MyBaseActivity{
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //proxy start game method?
+                Log.d(TAG, "onClick: Start game clicked");
+                GameFacadeProxy.SINGLETON.startGame(game); //FIXME Only let the player start a game if there is at least 2 players
             }
         });
     }
