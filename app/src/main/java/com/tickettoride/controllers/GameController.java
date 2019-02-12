@@ -61,6 +61,20 @@ public class GameController extends BaseController {
             joinGameActivity.updateUI();
         }
     }
+    
+    public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
+        Player player = new Player(gameID, sessionID, playerID);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
+        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+            DataManager.SINGLETON.setPlayer(player);
+            JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+            joinGameActivity.moveToLobbyJoin(game);
+        }else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+            LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+            lobbyActivity.updateUI(game);
+        }
+    }
+    
 
     public void errorCreate(Throwable t) {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();

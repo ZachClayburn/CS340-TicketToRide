@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import command.Command;
@@ -31,7 +32,7 @@ public class GameFacade extends BaseFacade {
             Game game = createGame(gameName, maxPlayers, sessionID);
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            Player player = createPlayer(user, game);
+            Player player = createPlayer(user.getUserID(), game.getGameID());
             ServerCommunicator.getINSTANCE().addRoom(game.getGameID());
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
@@ -53,14 +54,29 @@ public class GameFacade extends BaseFacade {
             if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            Player player = createPlayer(user, game);
-            updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
-            game.setNumPlayer((game.getNumPlayer() + 1));
+            List<Player> players=null;
+            try (Database database = new Database()) {
+                PlayerDAO dao = database.getPlayerDAO();
+                players=dao.getGamePlayers(gameID);
+            }
+            Player player=isAlreadyPlayer(user,players);
+            Command command;
+            if(player==null){
+                player = createPlayer(user.getUserID(), game.getGameID());
+                updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
+                game.setNumPlayer((game.getNumPlayer() + 1));
+                command = new Command(
+                        CONTROLLER_NAME, "join",
+                        player.getPlayerID(), sessionID,
+                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.IsStarted());
+            }else{
+                command = new Command(
+                        CONTROLLER_NAME, "rejoin",
+                        player.getPlayerID(), sessionID,
+                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
+            }
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
-            Command command = new Command(
-                    CONTROLLER_NAME, "join",
-                    player.getPlayerID(), sessionID,
-                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
+            
             sendResponseToRoom(connID, command);
             if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
@@ -83,6 +99,18 @@ public class GameFacade extends BaseFacade {
             Command command = new Command(CONTROLLER_NAME, "errorLeave", throwable);
             sendResponseToOne(connID, command);
         }
+    }
+    
+    private Player isAlreadyPlayer(User user, List<Player> players){
+        if(players==null||players.size()==0){
+            return null;
+        }
+        for(Player p:players){
+            if(user.getUserID().equals(p.getUserID())){
+                return p;
+            }
+        }
+        return null;
     }
 
     public void start(UUID connID, UUID gameID) throws DatabaseException {
@@ -133,7 +161,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public Player createPlayer(User user, Game game) throws DatabaseException {
+    public Player createPlayer(UUID user, UUID game) throws DatabaseException {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
