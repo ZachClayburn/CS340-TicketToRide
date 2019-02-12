@@ -11,7 +11,7 @@ import modelInterfaces.IGame;
 public class Game implements IGame, Serializable { //used for when creating a new game
     private UUID gameID = null;
     private String groupName = "";
-    private int maxPlayer = 5;
+    private int maxPlayer = 1;
     private int numPlayer = 1;
     private ArrayList<Player> players = new ArrayList();
 
