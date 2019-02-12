@@ -3,30 +3,36 @@ package com.tickettoride.models;
 import java.util.UUID;
 
 public class Player {
-    private User user = null;
-    private Game game = null;
+    private UUID userid = null;
+    private UUID gameid = null;
     private UUID playerID = null;
 
-    public Player(User user, Game game) {
-        this.user = user;
-        this.game = game;
+    public Player(UUID user, UUID game) {
+        this.userid = user;
+        this.gameid = game;
         this.playerID = UUID.randomUUID();
     }
-
-    public User getUser() {
-        return user;
+    
+    public Player(UUID user, UUID game, UUID player){
+        this.userid=user;
+        this.gameid=game;
+        this.playerID=player;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public UUID getUserID() {
+        return userid;
     }
 
-    public Game getGame() {
-        return game;
+    public void setUserID(UUID userid) {
+        this.userid = userid;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public UUID getGameID() {
+        return gameid;
+    }
+
+    public void setGameID(UUID gameid) {
+        this.gameid = gameid;
     }
 
     public UUID getPlayerID() {
