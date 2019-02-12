@@ -100,11 +100,12 @@ public class GameDAO extends Database.DataAccessObject {
 
     public void setGameToStarted(UUID gameID) throws DatabaseException {
 
-        String sql = "UPDATE games SET istarted=TRUE WHERE gameid=?";
+        String sql = "UPDATE games SET istarted=TRUE WHERE gameid= ?";
 
         try (var statement = connection.prepareStatement(sql)){
 
-            statement.setString(0, gameID.toString());
+            statement.setString(1, gameID.toString());
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             logger.catching(e);

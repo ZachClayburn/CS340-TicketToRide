@@ -1,5 +1,6 @@
 package com.tickettoride.facadeProxies;
 
+import android.util.Log;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.Session;
@@ -13,6 +14,8 @@ import java.util.UUID;
 import command.Command;
 
 public class GameFacadeProxy {
+
+    private static final String TAG = "GAME_FACADE_PROXY";
 
     public static GameFacadeProxy SINGLETON = new GameFacadeProxy();
     public static String FACADE_NAME = "GameFacade";
@@ -43,6 +46,9 @@ public class GameFacadeProxy {
     }
 
     public void startGame(Game game) {
+        Log.d(TAG, "startGame: Start game called, prepping command to send");
         Command command = new Command(FACADE_NAME, "start", game.getGameID());
+
+        ClientCommunicator.SINGLETON.send(command);
     }
 }
