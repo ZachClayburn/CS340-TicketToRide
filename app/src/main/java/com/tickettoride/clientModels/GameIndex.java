@@ -7,6 +7,7 @@ import com.tickettoride.activities.JoinGameActivity;
 import java.util.ArrayList;
 
 import modelInterfaces.IGame;
+import org.jetbrains.annotations.Nullable;
 
 
 public class GameIndex {
@@ -30,9 +31,10 @@ public class GameIndex {
 
     public void addGame(Game newGame) { gameIndex.add(newGame); }
 
+    @Nullable
     public Game findGame(String gameID) {
         for (Game game: gameIndex) {
-            if (game.getGameID().equals(gameID)) {
+            if (game.getGameID().toString().equals(gameID)) {
                 return game;
             }
         }
@@ -43,7 +45,7 @@ public class GameIndex {
     public void makeGameUnavailable(String gameID) {
         Game fullGame = null;
         for (Game game: gameIndex) {
-            if (game.getGameID().equals(gameID)) {
+            if (game.getGameID().toString().equals(gameID)) {
                 break;
             }
         }

@@ -1,13 +1,12 @@
 package com.tickettoride.database;
 
-import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.User;
+import exceptions.DatabaseException;
 import modelAttributes.Password;
 import modelAttributes.Username;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.postgresql.core.SqlCommand;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,7 +60,7 @@ public class UserDAO extends Database.DataAccessObject {
 
         } catch (SQLException e) {
             logger.catching(e);
-            throw new Database.DatabaseException("Could not retrieve user!", e);
+            throw new DatabaseException("Could not retrieve user!", e);
         }
         return user;
     }
@@ -87,7 +86,7 @@ public class UserDAO extends Database.DataAccessObject {
             user = getUserFromStatementResult(statement);
         } catch (SQLException e) {
             logger.catching(e);
-            throw new Database.DatabaseException("Could not retrieve user!", e);
+            throw new DatabaseException("Could not retrieve user!", e);
         }
         return user;
     }
