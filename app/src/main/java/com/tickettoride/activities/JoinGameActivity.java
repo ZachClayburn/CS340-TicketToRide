@@ -46,6 +46,7 @@ public class JoinGameActivity extends MyBaseActivity {
                 startActivity(intent);
             }
         });
+        games = GameIndex.SINGLETON.getGameIndex();
         adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
         this.context = this;
@@ -124,8 +125,16 @@ public class JoinGameActivity extends MyBaseActivity {
             });
         }
     }
+
+    public Runnable joinError = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(context ,R.string.join_game_error, Toast.LENGTH_SHORT).show();
+        }
+    };
+
     public void JoinError() {
-        Toast.makeText(this ,R.string.join_game_error, Toast.LENGTH_SHORT).show();
+        runOnUiThread(joinError);
     }
 
     @Override

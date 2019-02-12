@@ -62,7 +62,7 @@ public class GameController extends BaseController {
         createGameActivity.createError();
     }
 
-    public void errorJoin(Throwable t) {
+    public void errorJoin() {
         JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
         joinGameActivity.JoinError();
     }

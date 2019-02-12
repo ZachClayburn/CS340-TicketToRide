@@ -25,9 +25,11 @@ public class Game implements IGame, Serializable { //used for when creating a ne
 
     public Game(){}
 
-    public Game(LinkedTreeMap<String, String> gameMap) {
-        this.gameID = UUID.fromString(gameMap.get("gameID"));
-        this.groupName = gameMap.get("groupName");
+    public Game(LinkedTreeMap<String, Object> gameMap) {
+        this.gameID = UUID.fromString((String) gameMap.get("gameID"));
+        this.groupName = (String) gameMap.get("groupName");
+        this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
+        this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
     }
 
 
@@ -64,5 +66,14 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     public void addPlayer(Player player){
         players.add(player);
         numPlayer += 1;
+    }
+
+    public static ArrayList<Game> buildGames(ArrayList<LinkedTreeMap> gameMap) {
+        ArrayList<Game> games = new ArrayList<>();
+        for (LinkedTreeMap singleGameHash : gameMap) {
+            Game game = new Game(singleGameHash);
+            games.add(game);
+        }
+        return games;
     }
 }

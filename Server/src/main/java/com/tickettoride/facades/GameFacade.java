@@ -50,6 +50,7 @@ public class GameFacade extends BaseFacade {
     public void join(UUID connID, UUID sessionID, UUID gameID) {
         try {
             Game game = findGame(gameID);
+            if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
             Player player = createPlayer(user, game);
@@ -63,8 +64,8 @@ public class GameFacade extends BaseFacade {
             sendResponseToRoom(connID, command);
             if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
-            logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "errorJoin", throwable);
+            logger.error(throwable.getMessage());
+            Command command = new Command(CONTROLLER_NAME, "errorJoin");
             sendResponseToOne(connID, command);
         }
     }

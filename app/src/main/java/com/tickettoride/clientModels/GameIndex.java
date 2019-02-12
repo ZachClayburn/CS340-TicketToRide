@@ -1,6 +1,7 @@
 package com.tickettoride.clientModels;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.tickettoride.activities.JoinGameActivity;
 
@@ -75,7 +76,9 @@ public class GameIndex {
     }
   
     public void setGames(ArrayList<Game> games) {
-        fullGames = games;
-        gameIndex = games;
+        ArrayList<Game> gameIndex = new ArrayList<>();
+        for (Game game: games) { if (game.getNumPlayer() < game.getMaxPlayer()) gameIndex.add(game); }
+        this.fullGames = games;
+        this.gameIndex = gameIndex;
     }
 }
