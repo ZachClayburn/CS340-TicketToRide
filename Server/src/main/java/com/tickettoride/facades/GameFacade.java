@@ -60,6 +60,7 @@ public class GameFacade extends BaseFacade {
                     player.getPlayerID(), sessionID,
                     game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
             sendResponseToRoom(connID, command);
+            if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorJoin", throwable);

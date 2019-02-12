@@ -46,17 +46,14 @@ public class GameController extends BaseController {
             DataManager.SINGLETON.setPlayer(player);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToLobbyJoin(game);
-        } else {
-            // If someone joined your game
-            if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
-                LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
-                lobbyActivity.updateUI();
-            }
-            // Update game index for all other players
-            else {
-                JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
-                joinGameActivity.updateUI();
-            }
+        } else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+            LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+            lobbyActivity.updateUI(game);
+        }
+        // Update game index for all other players
+        else {
+            JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+            joinGameActivity.updateUI();
         }
     }
 
