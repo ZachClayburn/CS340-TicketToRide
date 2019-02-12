@@ -1,15 +1,12 @@
 package com.tickettoride.database;
 
 import com.google.gson.Gson;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Paths;
-import java.security.PrivilegedActionException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -44,14 +41,15 @@ public class Database implements AutoCloseable {
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
+     *
      * @throws DatabaseException If there is an error in creating the database and tables, or if the
-     * database already exists
+     *                           database already exists
      */
     public void resetDatabase() throws DatabaseException {
 
         System.out.println("Creating database " + parameters.databaseName);
 
-        try (var statement = connection.createStatement()){
+        try (var statement = connection.createStatement()) {
 
             //Language=PostgreSQL
             String sql = "DO $$ DECLARE" +
@@ -77,7 +75,7 @@ public class Database implements AutoCloseable {
     /**
      * Constructs a new Database object and connects to the database file.
      */
-    public Database() throws DatabaseException{
+    public Database() throws DatabaseException {
 
         Gson gson = new Gson();
         var cl = Database.class.getClassLoader();
@@ -92,7 +90,7 @@ public class Database implements AutoCloseable {
 
         Reader reader = new InputStreamReader(in);
 
-        parameters =  gson.fromJson(reader, DatabaseParameters.class);
+        parameters = gson.fromJson(reader, DatabaseParameters.class);
 
         logger.info("Connecting to the database with parameter: " + parameters);
 
@@ -121,6 +119,7 @@ public class Database implements AutoCloseable {
 
     /**
      * Closes the connection to the database, closing the connection
+     *
      * @throws DatabaseException If an error occurs in the adding process
      */
     @Override
@@ -145,9 +144,13 @@ public class Database implements AutoCloseable {
         return userDAO;
     }
 
-    public GameDAO getGameDAO() {return gameDAO;}
+    public GameDAO getGameDAO() {
+        return gameDAO;
+    }
 
-    public PlayerDAO getPlayerDAO() {return playerDAO;}
+    public PlayerDAO getPlayerDAO() {
+        return playerDAO;
+    }
 
     public void commit() throws DatabaseException {
         try {
@@ -177,7 +180,7 @@ public class Database implements AutoCloseable {
         private String username;
         private String password;
 
-        public String getServerAddress(){
+        public String getServerAddress() {
             return URL + ":" + port + "/" + databaseName;
         }
 
@@ -204,68 +207,6 @@ public class Database implements AutoCloseable {
     public static void main(String[] args) throws DatabaseException {
         try (var db = new Database()) {
             db.resetDatabase();
-        }
-    }
-
-    /**
-     * A custom exception for handling all errors relating to the database
-     */
-    public static class DatabaseException extends Exception {
-        /**
-         * Constructs a new exception with {@code null} as its detail message.
-         * The cause is not initialized, and may subsequently be initialized by a
-         * call to {@link #initCause}.
-         */
-        public DatabaseException() {
-            super();
-        }
-
-        /**
-         * Constructs a new exception with the specified detail message.  The
-         * cause is not initialized, and may subsequently be initialized by
-         * a call to {@link #initCause}.
-         *
-         * @param message the detail message. The detail message is saved for
-         *                later retrieval by the {@link #getMessage()} method.
-         */
-        public DatabaseException(String message) {
-            super(message);
-        }
-
-        /**
-         * Constructs a new exception with the specified detail message and
-         * cause.  <p>Note that the detail message associated with
-         * {@code cause} is <i>not</i> automatically incorporated in
-         * this exception's detail message.
-         *
-         * @param message the detail message (which is saved for later retrieval
-         *                by the {@link #getMessage()} method).
-         * @param cause   the cause (which is saved for later retrieval by the
-         *                {@link #getCause()} method).  (A {@code null} value is
-         *                permitted, and indicates that the cause is nonexistent or
-         *                unknown.)
-         * @since 1.4
-         */
-        public DatabaseException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        /**
-         * Constructs a new exception with the specified cause and a detail
-         * message of {@code (cause==null ? null : cause.toString())} (which
-         * typically contains the class and detail message of {@code cause}).
-         * This constructor is useful for exceptions that are little more than
-         * wrappers for other throwables (for example, {@link
-         * PrivilegedActionException}).
-         *
-         * @param cause the cause (which is saved for later retrieval by the
-         *              {@link #getCause()} method).  (A {@code null} value is
-         *              permitted, and indicates that the cause is nonexistent or
-         *              unknown.)
-         * @since 1.4
-         */
-        public DatabaseException(Throwable cause) {
-            super(cause);
         }
     }
 

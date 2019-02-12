@@ -1,13 +1,12 @@
 package com.tickettoride.database;
 
-import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.User;
+import exceptions.DatabaseException;
 import modelAttributes.Password;
 import modelAttributes.Username;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
-import org.postgresql.core.SqlCommand;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,8 +22,8 @@ public class UserDAO extends Database.DataAccessObject {
             "CREATE TABLE Users" +
             "(" +
             "userID TEXT PRIMARY KEY NOT NULL," +
-            "userName TEXT NOT NULL UNIQUE," +
-            "password TEXT NOT NULL" +
+            "userName TEXT NOT NULL UNIQUE NOT NULL CHECK ( length(userName) > 0 )," +
+            "password TEXT NOT NULL CHECK ( length(password) > 0 )" +
             ");";
 
     public UserDAO(Connection connection) {
@@ -36,7 +35,7 @@ public class UserDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
-    public void addUser(User user) throws SQLException {
+    public void addUser(User user) throws DatabaseException {
         final String sql = "INSERT INTO Users (userID, userName, password) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, user.getUserID().toString());
@@ -44,6 +43,8 @@ public class UserDAO extends Database.DataAccessObject {
             statement.setString(3, user.getPassword().toString());
 
             statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not add user to database", e);
         }
     }
 
@@ -54,16 +55,24 @@ public class UserDAO extends Database.DataAccessObject {
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, userName.toString());
             statement.setString(2, password.getPassword());
-            var result = statement.executeQuery();
-            if (result.next()) {
-                var tableUserName = new Username(result.getString("userName"));
-                var tablePassWord = new Password(result.getString("password"));
-                var userID = result.getString("userID");
-                user = new User(tableUserName, tablePassWord, userID);
-            }
+
+            user = getUserFromStatementResult(statement);
+
         } catch (SQLException e) {
             logger.catching(e);
-            throw new Database.DatabaseException("Could not retrieve user!", e);
+            throw new DatabaseException("Could not retrieve user!", e);
+        }
+        return user;
+    }
+
+    private User getUserFromStatementResult(PreparedStatement statement) throws SQLException {
+        User user = null;
+        var result = statement.executeQuery();
+        if (result.next()) {
+            var tableUserName = new Username(result.getString("userName"));
+            var tablePassWord = new Password(result.getString("password"));
+            var userID = result.getString("userID");
+            user = new User(tableUserName, tablePassWord, userID);
         }
         return user;
     }
@@ -74,16 +83,10 @@ public class UserDAO extends Database.DataAccessObject {
         String sql = "SELECT * FROM Users WHERE userID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, id.toString());
-            var result = statement.executeQuery();
-            if (result.next()) {
-                var tableUserName = new Username(result.getString("userName"));
-                var tablePassWord = new Password(result.getString("password"));
-                var userID = result.getString("userID");
-                user = new User(tableUserName, tablePassWord, userID);
-            }
+            user = getUserFromStatementResult(statement);
         } catch (SQLException e) {
             logger.catching(e);
-            throw new Database.DatabaseException("Could not retrieve user!", e);
+            throw new DatabaseException("Could not retrieve user!", e);
         }
         return user;
     }

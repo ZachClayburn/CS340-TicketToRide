@@ -1,5 +1,7 @@
 package com.tickettoride.clientModels;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -9,7 +11,7 @@ import modelInterfaces.IGame;
 public class Game implements IGame, Serializable { //used for when creating a new game
     private UUID gameID = null;
     private String groupName = "";
-    private int maxPlayer = 5;
+    private int maxPlayer = 1;
     private int numPlayer = 1;
     private ArrayList<Player> players = new ArrayList();
 
@@ -22,6 +24,12 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     }
 
     public Game(){}
+
+    public Game(LinkedTreeMap<String, String> gameMap) {
+        this.gameID = UUID.fromString(gameMap.get("gameID"));
+        this.groupName = gameMap.get("groupName");
+    }
+
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;

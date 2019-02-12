@@ -1,6 +1,7 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import exceptions.DatabaseException;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.database.PlayerDAO;
 import com.tickettoride.models.Game;
@@ -53,12 +54,14 @@ public class GameFacade extends BaseFacade {
             User user = UserFacade.getSingleton().find_user(session);
             Player player = createPlayer(user, game);
             updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
+            game.setNumPlayer((game.getNumPlayer() + 1));
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
                     CONTROLLER_NAME, "join",
-                    player.getPlayerID(), sessionID, game.getGameID());
-            sendResponseToOne(connID, command);
-            sendResponseToMainLobby(command);
+                    player.getPlayerID(), sessionID,
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
+            sendResponseToRoom(connID, command);
+            if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorJoin", throwable);
@@ -85,7 +88,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public Game findGame(UUID gameID) throws Database.DatabaseException {
+    public Game findGame(UUID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.getGame(gameID);
@@ -101,7 +104,7 @@ public class GameFacade extends BaseFacade {
     }
 
 
-    public Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws Database.DatabaseException {
+    public Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
         try (Database database = new Database()) {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
@@ -113,14 +116,14 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public ArrayList<Game> allGames() throws Database.DatabaseException {
+    public ArrayList<Game> allGames() throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.allGames();
         }
     }
 
-    public Player createPlayer(User user, Game game) throws Database.DatabaseException {
+    public Player createPlayer(User user, Game game) throws DatabaseException {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
@@ -130,7 +133,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void updatePlayerCount(UUID gameID, Integer playerCount) throws Database.DatabaseException {
+    public void updatePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);

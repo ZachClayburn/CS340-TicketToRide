@@ -1,5 +1,6 @@
 package com.tickettoride.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +24,7 @@ public class LobbyActivity extends MyBaseActivity{
     private TextView gameID;
     private TextView numPlayers;
     private Button startGame;
+    private Context context;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,8 @@ public class LobbyActivity extends MyBaseActivity{
         gameName.setText("Group Name: " + game.getGroupName());
         gameID.setText("Game ID: " + game.getGameID());
         numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
+        context = this;
+
         setEnabled();
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,10 +56,20 @@ public class LobbyActivity extends MyBaseActivity{
             startGame.setEnabled(true);
         }
     }
-    public void updateUI(){
-        setEnabled();
-        numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
+
+    public Runnable updateUIRunnable = new Runnable() {
+        @Override
+        public void run() {
+            setEnabled();
+            numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
+        }
+    };
+
+    public void updateUI(Game game) {
+        this.game = game;
+        runOnUiThread(updateUIRunnable);
     }
+
     public void moveToGame() {
         Intent intent = new Intent(LobbyActivity.this, GameRoomActivity.class);
         startActivity(intent);
@@ -93,4 +107,5 @@ public class LobbyActivity extends MyBaseActivity{
         GameFacadeProxy.SINGLETON.leave();
         moveToJoin();
     }
+
 }

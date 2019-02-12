@@ -30,6 +30,7 @@ public class JoinGameActivity extends MyBaseActivity {
     private Button createGame;
     private Adapter adapter;
     private ArrayList<Game> games = GameIndex.SINGLETON.getGameIndex();
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class JoinGameActivity extends MyBaseActivity {
         });
         adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
+        this.context = this;
     }
 
     @Override
@@ -62,10 +64,23 @@ public class JoinGameActivity extends MyBaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateUI() {
+    public Runnable updateUIRunnable = new Runnable() {
+        @Override
+        public void run() {
         games = GameIndex.SINGLETON.getGameIndex();
-        adapter = new Adapter(this, games);
+        adapter = new Adapter(context, games);
         gameList.setAdapter(adapter);
+        }
+    };
+
+    public void updateUI() {
+        runOnUiThread(updateUIRunnable);
+    }
+
+    public void moveToLobbyJoin(Game game) {
+        Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
+        intent.putExtra("game", game);
+        startActivity(intent);
     }
 
     public class Adapter extends RecyclerView.Adapter<Holder> {
@@ -89,6 +104,7 @@ public class JoinGameActivity extends MyBaseActivity {
         public int getItemCount() {
             return listOfGames.size();
         }
+
     }
     public class Holder extends RecyclerView.ViewHolder {
         TextView gameName;
@@ -107,14 +123,6 @@ public class JoinGameActivity extends MyBaseActivity {
                 }
             });
         }
-        public void moveToLobbyJoin() {
-            Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("gameID", game.getGameID().toString());
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
-
     }
     public void JoinError() {
         Toast.makeText(this ,R.string.join_game_error, Toast.LENGTH_SHORT).show();

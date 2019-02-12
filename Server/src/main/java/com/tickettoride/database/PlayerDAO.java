@@ -1,11 +1,9 @@
 package com.tickettoride.database;
 
-import com.tickettoride.database.Database.DatabaseException;
-import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
-import com.tickettoride.models.User;
-
-import org.jetbrains.annotations.Nullable;
+import exceptions.DatabaseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,16 +12,19 @@ import java.util.UUID;
 
 public class PlayerDAO extends Database.DataAccessObject {
     private final String tableCreateString =
+            // language=PostgreSQL
             "CREATE TABLE Players" +
                     "(" +
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
-                    "gameID TEXT NOT NULL UNIQUE" +
+                    "gameID TEXT NOT NULL" + //FIXME Add foreign key constraint and insure correct creation order
                     ");";
 
     public PlayerDAO(Connection connection) {
         super(connection);
     }
+
+    private static Logger logger = LogManager.getLogger(PlayerDAO.class.getName());
 
     @Override
     String getTableCreateString() {
@@ -37,7 +38,10 @@ public class PlayerDAO extends Database.DataAccessObject {
             statement.setString(2, player.getUser().getUserID().toString());
             statement.setString(3, player.getGame().getGameID().toString());
             statement.executeUpdate();
-        } catch (SQLException e) { throw new DatabaseException("Could not add new player to Database!", e); }
+        } catch (SQLException e) {
+
+            throw new DatabaseException("Could not add new player to Database!", e);
+        }
     }
 
     public void deletePlayer(UUID sessionID) throws SQLException {

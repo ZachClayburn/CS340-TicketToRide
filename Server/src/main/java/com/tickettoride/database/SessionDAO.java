@@ -3,7 +3,6 @@ package com.tickettoride.database;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.tickettoride.database.Database.DatabaseException;
 import com.tickettoride.models.Session;
 
 import java.sql.Connection;
