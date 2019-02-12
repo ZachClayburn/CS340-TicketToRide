@@ -1,14 +1,13 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'application'
 }
 
-idea.module.outputDir file("build/resources/main")
+//idea.module.outputDir file("build/resources/main")
 
-idea {
-    module {
-
-    }
+application {
+    mainClassName = 'com.tickettoride.command.ServerCommunicator'
 }
 
 sourceCompatibility = 10

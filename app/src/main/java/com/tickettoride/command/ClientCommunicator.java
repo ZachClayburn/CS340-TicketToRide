@@ -18,7 +18,7 @@ public class ClientCommunicator {
     private WebSocketClient mWebSocketClient;
     protected static Gson gson = new Gson();
     private String websockethost = "10.0.2.2";
-    private String port = "80";
+    private String port = "8090";
 
     public static ClientCommunicator SINGLETON = new ClientCommunicator();
 
