@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
@@ -43,6 +47,19 @@ public class JoinGameActivity extends MyBaseActivity {
         });
         adapter = new Adapter(this, games);
         gameList.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            killSession();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void updateUI() {
@@ -105,10 +122,13 @@ public class JoinGameActivity extends MyBaseActivity {
 
     @Override
     public void onBackPressed(){
-        SessionFacadeProxy.SINGLETON.delete(DataManager.SINGLETON.getSession().getSessionId());
+        killSession();
+    }
+
+    public void killSession(){
         Intent intent = new Intent(JoinGameActivity.this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        SessionFacadeProxy.SINGLETON.delete();
     }
-
 }

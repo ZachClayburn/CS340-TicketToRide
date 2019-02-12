@@ -71,4 +71,18 @@ public class GameController extends BaseController {
         createGameActivity.moveToLobbyCreate(game);
     }
 
+    /*public void leave(UUID gameID){
+        Game game = GameIndex.SINGLETON.findGame(gameID.toString());
+        GameIndex.SINGLETON.makeGameAvailable(gameID.toString());
+        if(getCurrentActivity().getClass() == LobbyActivity.class){
+            LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+            lobbyActivity.moveToJoin();
+        }
+        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+        joinGameActivity.updateUI();
+    }*/
+
+    public void errorLeave(Throwable t){
+        Log.i("GameController", "Couldn't leave game");
+    }
 }

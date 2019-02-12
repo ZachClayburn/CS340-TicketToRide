@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 public class PlayerDAO extends Database.DataAccessObject {
     private final String tableCreateString =
@@ -37,5 +38,13 @@ public class PlayerDAO extends Database.DataAccessObject {
             statement.setString(3, player.getGame().getGameID().toString());
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new player to Database!", e); }
+    }
+
+    public void deletePlayer(UUID sessionID) throws SQLException {
+        String sql = "DELETE FROM Players WHERE sessionID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, sessionID.toString());
+            statement.executeUpdate();
+        }
     }
 }

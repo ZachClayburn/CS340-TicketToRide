@@ -44,12 +44,25 @@ public class GameIndex {
         Game fullGame = null;
         for (Game game: gameIndex) {
             if (game.getGameID().equals(gameID)) {
-                break;
+                fullGame = game;
             }
         }
         fullGames.add(fullGame);
         gameIndex.remove(fullGame);
         indexUI.updateUI();
+    }
+
+    // Move game to normal gameIndex if someone left
+    public void makeGameAvailable(String gameID) {
+        Game openGame = null;
+        for (Game game: fullGames) {
+            if (game.getGameID().toString().equals(gameID)) {
+                openGame = game;
+                fullGames.remove(openGame);
+                gameIndex.add(openGame);
+                break;
+            }
+        }
     }
 
     public void addGames(ArrayList<IGame> games) {

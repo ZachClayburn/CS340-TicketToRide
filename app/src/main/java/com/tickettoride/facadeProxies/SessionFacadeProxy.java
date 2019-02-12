@@ -1,5 +1,8 @@
 package com.tickettoride.facadeProxies;
 
+import android.util.Log;
+
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.command.ClientCommunicator;
 
 import java.util.UUID;
@@ -20,7 +23,8 @@ public class SessionFacadeProxy {
         ClientCommunicator.SINGLETON.send(command);
     }
 
-    public void delete(UUID sessionID) {
+    public void delete() {
+        UUID sessionID = DataManager.SINGLETON.getSession().getSessionId();
         Command command = new Command(FACADE_NAME, "delete", sessionID);
         ClientCommunicator.SINGLETON.send(command);
     }
