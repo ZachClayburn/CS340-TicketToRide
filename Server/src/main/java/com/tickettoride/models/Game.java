@@ -6,10 +6,10 @@ import java.util.UUID;
 import modelInterfaces.IGame;
 
 public class Game implements IGame {
-    private UUID gameID = null;
-    private String groupName = "";
-    private int numPlayer = 0;
-    private int maxPlayer = 5;
+    private UUID gameID;
+    private String groupName;
+    private int numPlayer;
+    private int maxPlayer;
 
     private boolean isStarted = false;
 
