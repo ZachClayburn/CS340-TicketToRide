@@ -126,14 +126,21 @@ public class GameFacade extends BaseFacade {
         sendResponseToRoom(connID, command);
     }
 
-    public Game findGame(UUID gameID) throws DatabaseException {
+    public void dealCards(UUID conID, UUID gameID) {
+        logger.debug("Dealing to game " + gameID);
+
+        
+
+    }
+
+    Game findGame(UUID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.getGame(gameID);
         }
     }
 
-    public void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
+    void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
             dao.deletePlayer(sessionID);
@@ -142,7 +149,7 @@ public class GameFacade extends BaseFacade {
     }
 
 
-    public Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
+    Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
         try (Database database = new Database()) {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
@@ -154,14 +161,14 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public ArrayList<Game> allGames() throws DatabaseException {
+    ArrayList<Game> allGames() throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.allGames();
         }
     }
 
-    public Player createPlayer(UUID user, UUID game) throws DatabaseException {
+    Player createPlayer(UUID user, UUID game) throws DatabaseException {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
@@ -171,7 +178,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void updatePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
+    void updatePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);

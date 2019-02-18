@@ -1,5 +1,8 @@
 package com.tickettoride.database;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 
 import exceptions.DatabaseException;
@@ -7,10 +10,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.*;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GameDAO extends Database.DataAccessObject {
@@ -23,8 +30,11 @@ public class GameDAO extends Database.DataAccessObject {
                     "groupName TEXT NOT NULL UNIQUE," +
                     "numPlayer NUMERIC NOT NULL," +
                     "maxPlayer NUMERIC NOT NULL," +
-                    "iStarted BOOLEAN DEFAULT FALSE" +
+                    "iStarted BOOLEAN DEFAULT FALSE," +
+                    "destinationDeck json" +
                     ");";
+
+    private static final Type destinationDeckType = new TypeToken<ArrayList<DestinationCard>>(){}.getType();
 
     public GameDAO(Connection connection) {
         super(connection);
@@ -38,12 +48,17 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     public void addGame(Game game) throws DatabaseException {
-        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer) VALUES (?, ?, ?, ?)";
+        Gson gson = new Gson();
+        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, destinationdeck) VALUES (?, ?, ?, ?, ?::json)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
             statement.setInt(3, game.getNumPlayer());
             statement.setInt(4, game.getMaxPlayer());
+
+            var jsonString = gson.toJson(game.getDestinationDeck());
+            statement.setObject(5, jsonString);
+
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
     }
@@ -56,12 +71,7 @@ public class GameDAO extends Database.DataAccessObject {
             statement.setString(1, gameID.toString());
             var result = statement.executeQuery();
             if (result.next()) {
-                UUID tableGameID = UUID.fromString(result.getString("GameID"));
-                var tableGroupName = result.getString("groupName");
-                var tableNumPlayer = result.getInt("numPlayer");
-                var tableMaxPlayer = result.getInt("maxPlayer");
-                var tableIsStarted = result.getBoolean("iStarted");
-                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+                game = buildGameFromQueryResult(result);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve game!", e);
@@ -86,18 +96,27 @@ public class GameDAO extends Database.DataAccessObject {
         try (var statement = connection.prepareStatement(sql)) {
           var results = statement.executeQuery();
           while (results.next()) {
-              UUID tableGameID = UUID.fromString(results.getString("GameID"));
-              var tableGroupName = results.getString("groupName");
-              var tableNumPlayer = results.getInt("numPlayer");
-              var tableMaxPlayer = results.getInt("maxPlayer");
-              var tableIsStarted = results.getBoolean("iStarted");
-              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+              var game = buildGameFromQueryResult(results);
               games.add(game);
           }
         } catch (SQLException e) {
             throw new DatabaseException(("Could Not Retrieve Games"));
         }
         return games;
+    }
+
+    private Game buildGameFromQueryResult(ResultSet result) throws SQLException {
+        var gson = new Gson();
+        UUID tableGameID = UUID.fromString(result.getString("GameID"));
+        var tableGroupName = result.getString("groupName");
+        var tableNumPlayer = result.getInt("numPlayer");
+        var tableMaxPlayer = result.getInt("maxPlayer");
+        var tableIsStarted = result.getBoolean("iStarted");
+        var deckStreamReader = new InputStreamReader(result.getBinaryStream("destinationDeck"));
+        List<DestinationCard> destinationDeck = gson.fromJson(deckStreamReader, destinationDeckType);
+        Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+        game.setDestinationDeck(destinationDeck);
+        return game;
     }
 
     public void setGameToStarted(UUID gameID) throws DatabaseException {
