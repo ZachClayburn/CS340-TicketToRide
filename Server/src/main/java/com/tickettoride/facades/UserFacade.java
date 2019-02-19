@@ -50,12 +50,16 @@ public class UserFacade extends BaseFacade {
     }
 
     public User find_user(Session session) throws DatabaseException {
-        try (Database database = new Database()) {
-            UUID sessionID = session.getSessionID();
-            UserDAO dao = database.getUserDAO();
-            return dao.getUserBySessionID(sessionID);
+        UUID sessionID = session.getSessionID();
+        return find_user(sessionID);
+    }
+
+    public User find_user(UUID sessionID) throws DatabaseException {
+        try (Database db = new Database()) {
+            return db.getUserDAO().getUserBySessionID(sessionID);
         }
     }
+
 
     public User create_user(Username username, Password password) throws DatabaseException, SQLException {
         try (Database database = new Database()) {

@@ -1,14 +1,10 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import com.tickettoride.models.*;
 import exceptions.DatabaseException;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.database.PlayerDAO;
-import com.tickettoride.models.Game;
-
-import com.tickettoride.models.Player;
-import com.tickettoride.models.Session;
-import com.tickettoride.models.User;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,7 +64,7 @@ public class GameFacade extends BaseFacade {
                 command = new Command(
                         CONTROLLER_NAME, "join",
                         player.getPlayerID(), sessionID,
-                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.IsStarted());
+                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
             }else{
                 command = new Command(
                         CONTROLLER_NAME, "rejoin",
@@ -115,6 +111,7 @@ public class GameFacade extends BaseFacade {
 
     public void start(UUID connID, UUID gameID) throws DatabaseException {
         logger.info("Attempting to start game " + gameID);
+        //FIXME This should be where the the Players associated with each user should be added
         try (var db = new Database()){
 
             db.getGameDAO().setGameToStarted(gameID);
@@ -126,10 +123,31 @@ public class GameFacade extends BaseFacade {
         sendResponseToRoom(connID, command);
     }
 
-    public void dealCards(UUID conID, UUID gameID) {
+    void dealCards(UUID conID, UUID gameID) {
         logger.debug("Dealing to game " + gameID);
 
-        
+        try (var db = new Database()) {
+
+            var game = db.getGameDAO().getGame(gameID);
+
+            assert game != null;
+            assert game.getDestinationDeck().size() == 0;
+
+            var destinationDeck = DestinationCard.getShuffledDeck();
+
+
+            for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
+                
+            }
+
+            game.setDestinationDeck(destinationDeck);
+            db.getGameDAO().updateDecks(game);
+
+            db.commit();
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -151,12 +169,16 @@ public class GameFacade extends BaseFacade {
 
     Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
         try (Database database = new Database()) {
-            Session session = new Session(sessionID);
-            User user = UserFacade.getSingleton().find_user(session);
-            Game game = new Game(gameName, maxPlayers, user);
-            GameDAO dao = database.getGameDAO();
-            dao.addGame(game);
+
+            User user = UserFacade.getSingleton().find_user(sessionID);
+            Game game = new Game(gameName, maxPlayers);
+            Player player = new Player(user.getUserID(), game.getGameID());
+
+            database.getPlayerDAO().addNewPlayer(player);
+            database.getGameDAO().addGame(game);
+
             database.commit();
+
             return game;
         }
     }

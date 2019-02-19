@@ -16,9 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class GameDAO extends Database.DataAccessObject {
 
@@ -34,7 +32,7 @@ public class GameDAO extends Database.DataAccessObject {
                     "destinationDeck json" +
                     ");";
 
-    private static final Type destinationDeckType = new TypeToken<ArrayList<DestinationCard>>(){}.getType();
+    private static final Type destinationDeckType = new TypeToken<ArrayDeque<DestinationCard>>(){}.getType();
 
     public GameDAO(Connection connection) {
         super(connection);
@@ -49,7 +47,8 @@ public class GameDAO extends Database.DataAccessObject {
 
     public void addGame(Game game) throws DatabaseException {
         Gson gson = new Gson();
-        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, destinationdeck) VALUES (?, ?, ?, ?, ?::json)";
+        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, destinationdeck) " +
+                "VALUES (?, ?, ?, ?, ?::json)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
@@ -107,14 +106,18 @@ public class GameDAO extends Database.DataAccessObject {
 
     private Game buildGameFromQueryResult(ResultSet result) throws SQLException {
         var gson = new Gson();
-        UUID tableGameID = UUID.fromString(result.getString("GameID"));
+
+        var tableGameID = UUID.fromString(result.getString("GameID"));
         var tableGroupName = result.getString("groupName");
         var tableNumPlayer = result.getInt("numPlayer");
         var tableMaxPlayer = result.getInt("maxPlayer");
         var tableIsStarted = result.getBoolean("iStarted");
+
         var deckStreamReader = new InputStreamReader(result.getBinaryStream("destinationDeck"));
-        List<DestinationCard> destinationDeck = gson.fromJson(deckStreamReader, destinationDeckType);
+        Deque<DestinationCard> destinationDeck = gson.fromJson(deckStreamReader, destinationDeckType);
+
         Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+
         game.setDestinationDeck(destinationDeck);
         return game;
     }
@@ -134,6 +137,27 @@ public class GameDAO extends Database.DataAccessObject {
             throw new DatabaseException("Could not start the game!", e);
         }
 
+    }
+
+    public void updateDecks(Game game) throws DatabaseException {
+
+        var gson = new Gson();
+        String sql = "UPDATE games SET destinationdeck=?::json WHERE gameid=?";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            var jsonString = gson.toJson(game.getDestinationDeck());
+            statement.setString(1, jsonString);
+
+            statement.setString(2, game.getGameID().toString());
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            logger.catching(e);
+
+            throw new DatabaseException("Could not update the database!", e);
+        }
     }
 }
 

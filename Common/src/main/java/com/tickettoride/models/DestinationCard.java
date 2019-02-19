@@ -1,10 +1,7 @@
 package com.tickettoride.models;
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class DestinationCard implements Comparable<DestinationCard> {
 
@@ -71,7 +68,7 @@ public class DestinationCard implements Comparable<DestinationCard> {
     }
 
 
-    public static List<DestinationCard> getShuffledDeck() {
+    public static Deque<DestinationCard> getShuffledDeck() {
 
         final int deckSize = 30;
         ArrayList<DestinationCard> deck = new ArrayList<>(deckSize);
@@ -123,7 +120,7 @@ public class DestinationCard implements Comparable<DestinationCard> {
 
         Collections.shuffle(deck);
 
-        return deck;
+        return new ArrayDeque<>(deck);
     }
 
     @Override
