@@ -32,7 +32,7 @@ public class UserFacade extends BaseFacade {
             User user = create_user(username , password);
             Session session = SessionFacade.getSingleton().create_session(user);
             ArrayList<Game> games = GameFacade.getSingleton().allGames();
-            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), games);
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), games);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             sendResponseToOne(connID, command);
         } catch (Throwable throwable) {

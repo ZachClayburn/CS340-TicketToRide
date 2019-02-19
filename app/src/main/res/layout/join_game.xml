@@ -7,14 +7,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/game_option"
+        android:text="@string/join_game"
         android:textSize="20dp"
         android:gravity="center">
     </TextView>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
+        android:id="@+id/join_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="150dp">
+    </android.support.v7.widget.RecyclerView>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/rejoin_game"
+        android:textSize="20dp"
+        android:gravity="center">
+    </TextView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rejoin_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
     </android.support.v7.widget.RecyclerView>
     <Button
         android:id="@+id/create_game"

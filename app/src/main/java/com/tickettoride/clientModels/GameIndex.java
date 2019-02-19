@@ -1,40 +1,31 @@
 package com.tickettoride.clientModels;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.tickettoride.activities.JoinGameActivity;
-
 import java.util.ArrayList;
-
-import modelInterfaces.IGame;
+import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 
 public class GameIndex {
-    private ArrayList<Game> gameIndex;
+    private ArrayList<Game> joinGameIndex;
+    private ArrayList<Game> rejoinGameIndex;
     private ArrayList<Game> fullGames;
-    private JoinGameActivity indexUI;
     public static GameIndex SINGLETON = new GameIndex();
 
     private GameIndex(){
-        gameIndex = new ArrayList<Game>();
-        fullGames = new ArrayList<Game>();
+        joinGameIndex = new ArrayList<Game>();
+        rejoinGameIndex = new ArrayList<Game>();
     }
 
-    public void setIndexUI(Context c){
-        indexUI = (JoinGameActivity)c;
+    public void addGame(Game newGame) {
+        fullGames.add(newGame);
+        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
+        if (!newGame.getIsStarted() && !newGame.forUser(userID)) { joinGameIndex.add(newGame); }
+        if (newGame.forUser(userID)) { rejoinGameIndex.add((newGame)); }
     }
-
-    public ArrayList<Game> getGameIndex() {
-        return gameIndex;
-    }
-
-    public void addGame(Game newGame) { gameIndex.add(newGame); }
 
     @Nullable
     public Game findGame(String gameID) {
-        for (Game game: gameIndex) {
+        for (Game game: fullGames) {
             if (game.getGameID().toString().equals(gameID)) {
                 return game;
             }
@@ -42,43 +33,17 @@ public class GameIndex {
         return null;
     }
 
-    // Move game to list of full games so it doesn't show up on the UI
-    public void makeGameUnavailable(String gameID) {
-        Game fullGame = null;
-        for (Game game: gameIndex) {
-            if (game.getGameID().equals(gameID)) {
-                fullGame = game;
-            }
-        }
-        fullGames.add(fullGame);
-        gameIndex.remove(fullGame);
-        indexUI.updateUI();
-    }
-
-    // Move game to normal gameIndex if someone left
-    public void makeGameAvailable(String gameID) {
-        Game openGame = null;
-        for (Game game: fullGames) {
-            if (game.getGameID().toString().equals(gameID)) {
-                openGame = game;
-                fullGames.remove(openGame);
-                gameIndex.add(openGame);
-                break;
-            }
-        }
-    }
-
-    public void addGames(ArrayList<IGame> games) {
-//        for (IGame game : games) {
-//            Game newGame = new Game(game);
-//            fullGames.add(newGame);
-//        }
-    }
-  
     public void setGames(ArrayList<Game> games) {
-        ArrayList<Game> gameIndex = new ArrayList<>();
-        for (Game game: games) { if (!game.getIsStarted()) gameIndex.add(game); }
         this.fullGames = games;
-        this.gameIndex = gameIndex;
+        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
+        joinGameIndex = new ArrayList<>();
+        for (Game game: games) {
+            if (!game.getIsStarted() && !game.forUser(userID)) joinGameIndex.add(game);
+        }
+        rejoinGameIndex = new ArrayList<>();
+        for (Game game: games) { if (game.forUser(userID)) rejoinGameIndex.add(game); }
     }
+
+    public ArrayList<Game> getJoinGameIndex() { return joinGameIndex; }
+    public ArrayList<Game> getRejoinGameIndex() { return  rejoinGameIndex; }
 }

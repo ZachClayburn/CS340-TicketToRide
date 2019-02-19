@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <TextView
-        android:id="@+id/join_game_list"
+        android:id="@+id/rejoin_game_list"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:text="@string/game_list_item"

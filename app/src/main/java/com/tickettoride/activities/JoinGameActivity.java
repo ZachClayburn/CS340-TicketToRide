@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.Game;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
@@ -26,29 +23,22 @@ import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import java.util.ArrayList;
 
 public class JoinGameActivity extends MyBaseActivity {
-    private RecyclerView gameList;
+    private RecyclerView joinGameList;
+    private RecyclerView rejoinGameList;
     private Button createGame;
-    private Adapter adapter;
-    private ArrayList<Game> games = GameIndex.SINGLETON.getGameIndex();
+    private Adapter joinAdapter;
+    private Adapter rejoinAdapter;
+    private ArrayList<Game> joinGames = GameIndex.SINGLETON.getJoinGameIndex();
+    private ArrayList<Game> rejoinGames = GameIndex.SINGLETON.getRejoinGameIndex();
     private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.join_game);
-        gameList = (RecyclerView) findViewById(R.id.recycler_view);
-        gameList.setLayoutManager(new LinearLayoutManager(this));
-        createGame = (Button) findViewById(R.id.create_game);
-        createGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(JoinGameActivity.this, CreateGameActivity.class);
-                startActivity(intent);
-            }
-        });
-        games = GameIndex.SINGLETON.getGameIndex();
-        adapter = new Adapter(this, games);
-        gameList.setAdapter(adapter);
+        setupJoinGameList();
+        setupRejoinGameList();
+        setupCreateGameButton();
         this.context = this;
     }
 
@@ -59,18 +49,15 @@ public class JoinGameActivity extends MyBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            killSession();
-        }
+        if (item.getItemId() == android.R.id.home) { killSession(); }
         return super.onOptionsItemSelected(item);
     }
 
     public Runnable updateUIRunnable = new Runnable() {
         @Override
         public void run() {
-        games = GameIndex.SINGLETON.getGameIndex();
-        adapter = new Adapter(context, games);
-        gameList.setAdapter(adapter);
+            updateJoinGames();
+            updateRejoinGames();
         }
     };
 
@@ -112,25 +99,21 @@ public class JoinGameActivity extends MyBaseActivity {
         Game game;
         public Holder(View view) {
            super(view);
-           gameName = (TextView) view.findViewById(R.id.game_list);
+           gameName = view.findViewById(R.id.join_game_list);
         }
         public void bind(final Game game) {
             this.game = game;
             gameName.setText(game.getGroupName());
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    GameFacadeProxy.SINGLETON.join(game.getGameID());
-                }
+                public void onClick(View view) { GameFacadeProxy.SINGLETON.join(game.getGameID()); }
             });
         }
     }
 
     public Runnable joinError = new Runnable() {
         @Override
-        public void run() {
-            Toast.makeText(context ,R.string.join_game_error, Toast.LENGTH_SHORT).show();
-        }
+        public void run() { Toast.makeText(context ,R.string.join_game_error, Toast.LENGTH_SHORT).show(); }
     };
 
     public void JoinError() {
@@ -148,4 +131,44 @@ public class JoinGameActivity extends MyBaseActivity {
         startActivity(intent);
         SessionFacadeProxy.SINGLETON.delete();
     }
+
+    private void setupJoinGameList() {
+        joinGameList = findViewById(R.id.join_recycler_view);
+        joinGameList.setLayoutManager(new LinearLayoutManager(this));
+        joinGames = GameIndex.SINGLETON.getJoinGameIndex();
+        joinAdapter = new Adapter(this, joinGames);
+        joinGameList.setAdapter(joinAdapter);
+    }
+
+    private void setupRejoinGameList() {
+        rejoinGameList = findViewById(R.id.rejoin_recycler_view);
+        rejoinGameList.setLayoutManager(new LinearLayoutManager(this));
+        rejoinGames = GameIndex.SINGLETON.getRejoinGameIndex();
+        rejoinAdapter = new Adapter(this, rejoinGames);
+        rejoinGameList.setAdapter(rejoinAdapter);
+    }
+
+    private void setupCreateGameButton() {
+        createGame = (Button) findViewById(R.id.create_game);
+        createGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(JoinGameActivity.this, CreateGameActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void updateJoinGames() {
+        joinGames = GameIndex.SINGLETON.getJoinGameIndex();
+        joinAdapter = new Adapter(context, joinGames);
+        joinGameList.setAdapter(joinAdapter);
+    }
+
+    private void updateRejoinGames() {
+        rejoinGames = GameIndex.SINGLETON.getRejoinGameIndex();
+        rejoinAdapter = new Adapter(context, joinGames);
+        rejoinGameList.setAdapter(rejoinAdapter);
+    }
+
 }

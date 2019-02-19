@@ -1,6 +1,7 @@
 package com.tickettoride.models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import modelInterfaces.IGame;
@@ -10,17 +11,9 @@ public class Game implements IGame {
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;
-
     private boolean isStarted = false;
 
-    private ArrayList<User> players = new ArrayList<>();
-    public Game(String groupName, int maxPlayer, User creator) {
-        this.gameID = UUID.randomUUID();
-        this.groupName = groupName;
-        this.numPlayer = 1;
-        this.maxPlayer = maxPlayer;
-        players.add(creator);
-    }
+    private ArrayList<Player> players = new ArrayList<>();
 
     public Game(String groupName, int maxPlayer) {
         this.gameID = UUID.randomUUID();
@@ -37,6 +30,11 @@ public class Game implements IGame {
         this.isStarted = isStarted;
     }
 
+    public void setPlayers(ArrayList<Player> players) {
+        this.players = players;
+    }
+
+    public List<Player> getPlayers() { return players; }
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
@@ -79,4 +77,9 @@ public class Game implements IGame {
     }
 
     public Boolean IsStarted() { return isStarted; }
+
+    public void addPLayer(Player player) {
+        players.add(player);
+    }
+
 }
