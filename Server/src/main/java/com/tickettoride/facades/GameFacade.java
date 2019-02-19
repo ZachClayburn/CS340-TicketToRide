@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
 
 import command.Command;
@@ -126,6 +127,7 @@ public class GameFacade extends BaseFacade {
     void dealCards(UUID conID, UUID gameID) {
         logger.debug("Dealing to game " + gameID);
 
+        List<Command> commands = new ArrayList<>();
         try (var db = new Database()) {
 
             var game = db.getGameDAO().getGame(gameID);
@@ -133,15 +135,21 @@ public class GameFacade extends BaseFacade {
             assert game != null;
             assert game.getDestinationDeck().size() == 0;
 
-            var destinationDeck = DestinationCard.getShuffledDeck();
+            Queue<DestinationCard> destinationDeck = DestinationCard.getShuffledDeck();
 
 
             for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
-                
+                player.addDestinationCardToHand(destinationDeck.remove());
+                player.addDestinationCardToHand(destinationDeck.remove());
+                player.addDestinationCardToHand(destinationDeck.remove());
+
+                db.getPlayerDAO().updateHand(player);
+                //TODO Create command to send this hand to all players
             }
 
             game.setDestinationDeck(destinationDeck);
             db.getGameDAO().updateDecks(game);
+            //TODO Create command to send this deck to each player
 
             db.commit();
 
@@ -149,6 +157,7 @@ public class GameFacade extends BaseFacade {
             e.printStackTrace();
         }
 
+        commands.forEach(command -> sendResponseToRoom(conID, command));
     }
 
     Game findGame(UUID gameID) throws DatabaseException {
