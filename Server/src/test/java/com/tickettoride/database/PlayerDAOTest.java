@@ -9,8 +9,6 @@ import modelAttributes.Password;
 import modelAttributes.Username;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.junit.Assert.*;
 
 public class PlayerDAOTest extends AbstractDatabaseTest{
@@ -51,7 +49,7 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
 
         try (var db = new Database()){
 
-            db.getPlayerDAO().addNewPlayer(testPlayer);
+            db.getPlayerDAO().addPlayer(testPlayer);
             db.commit();
 
         }
@@ -71,7 +69,7 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
 
         try (var db = new Database()){
 
-            db.getPlayerDAO().addNewPlayer(testPlayer);
+            db.getPlayerDAO().addPlayer(testPlayer);
             db.commit();
 
         }

@@ -44,7 +44,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
-    public void addNewPlayer(Player player) throws DatabaseException {
+    public void addPlayer(Player player) throws DatabaseException {
 
         Gson gson = new Gson();
         final String sql = "INSERT INTO Players (playerID, userID, gameID, destinationhand) VALUES (?, ?, ?, ?::json)";

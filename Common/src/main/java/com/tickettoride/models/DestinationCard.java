@@ -5,14 +5,14 @@ import java.util.*;
 
 public class DestinationCard implements Comparable<DestinationCard> {
 
-    private final Destination destination1;
-    private final Destination destination2;
+    private final City destination1;
+    private final City destination2;
 
-    public Destination getDestination1() {
+    public City getDestination1() {
         return destination1;
     }
 
-    public Destination getDestination2() {
+    public City getDestination2() {
         return destination2;
     }
 
@@ -22,7 +22,7 @@ public class DestinationCard implements Comparable<DestinationCard> {
 
     private final Value pointValue;
 
-    private DestinationCard(Destination destination1, Destination destination2, Value pointValue) {
+    public DestinationCard(City destination1, City destination2, Value pointValue) {
 
         this.destination1 = destination1;
         this.destination2 = destination2;
@@ -40,7 +40,7 @@ public class DestinationCard implements Comparable<DestinationCard> {
             return this.destination2.compareTo(o.destination2);
     }
 
-    enum Value {
+    public enum Value {
         FOUR(4),
         FIVE(5),
         SIX(6),
@@ -65,6 +65,13 @@ public class DestinationCard implements Comparable<DestinationCard> {
         public int asInt() {
             return pointValue;
         }
+
+        public static Value fromInt(int intValue) {
+            return Arrays.stream(Value.values())
+                    .filter(value -> intValue == value.asInt())
+                    .findFirst()
+                    .get();
+        }
     }
 
 
@@ -73,50 +80,50 @@ public class DestinationCard implements Comparable<DestinationCard> {
         final int deckSize = 30;
         ArrayList<DestinationCard> deck = new ArrayList<>(deckSize);
 
-        deck.add(new DestinationCard(Destination.DENVER, Destination.EL_PASO, Value.FOUR));
+        deck.add(new DestinationCard(City.DENVER, City.EL_PASO, Value.FOUR));
 
-        deck.add(new DestinationCard(Destination.KANSAS_CITY, Destination.HOUSTON, Value.FIVE));
+        deck.add(new DestinationCard(City.KANSAS_CITY, City.HOUSTON, Value.FIVE));
 
-        deck.add(new DestinationCard(Destination.NEW_YORK, Destination.ATLANTA, Value.SIX));
+        deck.add(new DestinationCard(City.NEW_YORK, City.ATLANTA, Value.SIX));
 
-        deck.add(new DestinationCard(Destination.CHICAGO, Destination.NEW_ORLEANS, Value.SEVEN));
-        deck.add(new DestinationCard(Destination.CALGARY, Destination.SALT_LAKE_CITY, Value.SEVEN));
+        deck.add(new DestinationCard(City.CHICAGO, City.NEW_ORLEANS, Value.SEVEN));
+        deck.add(new DestinationCard(City.CALGARY, City.SALT_LAKE_CITY, Value.SEVEN));
 
-        deck.add(new DestinationCard(Destination.HELENA, Destination.LOS_ANGELES, Value.EIGHT));
-        deck.add(new DestinationCard(Destination.DULUTH, Destination.HOUSTON, Value.EIGHT));
-        deck.add(new DestinationCard(Destination.SAUL_ST_MARIE, Destination.NASHVILLE, Value.EIGHT));
+        deck.add(new DestinationCard(City.HELENA, City.LOS_ANGELES, Value.EIGHT));
+        deck.add(new DestinationCard(City.DULUTH, City.HOUSTON, Value.EIGHT));
+        deck.add(new DestinationCard(City.SAUL_ST_MARIE, City.NASHVILLE, Value.EIGHT));
 
-        deck.add(new DestinationCard(Destination.MONTREAL, Destination.ATLANTA, Value.NINE));
-        deck.add(new DestinationCard(Destination.SAUL_ST_MARIE, Destination.OKLAHOMA_CITY, Value.NINE));
-        deck.add(new DestinationCard(Destination.SEATTLE, Destination.LOS_ANGELES, Value.NINE));
-        deck.add(new DestinationCard(Destination.CHICAGO, Destination.SANTA_FE, Value.NINE));
+        deck.add(new DestinationCard(City.MONTREAL, City.ATLANTA, Value.NINE));
+        deck.add(new DestinationCard(City.SAUL_ST_MARIE, City.OKLAHOMA_CITY, Value.NINE));
+        deck.add(new DestinationCard(City.SEATTLE, City.LOS_ANGELES, Value.NINE));
+        deck.add(new DestinationCard(City.CHICAGO, City.SANTA_FE, Value.NINE));
 
-        deck.add(new DestinationCard(Destination.DULUTH, Destination.EL_PASO, Value.TEN));
-        deck.add(new DestinationCard(Destination.TORONTO, Destination.MIAMI, Value.TEN));
+        deck.add(new DestinationCard(City.DULUTH, City.EL_PASO, Value.TEN));
+        deck.add(new DestinationCard(City.TORONTO, City.MIAMI, Value.TEN));
 
-        deck.add(new DestinationCard(Destination.PORTLAND, Destination.PHOENIX, Value.ELEVEN));
-        deck.add(new DestinationCard(Destination.DALLAS, Destination.NEW_YORK, Value.ELEVEN));
-        deck.add(new DestinationCard(Destination.DENVER, Destination.PITTSBURGH, Value.ELEVEN));
-        deck.add(new DestinationCard(Destination.WINNIPEG, Destination.LITTLE_ROCK, Value.ELEVEN));
+        deck.add(new DestinationCard(City.PORTLAND, City.PHOENIX, Value.ELEVEN));
+        deck.add(new DestinationCard(City.DALLAS, City.NEW_YORK, Value.ELEVEN));
+        deck.add(new DestinationCard(City.DENVER, City.PITTSBURGH, Value.ELEVEN));
+        deck.add(new DestinationCard(City.WINNIPEG, City.LITTLE_ROCK, Value.ELEVEN));
 
-        deck.add(new DestinationCard(Destination.WINNIPEG, Destination.HOUSTON, Value.TWELVE));
-        deck.add(new DestinationCard(Destination.BOSTON, Destination.MIAMI, Value.TWELVE));
+        deck.add(new DestinationCard(City.WINNIPEG, City.HOUSTON, Value.TWELVE));
+        deck.add(new DestinationCard(City.BOSTON, City.MIAMI, Value.TWELVE));
 
-        deck.add(new DestinationCard(Destination.VANCOUVER, Destination.SANTA_FE, Value.THIRTEEN));
-        deck.add(new DestinationCard(Destination.CALGARY, Destination.PHOENIX, Value.THIRTEEN));
-        deck.add(new DestinationCard(Destination.MONTREAL, Destination.NEW_ORLEANS, Value.THIRTEEN));
+        deck.add(new DestinationCard(City.VANCOUVER, City.SANTA_FE, Value.THIRTEEN));
+        deck.add(new DestinationCard(City.CALGARY, City.PHOENIX, Value.THIRTEEN));
+        deck.add(new DestinationCard(City.MONTREAL, City.NEW_ORLEANS, Value.THIRTEEN));
 
-        deck.add(new DestinationCard(Destination.LOS_ANGELES, Destination.CHICAGO, Value.SIXTEEN));
+        deck.add(new DestinationCard(City.LOS_ANGELES, City.CHICAGO, Value.SIXTEEN));
 
-        deck.add(new DestinationCard(Destination.SAN_FRANCISCO, Destination.ATLANTA, Value.SEVENTEEN));
-        deck.add(new DestinationCard(Destination.PORTLAND, Destination.NASHVILLE, Value.SEVENTEEN));
+        deck.add(new DestinationCard(City.SAN_FRANCISCO, City.ATLANTA, Value.SEVENTEEN));
+        deck.add(new DestinationCard(City.PORTLAND, City.NASHVILLE, Value.SEVENTEEN));
 
-        deck.add(new DestinationCard(Destination.VANCOUVER, Destination.MONTREAL, Value.TWENTY));
-        deck.add(new DestinationCard(Destination.LOS_ANGELES, Destination.MIAMI, Value.TWENTY));
+        deck.add(new DestinationCard(City.VANCOUVER, City.MONTREAL, Value.TWENTY));
+        deck.add(new DestinationCard(City.LOS_ANGELES, City.MIAMI, Value.TWENTY));
 
-        deck.add(new DestinationCard(Destination.LOS_ANGELES, Destination.NEW_YORK, Value.TWENTY_ONE));
+        deck.add(new DestinationCard(City.LOS_ANGELES, City.NEW_YORK, Value.TWENTY_ONE));
 
-        deck.add(new DestinationCard(Destination.SEATTLE, Destination.NEW_YORK, Value.TWENTY_TWO));
+        deck.add(new DestinationCard(City.SEATTLE, City.NEW_YORK, Value.TWENTY_TWO));
 
         Collections.shuffle(deck);
 

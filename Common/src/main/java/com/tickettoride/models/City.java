@@ -1,6 +1,6 @@
 package com.tickettoride.models;
 
-public enum Destination {
+public enum City {
     VANCOUVER,
     CALGARY,
     WINNIPEG,

@@ -183,7 +183,7 @@ public class GameFacade extends BaseFacade {
             Game game = new Game(gameName, maxPlayers);
             Player player = new Player(user.getUserID(), game.getGameID());
 
-            database.getPlayerDAO().addNewPlayer(player);
+            database.getPlayerDAO().addPlayer(player);
             database.getGameDAO().addGame(game);
 
             database.commit();
@@ -203,7 +203,7 @@ public class GameFacade extends BaseFacade {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
-            dao.addNewPlayer(player);
+            dao.addPlayer(player);
             database.commit();
             return player;
         }

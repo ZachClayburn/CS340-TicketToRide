@@ -31,6 +31,7 @@ public class Database implements AutoCloseable {
     private static Logger logger = LogManager.getLogger(Database.class.getName());
 
     protected Connection connection;
+    private boolean doCommit = false;
 
     List<DataAccessObject> DAOs = new ArrayList<>();
 
@@ -38,6 +39,7 @@ public class Database implements AutoCloseable {
     protected UserDAO userDAO;
     protected GameDAO gameDAO;
     protected PlayerDAO playerDAO;
+    protected DestinationCardDAO destinationCardDAO;
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
@@ -58,12 +60,13 @@ public class Database implements AutoCloseable {
                     "    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = current_schema()) LOOP" +
                     "        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';" +
                     "    END LOOP;" +
-                    "END $$;";
+                    "END $$;" +
+                    "DROP TYPE cardState;";
             sql += DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
             statement.executeUpdate(sql);
 
-            connection.commit();
+            commit();
 
         } catch (SQLException e) {
             logger.catching(e);
@@ -92,9 +95,6 @@ public class Database implements AutoCloseable {
 
         parameters = gson.fromJson(reader, DatabaseParameters.class);
 
-        logger.info("Connecting to the database with parameter: " + parameters);
-
-
         final String url = "jdbc:postgresql://" + parameters.getServerAddress();
 
         try {
@@ -115,6 +115,8 @@ public class Database implements AutoCloseable {
         DAOs.add(gameDAO);
         playerDAO = new PlayerDAO(connection);
         DAOs.add(playerDAO);
+        destinationCardDAO = new DestinationCardDAO(connection);
+        DAOs.add(destinationCardDAO);
     }
 
     /**
@@ -126,6 +128,12 @@ public class Database implements AutoCloseable {
     public void close() throws DatabaseException {
         try {
             if (connection != null) {
+                if (doCommit) {
+                    connection.commit();
+                } else {
+                    logger.warn("Aborting all transactions!");
+                    connection.rollback();
+                }
                 connection.close();
                 connection = null;
                 DAOs.forEach(dataAccessObject -> dataAccessObject.connection = null);
@@ -152,13 +160,12 @@ public class Database implements AutoCloseable {
         return playerDAO;
     }
 
-    public void commit() throws DatabaseException {
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            logger.catching(e);
-            throw new DatabaseException("Can not commit transaction!", e);
-        }
+    public DestinationCardDAO getDestinationCardDAO() {
+        return destinationCardDAO;
+    }
+
+    public void commit() {
+        doCommit = true;
     }
 
     static abstract class DataAccessObject {

@@ -4,10 +4,7 @@ import org.hamcrest.core.IsEqual;
 import org.hamcrest.core.IsNot;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static com.tickettoride.models.DestinationCard.*;
 import static org.junit.Assert.*;
@@ -17,7 +14,7 @@ public class DestinationCardTest {
     @Test
     public void NewRandomDeckAskedFor_IsCorrectLength() {
 
-        List<DestinationCard> shuffledDeck = getShuffledDeck();
+        Queue<DestinationCard> shuffledDeck = getShuffledDeck();
         int expectedLength = 30;
 
         assertEquals(expectedLength, shuffledDeck.size());
@@ -98,7 +95,7 @@ public class DestinationCardTest {
     @Test
     public void NewRandomDeckAskedFor_AllCardsUnique() {
 
-        List<DestinationCard> shuffledDeck = getShuffledDeck();
+        Queue<DestinationCard> shuffledDeck = getShuffledDeck();
         Set<DestinationCard> uniqueCards = new TreeSet<>(shuffledDeck);
 
         assertEquals(shuffledDeck.size(), uniqueCards.size());
@@ -107,8 +104,8 @@ public class DestinationCardTest {
     @Test
     public void TwoNewRandomDeckAskedFor_EachIsInAUniqueOrder() {
 
-        List<DestinationCard> deckOne = getShuffledDeck();
-        List<DestinationCard> deckTwo = getShuffledDeck();
+        Queue<DestinationCard> deckOne = getShuffledDeck();
+        Queue<DestinationCard> deckTwo = getShuffledDeck();
 
         assertThat(deckOne, IsNot.not(IsEqual.equalTo(deckTwo)));
 

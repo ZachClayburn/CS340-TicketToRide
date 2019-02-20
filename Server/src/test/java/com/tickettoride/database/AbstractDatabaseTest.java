@@ -31,9 +31,8 @@ public abstract class AbstractDatabaseTest {
                     "    END LOOP;" +
                     "END $$;";
 
-            try (var connection = db.connection) {
-                connection.prepareStatement(sql).execute();
-            }
+            db.connection.prepareStatement(sql).execute();
+            db.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }
