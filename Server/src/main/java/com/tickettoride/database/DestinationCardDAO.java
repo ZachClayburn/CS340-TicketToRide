@@ -3,22 +3,22 @@ package com.tickettoride.database;
 import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class DestinationCardDAO extends Database.DataAccessObject {
 
     private static final String tableCreateString =
             // language=PostgreSQL
-            "CREATE TYPE cardState AS ENUM ( 'inDeck', 'inPlayerHand' );" +
+            "CREATE TYPE cardState AS ENUM ( 'inDeck', 'inPlayerHand' );" + //FIXME Add 'offeredToPlayer' state
             "CREATE TABLE destinationCards" +
                     "(" +
                     "gameID TEXT," +
@@ -84,7 +84,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         Queue<DestinationCard> deck = new ArrayDeque<>();
         String sql = "SELECT " +
                 "destination1, destination2, pointvalue FROM destinationcards " +
-                "WHERE gameid=? " +
+                "WHERE gameid=? AND state='inDeck' " +
                 "ORDER BY sequenceposition";
 
         try (var statement = connection.prepareStatement(sql)){
@@ -93,14 +93,8 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
             var results = statement.executeQuery();
 
-            while (results.next()) {
-
-                var destination1 = City.valueOf(results.getString("destination1"));
-                var destination2 = City.valueOf(results.getString("destination2"));
-                var pointValue = DestinationCard.Value.fromInt(results.getInt("pointValue"));
-                deck.add(new DestinationCard(destination1, destination2, pointValue));
-
-            }
+            while (results.next())
+                deck.add(buildDestinationCardFromResult(results));
 
         } catch (SQLException e) {
             logger.catching(e);
@@ -108,5 +102,68 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         }
 
         return deck;
+    }
+
+    public void giveCardsToPlayer(Player player, Collection<DestinationCard> cards) throws DatabaseException {
+        giveCardsToPlayer(player, cards.toArray(new DestinationCard[0]));
+    }
+
+    public void giveCardsToPlayer(Player player, DestinationCard... cards) throws DatabaseException {
+
+        String sql = "UPDATE destinationcards " +
+                "SET sequenceposition=NULL, state='inPlayerHand', playerid=? " +
+                "WHERE destination1=? AND destination2=?";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, player.getPlayerID().toString());
+
+            for (var card : cards) {
+
+                statement.setString(2, card.getDestination1().name());
+                statement.setString(3, card.getDestination2().name());
+
+                statement.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not give card to player!", e);
+        }
+
+    }
+
+    public Set<DestinationCard> getPlayerHand(Player player) throws DatabaseException {
+
+        Set<DestinationCard> hand = new TreeSet<>();
+        String sql = "SELECT " +
+                "destination1, destination2, pointvalue FROM destinationcards " +
+                "WHERE state='inPlayerHand' AND playerid=?";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, player.getPlayerID().toString());
+
+            var results = statement.executeQuery();
+
+            while (results.next())
+                hand.add(buildDestinationCardFromResult(results));
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not get player hand!", e);
+        }
+
+        return hand;
+    }
+
+    @NotNull
+    private DestinationCard buildDestinationCardFromResult(ResultSet result) throws SQLException {
+
+        var destination1 = City.valueOf(result.getString("destination1"));
+        var destination2 = City.valueOf(result.getString("destination2"));
+        var pointValue = DestinationCard.Value.fromInt(result.getInt("pointValue"));
+
+        return new DestinationCard(destination1, destination2, pointValue);
     }
 }

@@ -7,11 +7,11 @@ import com.tickettoride.models.User;
 import exceptions.DatabaseException;
 import modelAttributes.Password;
 import modelAttributes.Username;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -65,6 +65,47 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
         }
 
         assertArrayEquals(deck.toArray(), fromDatabase.toArray());
+
+    }
+
+    @Test
+    public void CardMovedToPlayersHand_CorrectlyReflectedInDatabase() throws DatabaseException {
+
+        Queue<DestinationCard> deck = DestinationCard.getShuffledDeck();
+
+        try (var db = new Database()) {
+
+            db.getDestinationCardDAO().addDeck(testGame, deck);
+            db.commit();
+
+        }
+
+        Set<DestinationCard> playerHand = new TreeSet<>();
+
+        for (int i = 0; i < 3; i++) {
+            playerHand.add(deck.poll());
+        }
+
+        try (var db = new Database()) {
+
+            db.getDestinationCardDAO().giveCardsToPlayer(testPlayer,  playerHand);
+            db.commit();
+
+        }
+
+        Queue<DestinationCard> deckFromDatabase;
+        Set<DestinationCard> playerHandFromDatabase;
+
+        try (var db = new Database()) {
+
+            deckFromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame);
+            playerHandFromDatabase = db.getDestinationCardDAO().getPlayerHand(testPlayer);
+
+        }
+
+
+        assertArrayEquals(deck.toArray(), deckFromDatabase.toArray());
+        assertArrayEquals(playerHand.toArray(), playerHandFromDatabase.toArray());
 
     }
 }
