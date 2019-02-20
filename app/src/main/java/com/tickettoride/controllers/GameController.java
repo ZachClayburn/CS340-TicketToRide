@@ -102,7 +102,7 @@ public class GameController extends BaseController {
     public void start() {
         Log.i("GAME_CONTROLLER", "Calling Start");
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
-        Snackbar.make(activity.findViewById(R.id.lobby_linear_layout), R.string.game_start_message, Snackbar.LENGTH_LONG ).show();
+        activity.moveToGame();
     }
 
     public void errorLeave(Throwable t){
