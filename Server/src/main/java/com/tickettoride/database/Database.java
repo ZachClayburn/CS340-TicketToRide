@@ -61,7 +61,7 @@ public class Database implements AutoCloseable {
                     "        EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';" +
                     "    END LOOP;" +
                     "END $$;" +
-                    "DROP TYPE cardState;";
+                    "DROP TYPE IF EXISTS cardState;";
             sql += DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
             statement.executeUpdate(sql);
