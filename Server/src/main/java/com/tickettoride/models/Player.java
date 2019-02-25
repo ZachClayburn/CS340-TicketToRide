@@ -6,7 +6,6 @@ public class Player {
     private UUID userid = null;
     private UUID gameid = null;
     private UUID playerID = null;
-    private List<DestinationCard> destinationCardsHand = new ArrayList<>();
 
     public Player(UUID user, UUID game) {
         this.userid = user;
@@ -44,18 +43,6 @@ public class Player {
         this.playerID = playerID;
     }
 
-    public boolean addDestinationCardToHand(DestinationCard card) {
-        return destinationCardsHand.add(card);
-    }
-
-    public boolean removeDestinationCardFromHand(DestinationCard card) {
-        return destinationCardsHand.remove(card);
-    }
-
-    public List<DestinationCard> getDestinationCardsHand() {
-        return destinationCardsHand;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,13 +50,12 @@ public class Player {
         Player player = (Player) o;
         return userid.equals(player.userid) &&
                 gameid.equals(player.gameid) &&
-                getPlayerID().equals(player.getPlayerID()) &&
-                destinationCardsHand.equals(player.destinationCardsHand);
+                getPlayerID().equals(player.getPlayerID());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userid, gameid, getPlayerID(), destinationCardsHand);
+        return Objects.hash(userid, gameid, getPlayerID());
     }
 
     @Override
@@ -78,7 +64,6 @@ public class Player {
                 "userid=" + userid +
                 ", gameid=" + gameid +
                 ", playerID=" + playerID +
-                ", destinationCardsHand=" + destinationCardsHand +
                 '}';
     }
 }

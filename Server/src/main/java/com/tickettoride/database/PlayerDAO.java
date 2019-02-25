@@ -10,10 +10,8 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.sql.*;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +24,6 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
                     "gameID TEXT NOT NULL," +
-                    "destinationHand json," +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
@@ -46,17 +43,13 @@ public class PlayerDAO extends Database.DataAccessObject {
 
     public void addPlayer(Player player) throws DatabaseException {
 
-        Gson gson = new Gson();
-        final String sql = "INSERT INTO Players (playerID, userID, gameID, destinationhand) VALUES (?, ?, ?, ?::json)";
+        final String sql = "INSERT INTO Players (playerID, userID, gameID) VALUES (?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
             statement.setString(1, player.getPlayerID().toString());
             statement.setString(2, player.getUserID().toString());
             statement.setString(3, player.getGameID().toString());
-
-            var jsonString = gson.toJson(player.getDestinationCardsHand());
-            statement.setString(4, jsonString);
 
             statement.executeUpdate();
 
@@ -86,18 +79,12 @@ public class PlayerDAO extends Database.DataAccessObject {
     @NotNull
     private Player buildPlayerFromResult(ResultSet result) throws SQLException {
 
-        Gson gson = new Gson();
         Player player;
 
         UUID tableGameID = UUID.fromString(result.getString("GameID"));
         UUID tablePlayerID = UUID.fromString(result.getString("PlayerID"));
         UUID tableUserID = UUID.fromString(result.getString("UserID"));
         player = new Player(tableUserID, tableGameID, tablePlayerID);
-
-        var handStreamReader = new InputStreamReader(result.getBinaryStream("destinationHand"));
-        List<DestinationCard> destinationCards = gson.fromJson(handStreamReader, destinationHandType);
-
-        destinationCards.forEach(player::addDestinationCardToHand);
 
         return player;
     }
@@ -132,25 +119,5 @@ public class PlayerDAO extends Database.DataAccessObject {
             statement.executeUpdate();
 
         }
-    }
-
-    public void updateHand(Player player) throws DatabaseException {
-
-        Gson gson = new Gson();
-        String sql = "UPDATE players SET destinationhand=?::json WHERE playerid=?";
-
-        try (var statement = connection.prepareStatement(sql)) {
-
-            String jsonString = gson.toJson(player.getDestinationCardsHand());
-            statement.setString(1, jsonString);
-            statement.setString(2, player.getPlayerID().toString());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            logger.catching(e);
-            throw new DatabaseException("Could not update the Players Hand!", e);
-        }
-
     }
 }

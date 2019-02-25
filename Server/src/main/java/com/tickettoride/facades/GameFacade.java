@@ -131,24 +131,19 @@ public class GameFacade extends BaseFacade {
         try (var db = new Database()) {
 
             var game = db.getGameDAO().getGame(gameID);
-
             assert game != null;
-            assert game.getDestinationDeck().size() == 0;
 
             Queue<DestinationCard> destinationDeck = DestinationCard.getShuffledDeck();
 
-
             for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
-                player.addDestinationCardToHand(destinationDeck.remove());
-                player.addDestinationCardToHand(destinationDeck.remove());
-                player.addDestinationCardToHand(destinationDeck.remove());
+//                player.addDestinationCardToHand(destinationDeck.remove());
+//                player.addDestinationCardToHand(destinationDeck.remove());
+//                player.addDestinationCardToHand(destinationDeck.remove());
 
-                db.getPlayerDAO().updateHand(player);
+//                db.getPlayerDAO().updateHand(player);
                 //TODO Create command to send this hand to all players
             }
 
-            game.setDestinationDeck(destinationDeck);
-            db.getGameDAO().updateDecks(game);
             //TODO Create command to send this deck to each player
 
             db.commit();

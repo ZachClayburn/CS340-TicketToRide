@@ -13,9 +13,6 @@ public class Game implements IGame {
 
     private boolean isStarted = false;
 
-    @NotNull
-    private Queue<DestinationCard> destinationDeck = new ArrayDeque<>();
-
     public Game(String groupName, int maxPlayer) {
         this.gameID = UUID.randomUUID();
         this.groupName = groupName;
@@ -29,14 +26,6 @@ public class Game implements IGame {
         this.maxPlayer = maxPlayer;
         this.numPlayer = numPlayer;
         this.isStarted = isStarted;
-    }
-
-    public Queue<DestinationCard> getDestinationDeck() {
-        return destinationDeck;
-    }
-
-    public void setDestinationDeck(Queue<DestinationCard> destinationDeck) {
-        this.destinationDeck = destinationDeck;
     }
 
     public void setGameID(UUID gameID) {
@@ -88,13 +77,12 @@ public class Game implements IGame {
                 getMaxPlayer() == game.getMaxPlayer() &&
                 isStarted() == game.isStarted() &&
                 Objects.equals(getGameID(), game.getGameID()) &&
-                Objects.equals(getGroupName(), game.getGroupName()) &&
-                Objects.equals(new ArrayList<>(getDestinationDeck()), new ArrayList<>(game.getDestinationDeck()));
+                Objects.equals(getGroupName(), game.getGroupName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getGameID(), getGroupName(), getNumPlayer(), getMaxPlayer(), isStarted(), getDestinationDeck());
+        return Objects.hash(getGameID(), getGroupName(), getNumPlayer(), getMaxPlayer(), isStarted());
     }
 
     @Override
@@ -105,7 +93,6 @@ public class Game implements IGame {
                 ", numPlayer=" + numPlayer +
                 ", maxPlayer=" + maxPlayer +
                 ", isStarted=" + isStarted +
-                ", destinationDeck=" + destinationDeck +
                 '}';
     }
 }

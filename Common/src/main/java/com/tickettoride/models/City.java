@@ -1,6 +1,6 @@
 package com.tickettoride.models;
 
-public enum City {
+public enum City { //TODO Move the model classes to common, kill the unused interfaces
     VANCOUVER,
     CALGARY,
     WINNIPEG,

@@ -43,9 +43,6 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
     public void PlayerIsAddedToDatabase_IsCorrectlyStoredAndRetrieved() throws DatabaseException {
 
         var deck = DestinationCard.getShuffledDeck();
-        testPlayer.addDestinationCardToHand(deck.remove());
-        testPlayer.addDestinationCardToHand(deck.remove());
-        testPlayer.addDestinationCardToHand(deck.remove());
 
         try (var db = new Database()){
 
@@ -64,36 +61,4 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
 
         assertEquals(testPlayer, fromDatabase);
     }
-    @Test
-    public void PlayersHandIsUpdated_IsCorrectlyStoredAndRetrieved() throws DatabaseException {
-
-        try (var db = new Database()){
-
-            db.getPlayerDAO().addPlayer(testPlayer);
-            db.commit();
-
-        }
-
-        var deck = DestinationCard.getShuffledDeck();
-        testPlayer.addDestinationCardToHand(deck.remove());
-        testPlayer.addDestinationCardToHand(deck.remove());
-        testPlayer.addDestinationCardToHand(deck.remove());
-
-        try (var db = new Database()) {
-
-            db.getPlayerDAO().updateHand(testPlayer);
-            db.commit();
-        }
-
-        Player fromDatabase;
-
-        try (var db = new Database()){
-
-            fromDatabase = db.getPlayerDAO().getPlayerByPlayerID(testPlayer.getPlayerID());
-
-        }
-
-        assertEquals(testPlayer, fromDatabase);
-    }
-
 }
