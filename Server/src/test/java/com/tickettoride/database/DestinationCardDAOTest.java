@@ -88,7 +88,7 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
 
         try (var db = new Database()) {
 
-            db.getDestinationCardDAO().giveCardsToPlayer(testPlayer,  playerHand);
+            db.getDestinationCardDAO().offerCardsToPlayer(testPlayer,  playerHand);
             db.commit();
 
         }

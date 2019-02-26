@@ -112,7 +112,6 @@ public class GameFacade extends BaseFacade {
 
     public void start(UUID connID, UUID gameID) throws DatabaseException {
         logger.info("Attempting to start game " + gameID);
-        //FIXME This should be where the the Players associated with each user should be added
         try (var db = new Database()){
 
             db.getGameDAO().setGameToStarted(gameID);
@@ -136,15 +135,15 @@ public class GameFacade extends BaseFacade {
             Queue<DestinationCard> destinationDeck = DestinationCard.getShuffledDeck();
 
             for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
-//                player.addDestinationCardToHand(destinationDeck.remove());
-//                player.addDestinationCardToHand(destinationDeck.remove());
-//                player.addDestinationCardToHand(destinationDeck.remove());
-
-//                db.getPlayerDAO().updateHand(player);
-                //TODO Create command to send this hand to all players
+                List<DestinationCard> offeredCards = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    offeredCards.add(destinationDeck.remove());
+                }
+                db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
+                commands.add(offerDestinationCards(player, offeredCards));
             }
 
-            //TODO Create command to send this deck to each player
+            commands.add(sendDestinationDeck(destinationDeck));
 
             db.commit();
 
@@ -153,6 +152,19 @@ public class GameFacade extends BaseFacade {
         }
 
         commands.forEach(command -> sendResponseToRoom(conID, command));
+    }
+
+    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards) {
+        return offerDestinationCards(player, offeredCards, 1);
+    }
+
+    Command offerDestinationCards(Player player, List<DestinationCard> offeredCard,
+                                  int requiredToKeep) {
+        return null; //FIXME Make this command
+    }
+
+    Command sendDestinationDeck(Queue<DestinationCard> deck) {
+        return null; //FIXME Make this command
     }
 
     Game findGame(UUID gameID) throws DatabaseException {

@@ -105,11 +105,11 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         return deck;
     }
 
-    public void giveCardsToPlayer(Player player, Collection<DestinationCard> cards) throws DatabaseException {
-        giveCardsToPlayer(player, cards.toArray(new DestinationCard[0]));
+    public void offerCardsToPlayer(Player player, Collection<DestinationCard> cards) throws DatabaseException {
+        offerCardsToPlayer(player, cards.toArray(new DestinationCard[0]));
     }
 
-    public void giveCardsToPlayer(Player player, DestinationCard... cards) throws DatabaseException {
+    public void offerCardsToPlayer(Player player, DestinationCard... cards) throws DatabaseException {
 
         String sql = "UPDATE destinationcards " +
                 "SET sequenceposition=NULL, state='inPlayerHand', playerid=? " +
