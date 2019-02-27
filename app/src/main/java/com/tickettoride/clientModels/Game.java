@@ -1,5 +1,7 @@
 package com.tickettoride.clientModels;
 
+import android.util.Log;
+
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.Serializable;
@@ -33,6 +35,9 @@ public class Game implements IGame, Serializable { //used for when creating a ne
         this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
         this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
         this.isStarted = (Boolean) gameMap.get(("isStarted"));
+        for (LinkedTreeMap playerLinkedTree : (ArrayList<LinkedTreeMap>) gameMap.get("players")) {
+            this.players.add(new Player(playerLinkedTree));
+        }
     }
 
 
@@ -67,6 +72,11 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     }
 
     public Boolean getIsStarted() { return  isStarted; }
+
+    public Boolean forUser(UUID userId) {
+        for (Player player: players) { if (player.getUserID().equals(userId)) { return true; } }
+        return false;
+    }
 
     public void addPlayer(Player player){
         players.add(player);

@@ -35,9 +35,7 @@ public class GameController extends BaseController {
             try {
                 joinGameActivity = (JoinGameActivity) getCurrentActivity();
                 joinGameActivity.updateUI();
-            } catch (ClassCastException e) {
-                Log.i("GameController", "New Game Created");
-            }
+            } catch (ClassCastException e) {  Log.i("GameController", "New Game Created"); }
         }
 
     }

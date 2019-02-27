@@ -30,7 +30,7 @@ public class SessionDAO extends Database.DataAccessObject {
     public void createSession(Session session) throws DatabaseException {
         String sql = "INSERT INTO Sessions (userID, sessionID) VALUES (?, ?)";
         try (var statement = connection.prepareStatement(sql)) {
-            statement.setString(1, session.getUser().getUserID().toString());
+            statement.setString(1, session.getUserID().toString());
             statement.setString(2, session.getSessionID().toString());
             statement.executeUpdate();
         } catch (SQLException e) {

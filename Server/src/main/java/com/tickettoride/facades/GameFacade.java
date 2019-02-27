@@ -51,32 +51,23 @@ public class GameFacade extends BaseFacade {
     public void join(UUID connID, UUID sessionID, UUID gameID) {
         try {
             Game game = findGame(gameID);
-            if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            List<Player> players=null;
-            try (Database database = new Database()) {
-                PlayerDAO dao = database.getPlayerDAO();
-                players=dao.getGamePlayers(gameID);
-            }
-            Player player=isAlreadyPlayer(user,players);
-            Command command;
-            if(player==null){
+            List<Player> players = getGamePLayers(game);
+            Player player = isAlreadyPlayer(user,players);
+            String commandMethodName;
+            if (player == null) {
+                if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
                 player = createPlayer(user.getUserID(), game.getGameID());
                 updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
                 game.setNumPlayer((game.getNumPlayer() + 1));
-                command = new Command(
-                        CONTROLLER_NAME, "join",
-                        player.getPlayerID(), sessionID,
-                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.IsStarted());
-            }else{
-                command = new Command(
-                        CONTROLLER_NAME, "rejoin",
-                        player.getPlayerID(), sessionID,
-                        game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
-            }
+                commandMethodName = "join";
+            } else { commandMethodName = "rejoin"; }
+            Command command = new Command(
+                    CONTROLLER_NAME, commandMethodName,
+                    player.getPlayerID(), sessionID,
+                    game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.isStarted());
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
-            
             sendResponseToRoom(connID, command);
             if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
@@ -88,9 +79,6 @@ public class GameFacade extends BaseFacade {
 
     public void leave(UUID connID) {
         try {
-            //deletePlayer(sessionID);
-            //int originalPlayerCount = game.getNumPlayer();
-            //updatePlayerCount(game.getGameID(), game.getNumPlayer() - 1);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             Command command = new Command(CONTROLLER_NAME, "leave", allGames());
             sendResponseToMainLobby(command);
@@ -102,14 +90,8 @@ public class GameFacade extends BaseFacade {
     }
     
     private Player isAlreadyPlayer(User user, List<Player> players){
-        if(players==null||players.size()==0){
-            return null;
-        }
-        for(Player p:players){
-            if(user.getUserID().equals(p.getUserID())){
-                return p;
-            }
-        }
+        if( players == null || players.size() == 0) { return null; }
+        for(Player p:players) { if (user.getUserID().equals(p.getUserID())) { return p; } }
         return null;
     }
 
@@ -146,7 +128,7 @@ public class GameFacade extends BaseFacade {
         try (Database database = new Database()) {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            Game game = new Game(gameName, maxPlayers, user);
+            Game game = new Game(gameName, maxPlayers);
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
             database.commit();
@@ -157,7 +139,12 @@ public class GameFacade extends BaseFacade {
     public ArrayList<Game> allGames() throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
-            return dao.allGames();
+            ArrayList<Game> games = dao.allGames();
+            for (Game game: games) {
+                ArrayList<Player> players = (ArrayList<Player>) getGamePLayers(game);
+                game.setPlayers(players);
+            }
+            return games;
         }
     }
 
@@ -176,6 +163,13 @@ public class GameFacade extends BaseFacade {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
             database.commit();
+        }
+    }
+
+    public List<Player> getGamePLayers(Game game) throws DatabaseException {
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            return dao.getGamePlayers(game.getGameID());
         }
     }
 
