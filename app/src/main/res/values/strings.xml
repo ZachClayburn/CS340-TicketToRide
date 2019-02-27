@@ -11,6 +11,12 @@
     <string name="three_label">3</string>
     <string name="four_label">4</string>
     <string name="five_label">5</string>
+    <string name="player_label">Player %1$d</string>
+    <string name="train_card_label">Train Cards: %1$d</string>
+    <string name="destination_card_label">Destination Cards: %1$d</string>
+    <string name="cars_label">Train Cars Left: %1$d</string>
+    <string name="turn_label">Player Turn: %1$d</string>
+    <string name="points_label">Points: %1$d</string>
     <string name="game_option">Click a game to join or create a game</string>
     <string name="login_welcome">WELCOME TO TICKET TO RIDE</string>
     <string name="game_list_item">Game Name</string>
@@ -29,4 +35,7 @@
     <string name="join_game_error">Game has max number of players</string>
     <string name="create_game_error">Invalid values for creating game</string>
     <string name="game_start_message">Party time, the game is starting now!</string>
+    <string name="setup_game_error">Could not setup the game</string>
+    <string name="return_to_game">Return to Game</string>
+    <string name="player_info">Player Information</string>
 </resources>

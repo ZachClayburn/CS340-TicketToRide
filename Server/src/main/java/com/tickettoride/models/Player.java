@@ -10,6 +10,7 @@ public class Player {
     private UUID playerID = null;
     private int turn = 0;
     private PlayerColor color = null;
+    private String username = "";
 
     public Player(UUID user, UUID game) {
         this.userid = user;
@@ -63,6 +64,10 @@ public class Player {
     public PlayerColor getColor() {
         return color;
     }
+
+    public String getUsername(){return username;}
+
+    public void setUsername(String username){this.username = username;}
 
     public void setColor() {
         switch (turn) {

@@ -125,7 +125,6 @@ public class GameFacade extends BaseFacade {
         }
 
         var command = new Command(CONTROLLER_NAME, "start");
-        // TODO: Move servercommunicator to gameroom
         sendResponseToRoom(connID, command);
     }
 
