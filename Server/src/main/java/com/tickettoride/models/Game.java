@@ -3,7 +3,6 @@ package com.tickettoride.models;
 import java.util.*;
 
 import modelInterfaces.IGame;
-import org.jetbrains.annotations.NotNull;
 
 public class Game implements IGame {
     private UUID gameID;
@@ -27,6 +26,7 @@ public class Game implements IGame {
         this.numPlayer = numPlayer;
         this.isStarted = isStarted;
     }
+
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
@@ -67,6 +67,8 @@ public class Game implements IGame {
     public void setStarted(boolean started) {
         isStarted = started;
     }
+
+    public Boolean IsStarted() { return isStarted; }
 
     @Override
     public boolean equals(Object o) {

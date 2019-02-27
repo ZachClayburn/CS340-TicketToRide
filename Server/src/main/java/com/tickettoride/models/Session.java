@@ -6,11 +6,11 @@ import modelInterfaces.ISession;
 
 public class Session implements ISession {
 
-    private User user;
+    private UUID userID;
     private UUID sessionID;
 
     public Session(User user) {
-        this.user = user;
+        this.userID = user.getUserID();
         this.sessionID = UUID.randomUUID();
     }
 
@@ -18,7 +18,7 @@ public class Session implements ISession {
         this.sessionID = sessionID;
     }
 
-    public User getUser() { return user; }
+    public UUID getUserID() { return userID; }
 
     public UUID getSessionID() { return  sessionID; }
 }
