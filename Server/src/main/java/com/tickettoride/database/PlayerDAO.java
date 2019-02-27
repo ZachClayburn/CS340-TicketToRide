@@ -20,6 +20,7 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
                     "gameID TEXT NOT NULL," +
+                    "turn NUMERIC," +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
@@ -36,11 +37,12 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
     public void addNewPlayer(Player player) throws DatabaseException {
-        final String sql = "INSERT INTO Players (playerID, userID, gameID) VALUES (?, ?, ?)";
+        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, player.getPlayerID().toString());
             statement.setString(2, player.getUserID().toString());
             statement.setString(3, player.getGameID().toString());
+            statement.setInt(4, player.getTurn());
             statement.executeUpdate();
         } catch (SQLException e) {
 
@@ -59,13 +61,26 @@ public class PlayerDAO extends Database.DataAccessObject {
                 UUID tableGameID = UUID.fromString(result.getString("GameID"));
                 UUID tablePlayerID = UUID.fromString(result.getString("PlayerID"));
                 UUID tableUserID = UUID.fromString(result.getString("UserID"));
-                player = new Player(tableUserID, tableGameID, tablePlayerID);
+                int turn = result.getInt("turn");
+                player = new Player(tableUserID, tableGameID, tablePlayerID, turn);
+                player.setColor();
                 players.add(player);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve game players!", e);
         }
         return players;
+    }
+
+    public void setTurn(UUID playerID, int turn) throws DatabaseException {
+        String sql = "UPDATE Players SET turn = ? WHERE gameID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, turn);
+            statement.setString(2, playerID.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not set turn!", e);
+        }
     }
 
     public void deletePlayer(UUID sessionID) throws SQLException {

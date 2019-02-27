@@ -15,10 +15,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import command.Command;
+import modelAttributes.Color;
+import modelAttributes.PlayerColor;
 
 public class GameFacade extends BaseFacade {
     private static GameFacade SINGLETON = new GameFacade();
@@ -104,7 +107,6 @@ public class GameFacade extends BaseFacade {
         }
 
         var command = new Command(CONTROLLER_NAME, "start");
-
         sendResponseToRoom(connID, command);
     }
 
@@ -166,6 +168,41 @@ public class GameFacade extends BaseFacade {
         }
     }
 
+    public void setup(UUID connID, UUID gameID) throws DatabaseException {
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            List<Player> players = dao.getGamePlayers(gameID);
+            pickTurnOrder(players);
+            pickColors(players);
+            Command command = new Command(CONTROLLER_NAME, "setup", players);
+            sendResponseToRoom(connID, command);
+        }
+        catch (Throwable throwable) {
+            logger.error(throwable.getMessage(), throwable);
+            Command command = new Command(CONTROLLER_NAME, "errorSetup", throwable);
+            sendResponseToRoom(connID, command);
+        }
+    }
+
+    public void pickTurnOrder(List<Player> players) throws DatabaseException {
+        Collections.shuffle(players);
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            for (int i = 0; i < players.size(); i++) {
+                Player player = players.get(i);
+                player.setTurn(i + 1);
+                dao.setTurn(player.getPlayerID(), player.getTurn());
+            }
+            database.commit();
+        }
+    }
+
+    public void pickColors(List<Player> players) {
+        for (Player player:players){
+            player.setColor();
+        }
+    }
+  
     public List<Player> getGamePLayers(Game game) throws DatabaseException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();

@@ -23,7 +23,8 @@ public class GameDAO extends Database.DataAccessObject {
                     "groupName TEXT NOT NULL UNIQUE," +
                     "numPlayer NUMERIC NOT NULL," +
                     "maxPlayer NUMERIC NOT NULL," +
-                    "iStarted BOOLEAN DEFAULT FALSE" +
+                    "iStarted BOOLEAN DEFAULT FALSE," +
+                    "curTurn NUMERIC" +
                     ");";
 
     public GameDAO(Connection connection) {
@@ -38,12 +39,13 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     public void addGame(Game game) throws DatabaseException {
-        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer) VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, curTurn) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
             statement.setInt(3, game.getNumPlayer());
             statement.setInt(4, game.getMaxPlayer());
+            statement.setInt(5, game.getCurTurn());
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
     }
@@ -61,7 +63,8 @@ public class GameDAO extends Database.DataAccessObject {
                 var tableNumPlayer = result.getInt("numPlayer");
                 var tableMaxPlayer = result.getInt("maxPlayer");
                 var tableIsStarted = result.getBoolean("iStarted");
-                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+                var curTurn = result.getInt("curTurn");
+                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, curTurn);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve game!", e);
@@ -76,7 +79,18 @@ public class GameDAO extends Database.DataAccessObject {
             statement.setString(2, gameID.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve increase player count!", e);
+            throw new DatabaseException("Could not increase player count!", e);
+        }
+    }
+
+    public void updateTurn(Game game) throws DatabaseException {
+        String sql = "UPDATE Games SET curTurn = ? WHERE gameID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, game.getCurTurn());
+            statement.setString(2, game.getGameID().toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not update turn!", e);
         }
     }
 
@@ -91,7 +105,8 @@ public class GameDAO extends Database.DataAccessObject {
               var tableNumPlayer = results.getInt("numPlayer");
               var tableMaxPlayer = results.getInt("maxPlayer");
               var tableIsStarted = results.getBoolean("iStarted");
-              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+              var curTurn = results.getInt("curTurn");
+              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, curTurn);
               games.add(game);
           }
         } catch (SQLException e) {

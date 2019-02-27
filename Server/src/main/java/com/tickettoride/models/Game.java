@@ -11,6 +11,8 @@ public class Game implements IGame {
     private String groupName = "";
     private int numPlayer = 0;
     private int maxPlayer = 5;
+    private int curTurn = 1;
+
     private boolean isStarted = false;
 
     private ArrayList<Player> players = new ArrayList<>();
@@ -22,12 +24,13 @@ public class Game implements IGame {
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
         this.numPlayer = numPlayer;
         this.isStarted = isStarted;
+        this.curTurn = curTurn;
     }
 
     public void setPlayers(ArrayList<Player> players) {
@@ -77,6 +80,17 @@ public class Game implements IGame {
     }
 
     public Boolean IsStarted() { return isStarted; }
+
+    public int getCurTurn() {return curTurn;}
+
+    public void setNextTurn() {
+        if (curTurn == numPlayer) {
+            curTurn = 1;
+        }
+        else {
+            curTurn += 1;
+        }
+    }
 
     public void addPLayer(Player player) {
         players.add(player);
