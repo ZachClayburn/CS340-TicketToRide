@@ -108,6 +108,9 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     public void offerCardsToPlayer(Player player, Collection<DestinationCard> cards) throws DatabaseException {
 
+         //FIXME There is the possibility of an error if the collection of cards offered to the player is not in the
+         // correct order
+
         String sql1 = "UPDATE destinationcards " +
                 "SET sequenceposition=NULL, state='offeredToPlayer', playerid=? " +
                 "WHERE gameid=?" +

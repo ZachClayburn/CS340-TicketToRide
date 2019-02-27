@@ -9,9 +9,7 @@ import modelAttributes.Password;
 import modelAttributes.Username;
 import org.junit.Test;
 
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -80,7 +78,7 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
 
         }
 
-        TreeSet<DestinationCard> offeredCards = new TreeSet<>();
+        List<DestinationCard> offeredCards = new ArrayList<>();
         Set<DestinationCard> playerHand = new TreeSet<>();
 
         for (int i = 0; i < 3; i++) {
@@ -91,8 +89,8 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
         try (var db = new Database()) {
 
             db.getDestinationCardDAO().offerCardsToPlayer(testPlayer,  offeredCards);
-            playerHand.add(offeredCards.pollFirst());
-            playerHand.add(offeredCards.pollFirst());
+            playerHand.add(offeredCards.remove(0));
+            playerHand.add(offeredCards.remove(0));
             deck.addAll(offeredCards);
             db.getDestinationCardDAO().acceptCards(testPlayer, playerHand);
             db.commit();
