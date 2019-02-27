@@ -1,5 +1,4 @@
 package com.tickettoride.controllers;
-import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.LoginActivity;
@@ -15,8 +14,8 @@ public class SessionController extends BaseController {
     public static SessionController getSingleton() { return SINGLETON; }
     private SessionController() {}
 
-    public void create(UUID sessionId, ArrayList<LinkedTreeMap> linkedTreeGames) {
-        Session session = new Session(sessionId);
+    public void create(UUID sessionID, UUID userID, ArrayList<LinkedTreeMap> linkedTreeGames) {
+        Session session = new Session(sessionID, userID);
         DataManager.getSINGLETON().setSession(session);
         ArrayList<Game> games = Game.buildGames(linkedTreeGames);
         DataManager.getSINGLETON().getGameIndex().setGames(games);

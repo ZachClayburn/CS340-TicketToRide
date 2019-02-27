@@ -5,57 +5,48 @@ import java.util.UUID;
 import modelAttributes.PlayerColor;
 
 public class Player {
-    private UUID userid = null;
-    private UUID gameid = null;
-    private UUID playerID = null;
     private int turn = 0;
     private PlayerColor color = null;
     private String username = "";
+    private UUID userID;
+    private UUID gameID;
+    private UUID playerID;
 
     public Player(UUID user, UUID game) {
-        this.userid = user;
-        this.gameid = game;
+        this.userID = user;
+        this.gameID = game;
         this.playerID = UUID.randomUUID();
     }
     
     public Player(UUID user, UUID game, UUID player, int turn){
-        this.userid=user;
-        this.gameid=game;
+        this.userID=user;
+        this.gameID=game;
         this.playerID=player;
         this.turn = turn;
     }
 
     public Player(UUID user, UUID game, UUID player, int turn, PlayerColor color){
-        this.userid=user;
-        this.gameid=game;
+        this.userID=user;
+        this.gameID=game;
         this.playerID=player;
         this.turn = turn;
         this.color = color;
     }
 
-    public UUID getUserID() {
-        return userid;
-    }
 
-    public void setUserID(UUID userid) {
-        this.userid = userid;
-    }
-
-    public UUID getGameID() {
-        return gameid;
-    }
-
-    public void setGameID(UUID gameid) {
-        this.gameid = gameid;
-    }
-
-    public UUID getPlayerID() {
-        return playerID;
-    }
-
-    public void setPlayerID(UUID playerID) {
+    public Player(UUID userID, UUID gameID, UUID playerID){
+        this.userID = userID;
+        this.gameID = gameID;
         this.playerID = playerID;
     }
+
+    public UUID getUserID() { return userID; }
+
+    public void setUserID(UUID userID) { this.userID = userID; }
+
+    public UUID getGameID() { return gameID; }
+
+    public void setGameID(UUID gameID) { this.gameID = gameID; }
 
     public int getTurn() {return turn;}
 
@@ -90,4 +81,8 @@ public class Player {
                 break;
         }
     }
+
+    public UUID getPlayerID() { return playerID; }
+
+    public void setPlayerID(UUID playerID) { this.playerID = playerID; }
 }
