@@ -98,18 +98,6 @@ public class GameFacade extends BaseFacade {
         }
     }
     
-    private Player isAlreadyPlayer(User user, List<Player> players){
-        if(players==null||players.size()==0){
-            return null;
-        }
-        for(Player p:players){
-            if(user.getUserID().equals(p.getUserID())){
-                return p;
-            }
-        }
-        return null;
-    }
-
     public void start(UUID connID, UUID gameID) throws DatabaseException {
         logger.info("Attempting to start game " + gameID);
         try (var db = new Database()){
@@ -140,7 +128,7 @@ public class GameFacade extends BaseFacade {
                     offeredCards.add(destinationDeck.remove());
                 }
                 db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
-                commands.add(offerDestinationCards(player, offeredCards));
+                commands.add(offerDestinationCards(player, offeredCards, 2));
             }
 
             commands.add(sendDestinationDeck(destinationDeck));
@@ -165,6 +153,18 @@ public class GameFacade extends BaseFacade {
 
     Command sendDestinationDeck(Queue<DestinationCard> deck) {
         return null; //FIXME Make this command
+    }
+
+    private Player isAlreadyPlayer(User user, List<Player> players){
+        if(players==null||players.size()==0){
+            return null;
+        }
+        for(Player p:players){
+            if(user.getUserID().equals(p.getUserID())){
+                return p;
+            }
+        }
+        return null;
     }
 
     Game findGame(UUID gameID) throws DatabaseException {

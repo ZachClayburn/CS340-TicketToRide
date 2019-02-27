@@ -80,15 +80,21 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
 
         }
 
+        TreeSet<DestinationCard> offeredCards = new TreeSet<>();
         Set<DestinationCard> playerHand = new TreeSet<>();
 
         for (int i = 0; i < 3; i++) {
-            playerHand.add(deck.poll());
+            offeredCards.add(deck.poll());
         }
+
 
         try (var db = new Database()) {
 
-            db.getDestinationCardDAO().offerCardsToPlayer(testPlayer,  playerHand);
+            db.getDestinationCardDAO().offerCardsToPlayer(testPlayer,  offeredCards);
+            playerHand.add(offeredCards.pollFirst());
+            playerHand.add(offeredCards.pollFirst());
+            deck.addAll(offeredCards);
+            db.getDestinationCardDAO().acceptCards(testPlayer, playerHand);
             db.commit();
 
         }
@@ -100,6 +106,7 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
 
             deckFromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame);
             playerHandFromDatabase = db.getDestinationCardDAO().getPlayerHand(testPlayer);
+            db.commit();
 
         }
 

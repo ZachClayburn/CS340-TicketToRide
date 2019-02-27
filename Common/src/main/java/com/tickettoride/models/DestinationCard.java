@@ -75,8 +75,15 @@ public class DestinationCard implements Comparable<DestinationCard> {
     }
 
 
-    public static Deque<DestinationCard> getShuffledDeck() {
+    public static Deque<DestinationCard> getPointOrderedDeck() {
 
+        List<DestinationCard> deck = getDeckList();
+
+
+        return new ArrayDeque<>(deck);
+    }
+
+    private static List<DestinationCard> getDeckList() {
         final int deckSize = 30;
         ArrayList<DestinationCard> deck = new ArrayList<>(deckSize);
 
@@ -124,13 +131,16 @@ public class DestinationCard implements Comparable<DestinationCard> {
         deck.add(new DestinationCard(City.LOS_ANGELES, City.NEW_YORK, Value.TWENTY_ONE));
 
         deck.add(new DestinationCard(City.SEATTLE, City.NEW_YORK, Value.TWENTY_TWO));
-
-        Collections.shuffle(deck);
-
-        return new ArrayDeque<>(deck);
+        return deck;
     }
 
-    @Override
+    public static Deque<DestinationCard> getShuffledDeck() {
+        List<DestinationCard> list = getDeckList();
+        Collections.shuffle(list);
+        return new ArrayDeque<>(list);
+    }
+
+        @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DestinationCard)) return false;
