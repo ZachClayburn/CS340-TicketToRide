@@ -2,7 +2,12 @@ package com.tickettoride.models;
 
 import java.util.*;
 
+import modelAttributes.PlayerColor;
+
 public class Player {
+    private int turn = 0;
+    private PlayerColor color = null;
+    private String username = "";
     private UUID userID;
     private UUID gameID;
     private UUID playerID;
@@ -12,6 +17,22 @@ public class Player {
         this.gameID = game;
         this.playerID = UUID.randomUUID();
     }
+    
+    public Player(UUID user, UUID game, UUID player, int turn){
+        this.userID=user;
+        this.gameID=game;
+        this.playerID=player;
+        this.turn = turn;
+    }
+
+    public Player(UUID user, UUID game, UUID player, int turn, PlayerColor color){
+        this.userID=user;
+        this.gameID=game;
+        this.playerID=player;
+        this.turn = turn;
+        this.color = color;
+    }
+
 
     public Player(UUID userID, UUID gameID, UUID playerID){
         this.userID = userID;
@@ -26,6 +47,40 @@ public class Player {
     public UUID getGameID() { return gameID; }
 
     public void setGameID(UUID gameID) { this.gameID = gameID; }
+
+    public int getTurn() {return turn;}
+
+    public void setTurn(int turn) {this.turn = turn;}
+
+    public PlayerColor getColor() {
+        return color;
+    }
+
+    public String getUsername(){return username;}
+
+    public void setUsername(String username){this.username = username;}
+
+    public void setColor() {
+        switch (turn) {
+            case 1:
+                color = PlayerColor.RED;
+                break;
+            case 2:
+                color = PlayerColor.BLUE;
+                break;
+            case 3:
+                color = PlayerColor.GREEN;
+                break;
+            case 4:
+                color = PlayerColor.BLACK;
+                break;
+            case 5:
+                color = PlayerColor.YELLOW;
+                break;
+            default:
+                break;
+        }
+    }
 
     public UUID getPlayerID() { return playerID; }
 

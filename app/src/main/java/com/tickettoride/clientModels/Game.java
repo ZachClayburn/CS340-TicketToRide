@@ -6,6 +6,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import modelInterfaces.IGame;
@@ -90,5 +91,26 @@ public class Game implements IGame, Serializable { //used for when creating a ne
             games.add(game);
         }
         return games;
+    }
+
+    public void setupPlayers(List<Player> updatedPlayers) {
+        for (Player updatedPlayer: updatedPlayers) {
+            for (Player player: players) {
+                if (!player.getPlayerID().equals(updatedPlayer.getPlayerID())) {
+                    continue;
+                }
+                player.setColor(updatedPlayer.getColor());
+                player.setTurn(updatedPlayer.getTurn());
+            }
+        }
+    }
+
+    public Player findPlayer(UUID playerID) {
+        for (Player player : players) {
+            if (player.getPlayerID().equals(playerID)) {
+                return player;
+            }
+        }
+        return null;
     }
 }

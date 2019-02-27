@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/player_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:orientation="vertical"
+    android:layout_gravity="center">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/player_info"
+        android:textSize="20dp"
+        android:gravity="center">
+    </TextView>
+    <TextView
+        android:id="@+id/player_username"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/username_label" />
+    <TextView
+        android:id="@+id/player_train_cards"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/train_card_label" />
+    <TextView
+        android:id="@+id/player_destination_cards"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/destination_card_label" />
+    <TextView
+        android:id="@+id/player_cars_left"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/cars_label" />
+    <TextView
+        android:id="@+id/player_turn"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/turn_label" />
+    <TextView
+        android:id="@+id/player_points"
+        style="?android:listSeparatorTextViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="@string/points_label" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/return_to_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/return_to_game"/>
+    </LinearLayout>
+</LinearLayout>

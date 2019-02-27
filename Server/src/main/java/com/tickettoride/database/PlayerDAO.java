@@ -1,8 +1,5 @@
 package com.tickettoride.database;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +20,10 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
                     "gameID TEXT NOT NULL," +
+                    "turn NUMERIC NOT NULL ," +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
-
-    private static final Type destinationHandType = new TypeToken<ArrayList<DestinationCard>>(){}.getType();
 
     public PlayerDAO(Connection connection) {
         super(connection);
@@ -42,14 +37,13 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
     public void addPlayer(Player player) throws DatabaseException {
-
-        final String sql = "INSERT INTO Players (playerID, userID, gameID) VALUES (?, ?, ?)";
-
+        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
             statement.setString(1, player.getPlayerID().toString());
             statement.setString(2, player.getUserID().toString());
             statement.setString(3, player.getGameID().toString());
+            statement.setInt(4, player.getTurn());
 
             statement.executeUpdate();
 
@@ -84,7 +78,9 @@ public class PlayerDAO extends Database.DataAccessObject {
         UUID tableGameID = UUID.fromString(result.getString("GameID"));
         UUID tablePlayerID = UUID.fromString(result.getString("PlayerID"));
         UUID tableUserID = UUID.fromString(result.getString("UserID"));
+        int turn = result.getInt("turn");
         player = new Player(tableUserID, tableGameID, tablePlayerID);
+        player.setTurn(turn);
 
         return player;
     }
@@ -108,6 +104,17 @@ public class PlayerDAO extends Database.DataAccessObject {
             throw new DatabaseException("Could not get the player from the database!", e);
         }
         return player;
+    }
+
+    public void setTurn(UUID playerID, int turn) throws DatabaseException {
+        String sql = "UPDATE Players SET turn = ? WHERE gameID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, turn);
+            statement.setString(2, playerID.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not set turn!", e);
+        }
     }
 
     public void deletePlayer(UUID sessionID) throws SQLException {

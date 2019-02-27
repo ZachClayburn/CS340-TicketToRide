@@ -1,8 +1,5 @@
 package com.tickettoride.database;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 
 import exceptions.DatabaseException;
@@ -10,8 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,10 +23,9 @@ public class GameDAO extends Database.DataAccessObject {
                     "groupName TEXT NOT NULL UNIQUE," +
                     "numPlayer NUMERIC NOT NULL," +
                     "maxPlayer NUMERIC NOT NULL," +
-                    "iStarted BOOLEAN DEFAULT FALSE" +
+                    "iStarted BOOLEAN DEFAULT FALSE," +
+                    "curTurn NUMERIC" +
                     ");";
-
-    private static final Type destinationDeckType = new TypeToken<ArrayDeque<DestinationCard>>(){}.getType();
 
     public GameDAO(Connection connection) {
         super(connection);
@@ -46,13 +40,14 @@ public class GameDAO extends Database.DataAccessObject {
 
     public void addGame(Game game) throws DatabaseException {
 
-        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer) " +
-                "VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, curTurn) " +
+                "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
             statement.setInt(3, game.getNumPlayer());
             statement.setInt(4, game.getMaxPlayer());
+            statement.setInt(5, game.getCurTurn());
 
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
@@ -81,7 +76,18 @@ public class GameDAO extends Database.DataAccessObject {
             statement.setString(2, gameID.toString());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve increase player count!", e);
+            throw new DatabaseException("Could not increase player count!", e);
+        }
+    }
+
+    public void updateTurn(Game game) throws DatabaseException {
+        String sql = "UPDATE Games SET curTurn = ? WHERE gameID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, game.getCurTurn());
+            statement.setString(2, game.getGameID().toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not update turn!", e);
         }
     }
 
@@ -107,8 +113,9 @@ public class GameDAO extends Database.DataAccessObject {
         var tableNumPlayer = result.getInt("numPlayer");
         var tableMaxPlayer = result.getInt("maxPlayer");
         var tableIsStarted = result.getBoolean("iStarted");
+        var tableCurrentTurn = result.getInt("curTurn");
 
-        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted);
+        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn);
     }
 
     public void setGameToStarted(UUID gameID) throws DatabaseException {

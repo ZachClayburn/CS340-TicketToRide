@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.R;
 import com.tickettoride.activities.CreateGameActivity;
+import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.activities.JoinGameActivity;
 import com.tickettoride.activities.LobbyActivity;
 import com.tickettoride.clientModels.DataManager;
@@ -101,7 +102,17 @@ public class GameController extends BaseController {
     public void start() {
         Log.i("GAME_CONTROLLER", "Calling Start");
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
-        Snackbar.make(activity.findViewById(R.id.lobby_linear_layout), R.string.game_start_message, Snackbar.LENGTH_LONG ).show();
+        activity.moveToGame();
+    }
+
+    public void setup(List<Player> players) {
+        DataManager.SINGLETON.getGame().setupPlayers(players);
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+    }
+
+    public void errorSetup() {
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        activity.setupError();
     }
 
     public void errorLeave(Throwable t){

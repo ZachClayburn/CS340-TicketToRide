@@ -9,6 +9,7 @@ public class Game implements IGame {
     private String groupName;
     private int numPlayer;
     private int maxPlayer;
+    private int curTurn = 1;
 
     private boolean isStarted = false;
 
@@ -19,12 +20,13 @@ public class Game implements IGame {
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
         this.numPlayer = numPlayer;
         this.isStarted = isStarted;
+        this.curTurn = curTurn;
     }
 
 
@@ -69,6 +71,17 @@ public class Game implements IGame {
     }
 
     public Boolean IsStarted() { return isStarted; }
+
+    public int getCurTurn() {return curTurn;}
+
+    public void setNextTurn() {
+        if (curTurn == numPlayer) {
+            curTurn = 1;
+        }
+        else {
+            curTurn += 1;
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
