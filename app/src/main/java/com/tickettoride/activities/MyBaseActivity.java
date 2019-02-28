@@ -3,6 +3,7 @@ package com.tickettoride.activities;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -36,5 +37,10 @@ public class MyBaseActivity extends AppCompatActivity {
         Activity currActivity = mMyApp.getCurrentActivity();
         if (this.equals(currActivity))
             mMyApp.setCurrentActivity(null);
+    }
+
+    public void moveToJoin() {
+        Intent intent = new Intent(MyBaseActivity.this, MyBaseActivity.class);
+        startActivity(intent);
     }
 }
