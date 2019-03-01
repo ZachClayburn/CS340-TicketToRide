@@ -101,6 +101,7 @@ public class LobbyActivity extends MyBaseActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void moveToJoin() {
         Intent intent = new Intent(LobbyActivity.this, JoinGameActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

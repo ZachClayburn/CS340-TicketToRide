@@ -1,7 +1,4 @@
 package com.tickettoride.controllers;
-
-import android.app.Activity;
-import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 
@@ -11,9 +8,9 @@ import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.activities.JoinGameActivity;
 import com.tickettoride.activities.LobbyActivity;
+import com.tickettoride.activities.MyBaseActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Game;
-import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.clientModels.Player;
 
 import java.util.ArrayList;
@@ -26,26 +23,29 @@ public class GameController extends BaseController {
     private GameController() {}
 
     public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
-        Player player = new Player(gameID, sessionID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
+        try { createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
+        try { createGameOnCreateGameActivity(game, sessionID, playerID); return; } catch (ClassCastException e) { }
+    }
+
+    private void createGameOnJoinActivity(Game game) throws ClassCastException {
+        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+        DataManager.getSINGLETON().getGameIndex().addJoinGame(game);
+        joinGameActivity.updateUI();
+    }
+
+    private void createGameOnCreateGameActivity(Game game, UUID sessionID, UUID playerID) throws ClassCastException {
+        CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
+        Player player = new Player(game.getGameID(), sessionID, playerID);
         DataManager.SINGLETON.setGame(game);
         DataManager.SINGLETON.setPlayer(player);
-        DataManager.SINGLETON.getGameIndex().addGame(game);
-        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) moveToLobby(player, game);
-        else {
-            JoinGameActivity joinGameActivity;
-            try {
-                joinGameActivity = (JoinGameActivity) getCurrentActivity();
-                joinGameActivity.updateUI();
-            } catch (ClassCastException e) {  Log.i("GameController", "New Game Created"); }
-        }
-
+        DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
+        createGameActivity.moveToLobbyCreate(game);
     }
 
     public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Player player = new Player(gameID, sessionID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
-        GameIndex.SINGLETON.findGame(game.getGameID().toString()).addPlayer(player);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
@@ -64,7 +64,7 @@ public class GameController extends BaseController {
     
     public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
         Player player = new Player(gameID, sessionID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, player, isStarted);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
@@ -86,17 +86,13 @@ public class GameController extends BaseController {
         joinGameActivity.JoinError();
     }
 
-    public void leave(ArrayList<LinkedTreeMap> linkedTreeGames) {
-        ArrayList<Game> games = Game.buildGames(linkedTreeGames);
-        DataManager.getSINGLETON().getGameIndex().setGames(games);
-        LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
-        lobbyActivity.moveToJoin();
-    }
-
-    private void moveToLobby(Player player, Game game) {
-        DataManager.SINGLETON.setPlayer(player);
-        CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
-        createGameActivity.moveToLobbyCreate(game);
+    public void leave(ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
+        ArrayList<Game> joinGames = Game.buildGames(linkedTreeJoinGames);
+        ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
+        DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
+        DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
+        MyBaseActivity baseActivity = (MyBaseActivity) getCurrentActivity();
+        baseActivity.moveToJoin();
     }
 
     public void start() {
@@ -118,4 +114,5 @@ public class GameController extends BaseController {
     public void errorLeave(Throwable t){
         Log.i("GameController", "Couldn't leave game");
     }
+
 }

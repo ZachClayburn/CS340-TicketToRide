@@ -4,9 +4,11 @@ import com.tickettoride.database.Database;
 import exceptions.DatabaseException;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 
+import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -33,7 +35,9 @@ public class SessionFacade extends BaseFacade {
             User user = UserFacade.getSingleton().find_user(username, password);
             Session session = create_session(user);
             ArrayList<Game> games = GameFacade.getSingleton().allGames();
-            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), games);
+            ArrayList<Game> joinGames = GameFacade.getSingleton().determineJoinGames(user, games);
+            ArrayList<Game> rejoinGames = GameFacade.getSingleton().determineRejoinGames(user, games);
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), joinGames, rejoinGames);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             sendResponseToOne(connID, command);
         } catch (Throwable throwable) {
@@ -59,6 +63,13 @@ public class SessionFacade extends BaseFacade {
             SessionDAO dao = database.getSessionDAO();
             dao.deleteSession(sessionID);
             database.commit();
+        }
+    }
+
+    public Session find_session(UUID sessionID) throws DatabaseException {
+        try (Database database = new Database()) {
+            SessionDAO dao = database.getSessionDAO();
+            return dao.findSession(sessionID);
         }
     }
 }

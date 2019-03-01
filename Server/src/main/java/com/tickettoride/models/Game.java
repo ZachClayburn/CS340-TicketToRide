@@ -15,8 +15,6 @@ public class Game implements IGame {
 
     private boolean isStarted = false;
 
-    private ArrayList<Player> players = new ArrayList<>();
-
     public Game(String groupName, int maxPlayer) {
         this.gameID = UUID.randomUUID();
         this.groupName = groupName;
@@ -32,12 +30,6 @@ public class Game implements IGame {
         this.isStarted = isStarted;
         this.curTurn = curTurn;
     }
-
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
-    }
-
-    public List<Player> getPlayers() { return players; }
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;

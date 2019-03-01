@@ -39,6 +39,21 @@ public class SessionDAO extends Database.DataAccessObject {
         }
     }
 
+    public Session findSession(UUID sessionID) throws DatabaseException {
+        String sql = "SELECT * FROM Sessions WHERE sessionID = ?";
+        Session session = new Session();
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, sessionID.toString());
+            var result = statement.executeQuery();
+            while (result.next()) {
+                UUID userID = UUID.fromString(result.getString("userID"));
+                UUID databaseSessionID = UUID.fromString(result.getString("sessionID"));
+                session = new Session(databaseSessionID, userID);
+            }
+        } catch (SQLException e) { throw new DatabaseException("Could not add user to database", e); }
+        return session;
+    }
+
     public void deleteSession(UUID sessionID) throws SQLException {
         String sql = "DELETE FROM Sessions WHERE sessionID = ?";
         try (var statement = connection.prepareStatement(sql)) {
