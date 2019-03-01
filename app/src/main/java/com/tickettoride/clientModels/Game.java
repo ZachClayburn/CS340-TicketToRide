@@ -17,15 +17,13 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     private int maxPlayer = 1;
     private int numPlayer = 1;
     private Boolean isStarted;
-    private ArrayList<Player> players = new ArrayList();
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, Player player, Boolean isStarted) {
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, Boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.numPlayer = numPlayer;
         this.maxPlayer = maxPlayer;
         this.isStarted = isStarted;
-        players.add(player);
     }
 
     public Game(){}
@@ -36,9 +34,6 @@ public class Game implements IGame, Serializable { //used for when creating a ne
         this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
         this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
         this.isStarted = (Boolean) gameMap.get(("isStarted"));
-        for (LinkedTreeMap playerLinkedTree : (ArrayList<LinkedTreeMap>) gameMap.get("players")) {
-            this.players.add(new Player(playerLinkedTree));
-        }
     }
 
 
@@ -73,16 +68,6 @@ public class Game implements IGame, Serializable { //used for when creating a ne
     }
 
     public Boolean getIsStarted() { return  isStarted; }
-
-    public Boolean forUser(UUID userId) {
-        for (Player player: players) { if (player.getUserID().equals(userId)) { return true; } }
-        return false;
-    }
-
-    public void addPlayer(Player player){
-        players.add(player);
-        numPlayer += 1;
-    }
 
     public static ArrayList<Game> buildGames(ArrayList<LinkedTreeMap> gameMap) {
         ArrayList<Game> games = new ArrayList<>();

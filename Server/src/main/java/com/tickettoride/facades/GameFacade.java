@@ -9,7 +9,6 @@ import com.tickettoride.database.PlayerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.*;
 
 import command.Command;
@@ -28,7 +27,7 @@ public class GameFacade extends BaseFacade {
             Game game = createGame(gameName, maxPlayers, sessionID);
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            Player player = createPlayer(user.getUserID(), game.getGameID());
+            Player player = PlayerFacade.getSingleton().createPlayer(user.getUserID(), game.getGameID());
             ServerCommunicator.getINSTANCE().addRoom(game.getGameID());
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             Command command = new Command(
@@ -49,13 +48,13 @@ public class GameFacade extends BaseFacade {
             Game game = findGame(gameID);
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            List<Player> players = getGamePLayers(game);
-            Player player = isAlreadyPlayer(user,players);
+            List<Player> players = PlayerFacade.getSingleton().getGamePLayers(game);
+            Player player = PlayerFacade.getSingleton().isAlreadyPlayer(user,players);
             String commandMethodName;
             if (player == null) {
                 if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
-                player = createPlayer(user.getUserID(), game.getGameID());
-                updatePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
+                player = PlayerFacade.getSingleton().createPlayer(user.getUserID(), game.getGameID());
+                updateGamePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
                 game.setNumPlayer((game.getNumPlayer() + 1));
                 commandMethodName = "join";
             } else { commandMethodName = "rejoin"; }
@@ -73,22 +72,21 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void leave(UUID connID) {
+    public void leave(UUID connID, UUID sessionID) {
         try {
+            Session session = SessionFacade.getSingleton().find_session(sessionID);
+            User user = UserFacade.getSingleton().find_user(session);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
-            Command command = new Command(CONTROLLER_NAME, "leave", allGames());
+            ArrayList<Game> games = GameFacade.getSingleton().allGames();
+            ArrayList<Game> joinGames = GameFacade.getSingleton().determineJoinGames(user, games);
+            ArrayList<Game> rejoinGames = GameFacade.getSingleton().determineRejoinGames(user, games);
+            Command command = new Command(CONTROLLER_NAME, "leave", joinGames, rejoinGames);
             sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorLeave", throwable);
             sendResponseToOne(connID, command);
         }
-    }
-    
-    private Player isAlreadyPlayer(User user, List<Player> players){
-        if( players == null || players.size() == 0) { return null; }
-        for(Player p:players) { if (user.getUserID().equals(p.getUserID())) { return p; } }
-        return null;
     }
 
     public void start(UUID connID, UUID gameID) throws DatabaseException {
@@ -177,16 +175,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
-            dao.deletePlayer(sessionID);
-            database.commit();
-        }
-    }
-
-
-    Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
+    public Game createGame(String gameName, Integer maxPlayers, UUID sessionID) throws DatabaseException {
         try (Database database = new Database()) {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
@@ -215,7 +204,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    void updatePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
+    void updateGamePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
@@ -265,4 +254,19 @@ public class GameFacade extends BaseFacade {
         }
     }
 
+    public ArrayList<Game> determineJoinGames(User user, ArrayList<Game> games) throws DatabaseException {
+        ArrayList<Game> joinGames = new ArrayList<>();
+        for (Game game : games) {
+            Player alreadyPlayer = PlayerFacade.getSingleton().isAlreadyPlayer(user, game);
+            if (alreadyPlayer == null) { joinGames.add(game); } }
+        return joinGames;
+    }
+
+    public ArrayList<Game> determineRejoinGames(User user, ArrayList<Game> games) throws DatabaseException {
+        ArrayList<Game> rejoinGames = new ArrayList<>();
+        for (Game game : games) {
+            Player alreadyPlayer = PlayerFacade.getSingleton().isAlreadyPlayer(user, game);
+            if (alreadyPlayer != null) { rejoinGames.add(game); } }
+        return rejoinGames;
+    }
 }

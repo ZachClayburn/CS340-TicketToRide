@@ -110,6 +110,8 @@ public class LoginActivity extends MyBaseActivity {
             register.setEnabled(false);
         }
     }
+
+    @Override
     public void moveToJoin() {
         Intent intent = new Intent(LoginActivity.this, JoinGameActivity.class);
         startActivity(intent);

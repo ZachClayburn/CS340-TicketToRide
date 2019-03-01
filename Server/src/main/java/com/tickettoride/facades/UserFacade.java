@@ -32,7 +32,9 @@ public class UserFacade extends BaseFacade {
             User user = create_user(username , password);
             Session session = SessionFacade.getSingleton().create_session(user);
             ArrayList<Game> games = GameFacade.getSingleton().allGames();
-            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), games);
+            ArrayList<Game> joinGames = GameFacade.getSingleton().determineJoinGames(user, games);
+            ArrayList<Game> rejoinGames = GameFacade.getSingleton().determineRejoinGames(user, games);
+            Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), joinGames, rejoinGames);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             sendResponseToOne(connID, command);
         } catch (Throwable throwable) {
@@ -61,7 +63,7 @@ public class UserFacade extends BaseFacade {
     }
 
 
-    public User create_user(Username username, Password password) throws DatabaseException, SQLException {
+    public User create_user(Username username, Password password) throws DatabaseException {
         try (Database database = new Database()) {
             UserDAO dao = database.getUserDAO();
             User user = new User(username, password);

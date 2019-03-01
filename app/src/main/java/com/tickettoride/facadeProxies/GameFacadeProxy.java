@@ -39,10 +39,11 @@ public class GameFacadeProxy {
     }
 
     public void leave() {
-        try{
-            Command command = new Command(FACADE_NAME, "leave");
+        try {
+            Session session =  DataManager.getSINGLETON().getSession();
+            Command command = new Command(FACADE_NAME, "leave", session.getSessionId());
             ClientCommunicator.SINGLETON.send(command);
-        } catch(Throwable t){}
+        } catch (Throwable t) {}
     }
 
     public void startGame(Game game) {
