@@ -1,6 +1,6 @@
 package com.tickettoride.models;
 
-import java.util.UUID;
+import java.util.*;
 
 import modelAttributes.PlayerColor;
 
@@ -85,4 +85,28 @@ public class Player {
     public UUID getPlayerID() { return playerID; }
 
     public void setPlayerID(UUID playerID) { this.playerID = playerID; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return userID.equals(player.userID) &&
+                gameID.equals(player.gameID) &&
+                getPlayerID().equals(player.getPlayerID());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, gameID, getPlayerID());
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "userID=" + userID +
+                ", gameID=" + gameID +
+                ", playerID=" + playerID +
+                '}';
+    }
 }

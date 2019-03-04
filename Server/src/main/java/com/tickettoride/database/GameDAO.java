@@ -9,9 +9,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
 
 public class GameDAO extends Database.DataAccessObject {
 
@@ -39,13 +39,16 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     public void addGame(Game game) throws DatabaseException {
-        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, curTurn) VALUES (?, ?, ?, ?, ?)";
+
+        final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, curTurn) " +
+                "VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, game.getGameID().toString());
             statement.setString(2, game.getGroupName());
             statement.setInt(3, game.getNumPlayer());
             statement.setInt(4, game.getMaxPlayer());
             statement.setInt(5, game.getCurTurn());
+
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
     }
@@ -58,13 +61,7 @@ public class GameDAO extends Database.DataAccessObject {
             statement.setString(1, gameID.toString());
             var result = statement.executeQuery();
             if (result.next()) {
-                UUID tableGameID = UUID.fromString(result.getString("GameID"));
-                var tableGroupName = result.getString("groupName");
-                var tableNumPlayer = result.getInt("numPlayer");
-                var tableMaxPlayer = result.getInt("maxPlayer");
-                var tableIsStarted = result.getBoolean("iStarted");
-                var curTurn = result.getInt("curTurn");
-                game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, curTurn);
+                game = buildGameFromQueryResult(result);
             }
         } catch (SQLException e) {
             throw new DatabaseException("Could not retrieve game!", e);
@@ -100,19 +97,25 @@ public class GameDAO extends Database.DataAccessObject {
         try (var statement = connection.prepareStatement(sql)) {
           var results = statement.executeQuery();
           while (results.next()) {
-              UUID tableGameID = UUID.fromString(results.getString("GameID"));
-              var tableGroupName = results.getString("groupName");
-              var tableNumPlayer = results.getInt("numPlayer");
-              var tableMaxPlayer = results.getInt("maxPlayer");
-              var tableIsStarted = results.getBoolean("iStarted");
-              var curTurn = results.getInt("curTurn");
-              Game game = new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, curTurn);
+              var game = buildGameFromQueryResult(results);
               games.add(game);
           }
         } catch (SQLException e) {
             throw new DatabaseException(("Could Not Retrieve Games"));
         }
         return games;
+    }
+
+    private Game buildGameFromQueryResult(ResultSet result) throws SQLException {
+
+        var tableGameID = UUID.fromString(result.getString("GameID"));
+        var tableGroupName = result.getString("groupName");
+        var tableNumPlayer = result.getInt("numPlayer");
+        var tableMaxPlayer = result.getInt("maxPlayer");
+        var tableIsStarted = result.getBoolean("iStarted");
+        var tableCurrentTurn = result.getInt("curTurn");
+
+        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn);
     }
 
     public void setGameToStarted(UUID gameID) throws DatabaseException {

@@ -1,16 +1,14 @@
 package com.tickettoride.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import modelInterfaces.IGame;
 
 public class Game implements IGame {
-    private UUID gameID = null;
-    private String groupName = "";
-    private int numPlayer = 0;
-    private int maxPlayer = 5;
+    private UUID gameID;
+    private String groupName;
+    private int numPlayer;
+    private int maxPlayer;
     private int curTurn = 1;
 
     private boolean isStarted = false;
@@ -30,6 +28,7 @@ public class Game implements IGame {
         this.isStarted = isStarted;
         this.curTurn = curTurn;
     }
+
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
@@ -84,8 +83,31 @@ public class Game implements IGame {
         }
     }
 
-    public void addPLayer(Player player) {
-        players.add(player);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Game)) return false;
+        Game game = (Game) o;
+        return getNumPlayer() == game.getNumPlayer() &&
+                getMaxPlayer() == game.getMaxPlayer() &&
+                isStarted() == game.isStarted() &&
+                Objects.equals(getGameID(), game.getGameID()) &&
+                Objects.equals(getGroupName(), game.getGroupName());
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getGameID(), getGroupName(), getNumPlayer(), getMaxPlayer(), isStarted());
+    }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "gameID=" + gameID +
+                ", groupName='" + groupName + '\'' +
+                ", numPlayer=" + numPlayer +
+                ", maxPlayer=" + maxPlayer +
+                ", isStarted=" + isStarted +
+                '}';
+    }
 }
