@@ -102,7 +102,7 @@ public class GameController extends BaseController {
     }
 
     public void setup(List<Player> players) {
-        DataManager.SINGLETON.getGame().setupPlayers(players);
+        DataManager.SINGLETON.setGamePlayers(players);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
     }
 

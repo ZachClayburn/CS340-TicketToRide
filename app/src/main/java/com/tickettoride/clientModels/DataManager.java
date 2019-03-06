@@ -1,5 +1,7 @@
 package com.tickettoride.clientModels;
 
+import java.util.List;
+
 public class DataManager {
     
     public static DataManager SINGLETON = new DataManager();
@@ -7,12 +9,11 @@ public class DataManager {
     private Player curPlayer;
     private Game curGame;
     private GameIndex gameIndex;
-    
-    
+    private List<Player> gamePlayers;
+
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
     }
-
 
     public static DataManager getSINGLETON() {
         return SINGLETON;
@@ -49,4 +50,8 @@ public class DataManager {
     public void setSession(Session session) {
         this.session = session;
     }
+
+    public void setGamePlayers(List<Player> players) { this.gamePlayers = players; }
+
+    public List<Player> getGamePlayers(List<Player> players) { return players; }
 }

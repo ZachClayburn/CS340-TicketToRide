@@ -78,24 +78,24 @@ public class Game implements IGame, Serializable { //used for when creating a ne
         return games;
     }
 
-    public void setupPlayers(List<Player> updatedPlayers) {
-        for (Player updatedPlayer: updatedPlayers) {
-            for (Player player: players) {
-                if (!player.getPlayerID().equals(updatedPlayer.getPlayerID())) {
-                    continue;
-                }
-                player.setColor(updatedPlayer.getColor());
-                player.setTurn(updatedPlayer.getTurn());
-            }
-        }
-    }
-
-    public Player findPlayer(UUID playerID) {
-        for (Player player : players) {
-            if (player.getPlayerID().equals(playerID)) {
-                return player;
-            }
-        }
-        return null;
-    }
+//    public void setupPlayers(List<Player> updatedPlayers) {
+//        for (Player updatedPlayer: updatedPlayers) {
+//            for (Player player: players) {
+//                if (!player.getPlayerID().equals(updatedPlayer.getPlayerID())) {
+//                    continue;
+//                }
+//                player.setColor(updatedPlayer.getColor());
+//                player.setTurn(updatedPlayer.getTurn());
+//            }
+//        }
+//    }
+//
+//    public Player findPlayer(UUID playerID) {
+//        for (Player player : players) {
+//            if (player.getPlayerID().equals(playerID)) {
+//                return player;
+//            }
+//        }
+//        return null;
+//    }
 }

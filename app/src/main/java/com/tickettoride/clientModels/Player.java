@@ -11,6 +11,7 @@ public class Player implements Serializable {
     private UUID gameID;
     private UUID userID;
     private UUID playerID;
+    private UUID sessionID;
     private int turn = 0;
     private PlayerColor color = null;
     private int points = 0;

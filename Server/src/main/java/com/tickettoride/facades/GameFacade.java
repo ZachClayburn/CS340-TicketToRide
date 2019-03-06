@@ -48,7 +48,7 @@ public class GameFacade extends BaseFacade {
             Game game = findGame(gameID);
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
-            List<Player> players = PlayerFacade.getSingleton().getGamePLayers(game);
+            List<Player> players = PlayerFacade.getSingleton().getGamePlayers(game);
             Player player = PlayerFacade.getSingleton().isAlreadyPlayer(user,players);
             String commandMethodName;
             if (player == null) {
@@ -212,10 +212,9 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void setup(UUID connID, UUID gameID) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
-            List<Player> players = dao.getGamePlayers(gameID);
+    public void setup(UUID connID, UUID gameID){
+        try {
+            List<Player> players = PlayerFacade.getSingleton().getGamePlayers(gameID);
             pickTurnOrder(players);
             pickColors(players);
             Command command = new Command(CONTROLLER_NAME, "setup", players);

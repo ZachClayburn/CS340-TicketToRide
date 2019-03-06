@@ -22,17 +22,21 @@ public class PlayerFacade extends BaseFacade {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
-            dao.addNewPlayer(player);
+            dao.addPlayer(player);
             database.commit();
             return player;
         }
     }
 
+    public List<Player> getGamePlayers(Game game) throws DatabaseException {
+        return getGamePlayers(game.getGameID());
+    }
 
-    public List<Player> getGamePLayers(Game game) throws DatabaseException {
+
+    public List<Player> getGamePlayers(UUID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
-            return dao.getGamePlayers(game.getGameID());
+            return dao.getGamePlayers(gameID);
         }
     }
 
@@ -53,7 +57,7 @@ public class PlayerFacade extends BaseFacade {
     }
 
     public Player isAlreadyPlayer(User user, Game game) throws DatabaseException {
-        ArrayList<Player> gamePlayers = (ArrayList) getGamePLayers(game);
+        ArrayList<Player> gamePlayers = (ArrayList) getGamePlayers(game);
         return isAlreadyPlayer(user, gamePlayers);
     }
 
