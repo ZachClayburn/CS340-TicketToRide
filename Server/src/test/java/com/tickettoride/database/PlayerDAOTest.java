@@ -9,6 +9,8 @@ import modelAttributes.Password;
 import modelAttributes.Username;
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static org.junit.Assert.*;
 
 public class PlayerDAOTest extends AbstractDatabaseTest{
@@ -17,8 +19,10 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
     public void setUp() throws Exception {
         super.setUp();
         testGame = new Game("Test Game", 2);
+        testGame.setGameID(UUID.randomUUID());
         testUser = new User(new Username("TestUsername"), new Password("TestPassword"));
         testPlayer = new Player(testUser.getUserID(), testGame.getGameID());
+        testPlayer.setGameID(UUID.randomUUID());
 
         try (var db = new Database()){
             db.getUserDAO().addUser(testUser);

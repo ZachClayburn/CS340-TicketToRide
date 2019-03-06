@@ -12,11 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Game;
+import com.tickettoride.models.Game;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
-import com.tickettoride.facadeProxies.SessionFacadeProxy;
 
 public class LobbyActivity extends MyBaseActivity{
     private Game game;

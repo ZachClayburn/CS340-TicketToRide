@@ -1,5 +1,7 @@
 package com.tickettoride.clientModels;
 
+import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.TrainCardDeck;
 
 import java.util.List;

@@ -6,10 +6,9 @@ import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.activities.JoinGameActivity;
 import com.tickettoride.activities.LobbyActivity;
-import com.tickettoride.activities.MyBaseActivity;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Game;
-import com.tickettoride.clientModels.Player;
+import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
 
 import java.util.ArrayList;
@@ -89,12 +88,7 @@ public class GameController extends BaseController {
     }
 
     public void leave(ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
-        ArrayList<Game> joinGames = Game.buildGames(linkedTreeJoinGames);
-        ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
-        DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
-        DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
-        MyBaseActivity baseActivity = (MyBaseActivity) getCurrentActivity();
-        baseActivity.moveToJoin();
+        //FIXME Add this function
     }
 
     public void start(ArrayList<LinkedTreeMap> players) {

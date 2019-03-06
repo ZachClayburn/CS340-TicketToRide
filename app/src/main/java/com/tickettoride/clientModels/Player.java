@@ -1,3 +1,4 @@
+
 package com.tickettoride.clientModels;
 
 import com.google.gson.internal.LinkedTreeMap;

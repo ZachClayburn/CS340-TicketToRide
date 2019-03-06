@@ -12,14 +12,14 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.Game;
 
 
+import com.tickettoride.clientModels.SerializableGame;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.models.Game;
 
 
 public class CreateGameActivity extends MyBaseActivity {
-    private Game info = new Game();
     private EditText groupName;
     private RadioButton two;
     private RadioButton three;
@@ -27,6 +27,8 @@ public class CreateGameActivity extends MyBaseActivity {
     private RadioButton five;
     private Button createGame;
     private Context context;
+    private String groupNameString = "";
+    private int maxPlayerNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class CreateGameActivity extends MyBaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
-                info.setGroupName(s.toString());
+                groupNameString = s.toString();
                 setEnabled();
             }
 
@@ -60,28 +62,28 @@ public class CreateGameActivity extends MyBaseActivity {
         two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setMaxPlayer(2);
+                maxPlayerNum = 2;
                 setEnabled();
             }
         });
         three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setMaxPlayer(3);
+                maxPlayerNum = 3;
                 setEnabled();
             }
         });
         four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setMaxPlayer(4);
+                maxPlayerNum = 4;
                 setEnabled();
             }
         });
         five.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                info.setMaxPlayer(5);
+                maxPlayerNum = 5;
                 setEnabled();
             }
         });
@@ -91,7 +93,7 @@ public class CreateGameActivity extends MyBaseActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    GameFacadeProxy.SINGLETON.create(info.getGroupName(), info.getMaxPlayer());
+                    GameFacadeProxy.SINGLETON.create(groupNameString, maxPlayerNum);
                 } catch (Throwable t) { }
 
             }
@@ -100,12 +102,12 @@ public class CreateGameActivity extends MyBaseActivity {
     }
     public void moveToLobbyCreate(Game game) {
         Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
-        intent.putExtra("game", game);
+        intent.putExtra("game", (SerializableGame) game);
         startActivity(intent);
     }
     public void setEnabled() {
         //if username and password fields have characters, login and register buttons are enabled
-        if (!info.getGroupName().equals("") && info.getMaxPlayer() > 1) {
+        if (!groupNameString.equals("") && maxPlayerNum > 1) {
             createGame.setEnabled(true);
         }
         else {

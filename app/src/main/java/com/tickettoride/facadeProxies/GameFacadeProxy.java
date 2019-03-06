@@ -2,15 +2,12 @@ package com.tickettoride.facadeProxies;
 
 import android.util.Log;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.Session;
 import com.tickettoride.command.ClientCommunicator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
+import com.tickettoride.models.Game;
 import command.Command;
 
 public class GameFacadeProxy {

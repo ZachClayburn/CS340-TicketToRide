@@ -24,6 +24,7 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
         super.setUp();
         testUser = new User(new Username("testUser"), new Password("testPassword"));
         testGame = new Game("TestGroup", 2);
+        testGame.setGameID(UUID.randomUUID());
         testPlayer = new Player(testUser.getUserID(), testGame.getGameID());
 
         try (var db = new Database()) {

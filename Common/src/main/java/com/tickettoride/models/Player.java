@@ -12,6 +12,9 @@ public class Player {
     private UUID gameID;
     private UUID playerID;
 
+    //FIXME Add this functionality
+    private int points;
+
     public Player(UUID user, UUID game) {
         this.userID = user;
         this.gameID = game;
@@ -108,5 +111,9 @@ public class Player {
                 ", gameID=" + gameID +
                 ", playerID=" + playerID +
                 '}';
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
