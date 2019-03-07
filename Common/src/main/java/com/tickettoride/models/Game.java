@@ -2,9 +2,7 @@ package com.tickettoride.models;
 
 import java.util.*;
 
-import modelInterfaces.IGame;
-
-public class Game implements IGame {
+public class Game {
     private UUID gameID;
     private String groupName;
     private int numPlayer;
@@ -14,7 +12,7 @@ public class Game implements IGame {
     private boolean isStarted = false;
 
     public Game(String groupName, int maxPlayer) {
-        this.gameID = null;
+        this.gameID = UUID.randomUUID();
         this.groupName = groupName;
         this.numPlayer = 1;
         this.maxPlayer = maxPlayer;

@@ -13,8 +13,6 @@ import java.sql.Array;
 import java.util.*;
 
 import command.Command;
-import modelAttributes.Color;
-import modelAttributes.PlayerColor;
 
 public class GameFacade extends BaseFacade {
     private static GameFacade SINGLETON = new GameFacade();

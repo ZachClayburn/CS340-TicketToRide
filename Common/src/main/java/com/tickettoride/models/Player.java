@@ -2,8 +2,6 @@ package com.tickettoride.models;
 
 import java.util.*;
 
-import modelAttributes.PlayerColor;
-
 public class Player {
     private int turn = 0;
     private PlayerColor color = null;

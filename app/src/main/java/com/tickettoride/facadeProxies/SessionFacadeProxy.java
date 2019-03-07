@@ -6,8 +6,8 @@ import com.tickettoride.command.ClientCommunicator;
 import java.util.UUID;
 
 import command.Command;
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 
 public class SessionFacadeProxy {
 

@@ -2,7 +2,7 @@ package com.tickettoride.facadeProxies;
 
 import android.util.Log;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Session;
+import com.tickettoride.models.Session;
 import com.tickettoride.command.ClientCommunicator;
 
 import java.util.UUID;
@@ -22,7 +22,7 @@ public class GameFacadeProxy {
     public void create(String name, int maxPlayers){
         Session session = DataManager.getSINGLETON().getSession();
         try{
-            Command command = new Command(FACADE_NAME, "create", session.getSessionId(), name, maxPlayers);
+            Command command = new Command(FACADE_NAME, "create", session.getSessionID(), name, maxPlayers);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t){}
     }
@@ -30,7 +30,7 @@ public class GameFacadeProxy {
     public void join(UUID gameID){
         Session session = DataManager.getSINGLETON().getSession();
         try {
-            Command command = new Command(FACADE_NAME, "join", session.getSessionId(), gameID);
+            Command command = new Command(FACADE_NAME, "join", session.getSessionID(), gameID);
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t) {}
     }
@@ -38,7 +38,7 @@ public class GameFacadeProxy {
     public void leave() {
         try {
             Session session =  DataManager.getSINGLETON().getSession();
-            Command command = new Command(FACADE_NAME, "leave", session.getSessionId());
+            Command command = new Command(FACADE_NAME, "leave", session.getSessionID());
             ClientCommunicator.SINGLETON.send(command);
         } catch (Throwable t) {}
     }

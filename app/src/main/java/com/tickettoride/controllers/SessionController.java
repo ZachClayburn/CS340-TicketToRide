@@ -3,7 +3,7 @@ package com.tickettoride.controllers;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.LoginActivity;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Session;
+import com.tickettoride.models.Session;
 import com.tickettoride.models.Game;
 
 import java.util.ArrayList;

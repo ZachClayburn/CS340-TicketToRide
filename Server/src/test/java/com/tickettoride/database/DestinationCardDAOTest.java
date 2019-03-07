@@ -5,8 +5,8 @@ import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
 import exceptions.DatabaseException;
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 import org.junit.Test;
 
 import java.util.*;
