@@ -45,7 +45,7 @@ public class GameController extends BaseController {
         Player player = new Player(gameID, sessionID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         // If user is the one joining game and becoming a player
-        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+        if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
@@ -65,7 +65,7 @@ public class GameController extends BaseController {
     public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
         Player player = new Player(gameID, sessionID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
-        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+        if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();

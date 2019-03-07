@@ -22,7 +22,7 @@ public class SessionFacadeProxy {
     }
 
     public void delete() {
-        UUID sessionID = DataManager.SINGLETON.getSession().getSessionId();
+        UUID sessionID = DataManager.SINGLETON.getSession().getSessionID();
         Command command = new Command(FACADE_NAME, "delete", sessionID);
         ClientCommunicator.SINGLETON.send(command);
     }
