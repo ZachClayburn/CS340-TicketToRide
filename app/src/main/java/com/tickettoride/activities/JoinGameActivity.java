@@ -149,7 +149,7 @@ public class JoinGameActivity extends MyBaseActivity {
     }
 
     private void setupCreateGameButton() {
-        createGame = (Button) findViewById(R.id.create_game);
+        createGame = findViewById(R.id.create_game);
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

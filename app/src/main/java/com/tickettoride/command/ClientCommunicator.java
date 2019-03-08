@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import android.util.Log;
 
+import java.util.*;
+
 import command.Command;
 import command.Response;
 

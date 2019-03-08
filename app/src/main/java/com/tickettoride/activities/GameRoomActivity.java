@@ -23,13 +23,10 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         fm = this.getSupportFragmentManager();
-        playerFragment = (PlayerFragment)fm.findFragmentById(R.id.player_layout);
-
+        playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
         Game game = DataManager.getSINGLETON().getGame();
-        GameFacadeProxy.SINGLETON.setup(DataManager.getSINGLETON().getGame());
         DataManager.SINGLETON.setTrainCardDeck();
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }

@@ -1,7 +1,5 @@
 package com.tickettoride.facadeProxies;
 
-import android.util.Log;
-
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.command.ClientCommunicator;
 

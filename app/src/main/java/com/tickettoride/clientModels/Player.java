@@ -41,6 +41,8 @@ public class Player implements Serializable {
         this.gameID = UUID.fromString((String) playerMap.get("gameID"));
         this.playerID = UUID.fromString((String) playerMap.get("playerID"));
         this.userID = UUID.fromString((String) playerMap.get("userID"));
+        this.turn = ((Double) playerMap.get("turn")).intValue();
+        this.color = PlayerColor.valueOf((String) playerMap.get("color"));
     }
 
 

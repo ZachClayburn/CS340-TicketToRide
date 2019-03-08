@@ -78,6 +78,7 @@ public class LobbyActivity extends MyBaseActivity{
         Intent intent = new Intent(LobbyActivity.this, GameRoomActivity.class);
         startActivity(intent);
     }
+
     public void startGameError() {
         Toast.makeText(this ,R.string.start_game_error, Toast.LENGTH_SHORT).show();
 

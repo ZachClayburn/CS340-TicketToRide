@@ -1,9 +1,7 @@
 package com.tickettoride.controllers;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.tickettoride.R;
 import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.activities.JoinGameActivity;
@@ -12,6 +10,7 @@ import com.tickettoride.activities.MyBaseActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Game;
 import com.tickettoride.clientModels.Player;
+import com.tickettoride.controllers.helpers.GameControllerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +48,11 @@ public class GameController extends BaseController {
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
+            DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToLobbyJoin(game);
-        } else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+        }
+        else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
         }
@@ -67,9 +68,10 @@ public class GameController extends BaseController {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
+            DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToLobbyJoin(game);
-        }else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+        } else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
         }
@@ -95,16 +97,14 @@ public class GameController extends BaseController {
         baseActivity.moveToJoin();
     }
 
-    public void start() {
+    public void start(ArrayList<LinkedTreeMap> players) {
         Log.i("GAME_CONTROLLER", "Calling Start");
+        List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
+        DataManager.SINGLETON.setGamePlayers(playerList);
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
     }
 
-    public void setup(List<Player> players) {
-        DataManager.SINGLETON.setGamePlayers(players);
-        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-    }
 
     public void errorSetup() {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();

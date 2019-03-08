@@ -9,6 +9,7 @@ import com.tickettoride.database.PlayerDAO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Array;
 import java.util.*;
 
 import command.Command;
@@ -91,15 +92,19 @@ public class GameFacade extends BaseFacade {
 
     public void start(UUID connID, UUID gameID) throws DatabaseException {
         logger.info("Attempting to start game " + gameID);
-        try (var db = new Database()){
+        startGame(gameID);
+        ArrayList<Player> players = (ArrayList) PlayerFacade.getSingleton().getGamePlayers(gameID);
+        PlayerFacade.getSingleton().pickTurnOrder(players);
+        PlayerFacade.getSingleton().pickColors(players);
+        var command = new Command(CONTROLLER_NAME, "start", players);
+        sendResponseToRoom(connID, command);
+    }
 
+    public void startGame(UUID gameID) throws DatabaseException {
+        try (var db = new Database()){
             db.getGameDAO().setGameToStarted(gameID);
             db.commit();
         }
-
-        var command = new Command(CONTROLLER_NAME, "start");
-
-        sendResponseToRoom(connID, command);
     }
 
     Game findGame(UUID gameID) throws DatabaseException {
@@ -143,40 +148,6 @@ public class GameFacade extends BaseFacade {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
             database.commit();
-        }
-    }
-
-    public void setup(UUID connID, UUID gameID){
-        try {
-            List<Player> players = PlayerFacade.getSingleton().getGamePlayers(gameID);
-            pickTurnOrder(players);
-            pickColors(players);
-            Command command = new Command(CONTROLLER_NAME, "setup", players);
-            sendResponseToRoom(connID, command);
-        }
-        catch (Throwable throwable) {
-            logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "errorSetup", throwable);
-            sendResponseToRoom(connID, command);
-        }
-    }
-
-    public void pickTurnOrder(List<Player> players) throws DatabaseException {
-        Collections.shuffle(players);
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
-            for (int i = 0; i < players.size(); i++) {
-                Player player = players.get(i);
-                player.setTurn(i + 1);
-                dao.setTurn(player.getPlayerID(), player.getTurn());
-            }
-            database.commit();
-        }
-    }
-
-    public void pickColors(List<Player> players) {
-        for (Player player:players){
-            player.setColor();
         }
     }
 
