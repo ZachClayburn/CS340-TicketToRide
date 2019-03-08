@@ -18,13 +18,18 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
     private FragmentManager fm;
+    private MapFragment mapFragment;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
-        //playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
+        if (mapFragment == null) {
+            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+        }
+        playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
         Game game = DataManager.getSINGLETON().getGame();
         DataManager.SINGLETON.setTrainCardDeck();
