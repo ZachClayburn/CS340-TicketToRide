@@ -1,8 +1,11 @@
 package com.tickettoride.clientModels;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.tickettoride.models.DestinationCard;
+import com.tickettoride.models.Hand;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import modelAttributes.PlayerColor;
@@ -16,6 +19,8 @@ public class Player implements Serializable {
     private PlayerColor color = null;
     private int points = 0;
     private String username = "";
+    private Hand playerHand = new Hand();
+    private ArrayList<DestinationCard> destCards = new ArrayList<>();
 
     public Player(UUID gameID, UUID userID, UUID playerID) {
         this.gameID = gameID;
@@ -88,4 +93,12 @@ public class Player implements Serializable {
     }
 
     public String getUsername() {return username;}
+
+    public Hand getPlayerHand() {
+        return playerHand;
+    }
+
+    public ArrayList<DestinationCard> getDestCards() {
+        return destCards;
+    }
 }

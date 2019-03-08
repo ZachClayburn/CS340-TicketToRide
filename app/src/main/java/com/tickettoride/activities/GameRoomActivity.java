@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.Game;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 
 import java.util.UUID;
@@ -16,6 +16,7 @@ import java.util.UUID;
 public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapListener {
     private Context context;
     private PlayerFragment playerFragment;
+    private ViewHandFragment viewHandFragment;
     private FragmentManager fm;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         playerFragment = (PlayerFragment)fm.findFragmentById(R.id.player_layout);
 
         this.context = this;
+        Game game = DataManager.getSINGLETON().getGame();
         GameFacadeProxy.SINGLETON.setup(DataManager.getSINGLETON().getGame());
         DataManager.SINGLETON.setTrainCardDeck();
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
@@ -39,7 +41,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
     public Runnable setupError = new Runnable() {
         @Override
         public void run() {
-            Toast.makeText(context,R.string.setup_game_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.setup_game_error, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -47,6 +49,9 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
     public void onReturnToMap() {
         // The login fragment is removed if it exists (if we log in from the login fragment)
         if(playerFragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(playerFragment).commit();
+        }
+        else if (viewHandFragment != null) {
             getSupportFragmentManager().beginTransaction().remove(playerFragment).commit();
         }
     }
@@ -59,6 +64,17 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
             playerFragment.setArguments(arguments);
             fm.beginTransaction()
                     .add(R.id.player_layout, playerFragment)
+                    .commit();
+        }
+    }
+    public void toViewHandFragment(UUID playerID){
+        if (viewHandFragment == null) {
+            viewHandFragment = new ViewHandFragment();
+            Bundle arguments = new Bundle();
+            arguments.putString("player", playerID.toString());
+            playerFragment.setArguments(arguments);
+            fm.beginTransaction()
+                    .add(R.id.view_cards, viewHandFragment)
                     .commit();
         }
     }

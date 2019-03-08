@@ -1,13 +1,7 @@
 package com.tickettoride.clientModels;
-
-import android.util.Log;
-
 import com.google.gson.internal.LinkedTreeMap;
-import com.tickettoride.models.TrainCard;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import modelInterfaces.IGame;
