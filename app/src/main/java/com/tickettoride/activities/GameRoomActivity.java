@@ -24,7 +24,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
-        playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
+        //playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
         Game game = DataManager.getSINGLETON().getGame();
         DataManager.SINGLETON.setTrainCardDeck();

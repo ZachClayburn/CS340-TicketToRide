@@ -7,8 +7,13 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.tickettoride.clientModels.Route;
+
+import java.util.ArrayList;
+
 public class DrawView extends View {
     Paint paint = new Paint();
+    private ArrayList<Route> routes = new ArrayList<>();
 
     private void init() {
         paint.setColor(Color.BLACK);
@@ -19,7 +24,14 @@ public class DrawView extends View {
         super(context);
         init();
     }
-
+    public void setRoutes(ArrayList<Route> routes) {
+        this.routes = routes;
+    }
+    public void drawRoutes(Canvas canvas) {
+        for (Route route : routes) {
+            route.drawRoute(canvas);
+        }
+    }
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -32,7 +44,8 @@ public class DrawView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         //Straight lines
-        //canvas.drawLine(150, 130, 150, 180, paint);
+        //canvas.drawRect(150, 130, 150, 180, paint);
+        drawRoutes(canvas);
         //canvas.drawLine(130, 130, 130, 180, paint);
         //canvas.drawLine(160, 108, 330, 88, paint);
         //canvas.drawLine(350, 98, 495, 273, paint);
