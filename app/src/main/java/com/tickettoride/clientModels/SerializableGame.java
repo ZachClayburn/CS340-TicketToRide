@@ -13,4 +13,8 @@ public class SerializableGame extends Game implements Serializable {
     public SerializableGame(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
         super(gameID, groupName, numPlayer, maxPlayer, isStarted, curTurn);
     }
+
+    public SerializableGame(Game game) {
+        super(game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer(), game.IsStarted(), game.getCurTurn());
+    }
 }
