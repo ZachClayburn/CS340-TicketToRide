@@ -1,4 +1,5 @@
 package com.tickettoride.controllers;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -8,6 +9,7 @@ import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -86,13 +88,13 @@ public class GameController extends BaseController {
         joinGameActivity.JoinError();
     }
 
-    public void leave(List<Map<String, Object>> linkedTreeJoinGames, List<Map<String, Object>> linkedTreeRejoinGames) {
+    public void leave(ArrayList<Map<String, Object>> linkedTreeJoinGames, ArrayList<Map<String, Object>> linkedTreeRejoinGames) {
         ArrayList<Game> joinGames = Game.buildGames(linkedTreeJoinGames);
         ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
         DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
-        MyBaseActivity baseActivity = (MyBaseActivity) getCurrentActivity();
-        baseActivity.moveToJoin();
+//        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+//        joinGameActivity.updateUI();
     }
 
     public void start(ArrayList<LinkedTreeMap<String, Object>> players) {

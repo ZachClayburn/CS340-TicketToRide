@@ -7,6 +7,7 @@ import com.tickettoride.models.Session;
 import com.tickettoride.models.Game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class SessionController extends BaseController {
@@ -17,11 +18,8 @@ public class SessionController extends BaseController {
     public void create(UUID sessionID, UUID userID, ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
         Session session = new Session(sessionID, userID);
         DataManager.getSINGLETON().setSession(session);
-        //FIXME Add this functionality
-//        ArrayList<Game> joinGames = Game.buildGames(linkedTreeJoinGames);
-//        ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
-        ArrayList<Game> joinGames = new ArrayList<>();
-        ArrayList<Game> rejoinGames = new ArrayList<>();
+        ArrayList<Game> joinGames = Game.buildGames((List) linkedTreeJoinGames);
+        ArrayList<Game> rejoinGames = Game.buildGames((List) linkedTreeRejoinGames);
         DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
         LoginActivity loginActivity = (LoginActivity) getCurrentActivity();

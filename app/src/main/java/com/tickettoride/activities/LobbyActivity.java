@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Game;
 import com.tickettoride.clientModels.GameIndex;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
@@ -30,7 +31,7 @@ public class LobbyActivity extends MyBaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lobby);
-        this.game = (Game) getIntent().getSerializableExtra("game");
+        this.game = DataManager.getSINGLETON().getGame();
 
         gameName = (TextView) findViewById(R.id.group_name);
         gameID = (TextView) findViewById(R.id.game_id);

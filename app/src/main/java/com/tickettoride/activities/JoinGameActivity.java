@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
-import com.tickettoride.clientModels.SerializableGame;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.models.Game;
@@ -68,7 +67,6 @@ public class JoinGameActivity extends MyBaseActivity {
 
     public void moveToLobbyJoin(Game game) {
         Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-        intent.putExtra("game", new SerializableGame(game));
         startActivity(intent);
     }
 

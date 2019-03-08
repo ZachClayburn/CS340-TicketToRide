@@ -18,6 +18,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
     private FragmentManager fm;
+    private MapFragment mf;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +26,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
         //playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
+        mf = (MapFragment)  fm.findFragmentById(R.id.map_fragment); 
         this.context = this;
         Game game = DataManager.getSINGLETON().getGame();
         DataManager.SINGLETON.setTrainCardDeck();

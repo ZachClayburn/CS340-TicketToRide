@@ -28,7 +28,7 @@
         <activity
             android:name=".activities.CreateGameActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".activities.LoginActivity">
+            android:parentActivityName=".activities.JoinGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity"
@@ -37,7 +37,7 @@
         <activity
             android:name=".activities.LobbyActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".activities.LoginActivity">
+            android:parentActivityName=".activities.JoinGameActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.LoginActivity"
