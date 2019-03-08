@@ -68,7 +68,7 @@ public class JoinGameActivity extends MyBaseActivity {
 
     public void moveToLobbyJoin(Game game) {
         Intent intent = new Intent(JoinGameActivity.this, LobbyActivity.class);
-        intent.putExtra("game", (SerializableGame)game);
+        intent.putExtra("game", new SerializableGame(game));
         startActivity(intent);
     }
 

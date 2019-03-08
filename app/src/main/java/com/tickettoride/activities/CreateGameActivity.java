@@ -102,7 +102,7 @@ public class CreateGameActivity extends MyBaseActivity {
     }
     public void moveToLobbyCreate(Game game) {
         Intent intent = new Intent(CreateGameActivity.this, LobbyActivity.class);
-        intent.putExtra("game", (SerializableGame) game);
+        intent.putExtra("game", new SerializableGame(game));
         startActivity(intent);
     }
     public void setEnabled() {
