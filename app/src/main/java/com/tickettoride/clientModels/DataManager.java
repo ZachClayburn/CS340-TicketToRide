@@ -1,5 +1,7 @@
 package com.tickettoride.clientModels;
 
+import com.tickettoride.models.TrainCardDeck;
+
 import java.util.List;
 
 public class DataManager {
@@ -10,6 +12,7 @@ public class DataManager {
     private Game curGame;
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
+    private TrainCardDeck trainCardDeck;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -54,4 +57,10 @@ public class DataManager {
     public void setGamePlayers(List<Player> players) { this.gamePlayers = players; }
 
     public List<Player> getGamePlayers(List<Player> players) { return players; }
+
+    public void setTrainCardDeck() {
+        trainCardDeck = new TrainCardDeck();
+    }
+
+    public TrainCardDeck getTrainCardDeck(){return trainCardDeck;}
 }

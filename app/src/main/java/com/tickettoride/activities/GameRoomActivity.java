@@ -28,6 +28,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
 
         this.context = this;
         GameFacadeProxy.SINGLETON.setup(DataManager.getSINGLETON().getGame());
+        DataManager.SINGLETON.setTrainCardDeck();
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }
 
