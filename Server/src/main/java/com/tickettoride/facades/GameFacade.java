@@ -37,7 +37,7 @@ public class GameFacade extends BaseFacade {
             sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
-            Command command = new Command(CONTROLLER_NAME, "errorCreate", throwable);
+            Command command = new Command(CONTROLLER_NAME, "errorCreate", throwable.getMessage());
             sendResponseToOne(connID, command);
       }
     }

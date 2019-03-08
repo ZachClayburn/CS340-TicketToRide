@@ -11,6 +11,8 @@ public class Game {
 
     private boolean isStarted = false;
 
+    public Game() {}
+
     public Game(String groupName, int maxPlayer) {
         this.gameID = UUID.randomUUID();
         this.groupName = groupName;

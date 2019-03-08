@@ -21,7 +21,9 @@ public class GameController extends BaseController {
     public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         try { createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
-        try { createGameOnCreateGameActivity(game, sessionID, playerID); return; } catch (ClassCastException e) { }
+        try { createGameOnCreateGameActivity(game, sessionID, playerID); return; } catch (ClassCastException e) {
+            Log.i("GAME_CONTROLLER", e.getMessage(), e);
+        }
     }
 
     private void createGameOnJoinActivity(Game game) throws ClassCastException {
@@ -73,9 +75,8 @@ public class GameController extends BaseController {
             lobbyActivity.updateUI(game);
         }
     }
-    
 
-    public void errorCreate(Throwable t) {
+    public void errorCreate(String errorMessage) {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
         createGameActivity.createError();
     }
