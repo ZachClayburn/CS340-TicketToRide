@@ -1,7 +1,5 @@
 package com.tickettoride.models;
 
-import modelAttributes.Color;
-
 public class TrainCard {
     private Color color;
 

@@ -9,5 +9,6 @@ public enum Color {
     PURPLE,
     BLACK,
     WHITE,
+    GREY,
     WILD
 }

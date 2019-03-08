@@ -1,10 +1,9 @@
 package com.tickettoride.clientModels;
 
-import com.tickettoride.models.Game;
+import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
-import com.tickettoride.models.Session;
+
 import java.util.List;
-import com.tickettoride.models.TrainCardDeck;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ public class DataManager {
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
+    private Hand playerHand = new Hand();
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -67,4 +67,8 @@ public class DataManager {
     }
 
     public TrainCardDeck getTrainCardDeck(){return trainCardDeck;}
+
+    public Hand getPlayerHand() {
+        return playerHand;
+    }
 }

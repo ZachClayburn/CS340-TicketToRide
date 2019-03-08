@@ -35,7 +35,15 @@ public class Game {
         this.isStarted = isStarted;
     }
 
-        public void setGameID(UUID gameID) {
+    public Game(Map<String, Object> gameMap) {
+        this.gameID = UUID.fromString((String) gameMap.get("gameID"));
+        this.groupName = (String) gameMap.get("groupName");
+        this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
+        this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
+        this.isStarted = (Boolean) gameMap.get(("isStarted"));
+    }
+
+    public void setGameID(UUID gameID) {
         this.gameID = gameID;
     }
 
@@ -114,5 +122,14 @@ public class Game {
                 ", maxPlayer=" + maxPlayer +
                 ", isStarted=" + isStarted +
                 '}';
+    }
+
+    public static ArrayList<Game> buildGames(List<Map<String, Object>> gameMap) {
+        ArrayList<Game> games = new ArrayList<>();
+        for (Map<String, Object> singleGameHash : gameMap) {
+            Game game = new Game(singleGameHash);
+            games.add(game);
+        }
+        return games;
     }
 }

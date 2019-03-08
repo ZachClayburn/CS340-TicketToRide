@@ -2,8 +2,6 @@ package com.tickettoride.models;
 
 import java.util.List;
 
-import modelAttributes.Color;
-
 public class Route {
     private List<Line> lines;
     private Color color;
