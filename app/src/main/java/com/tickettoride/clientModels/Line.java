@@ -7,9 +7,6 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Region;
 
-import modelAttributes.Color;
-
-
 public class Line {
     private int startX;
     private int startY;

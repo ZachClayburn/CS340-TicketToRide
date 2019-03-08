@@ -4,13 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import com.tickettoride.models.City;
+import com.tickettoride.models.Color;
 
 import java.util.List;
-
-import modelAttributes.Color;
-
-import static modelAttributes.Color.BLACK;
-import static modelAttributes.Color.BLUE;
 
 public class Route {
     private List<Line> lines;
