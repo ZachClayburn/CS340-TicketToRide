@@ -1,8 +1,8 @@
 package com.tickettoride.clientModels;
 
+import com.tickettoride.models.Game;
+
 import java.util.ArrayList;
-import java.util.UUID;
-import org.jetbrains.annotations.Nullable;
 
 
 public class GameIndex {
@@ -11,8 +11,8 @@ public class GameIndex {
     public static GameIndex SINGLETON = new GameIndex();
 
     private GameIndex(){
-        joinGameIndex = new ArrayList<Game>();
-        rejoinGameIndex = new ArrayList<Game>();
+        joinGameIndex = new ArrayList<>();
+        rejoinGameIndex = new ArrayList<>();
     }
 
     public void addJoinGame(Game game) { joinGameIndex.add(game); }

@@ -13,10 +13,11 @@ import android.widget.TextView;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Player;
+import com.tickettoride.models.Hand;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.DestinationCard;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ViewHandFragment extends Fragment {
@@ -31,7 +32,7 @@ public class ViewHandFragment extends Fragment {
     private TextView whiteCards;
     private TextView wildCards;
     private Player player;
-    private ArrayList<DestinationCard> playerDestCards;
+    private List<DestinationCard> playerDestCards;
     private RecyclerView destCards;
     private Adapter adapter;
     private OnReturnToMapListener fragmentListener;
@@ -47,25 +48,28 @@ public class ViewHandFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.view_hand, container, false);
+
+        Hand playerHand = DataManager.getSINGLETON().getPlayerHand();
+
         blueCards = v.findViewById(R.id.blue);
-        blueCards.setText("Blue: " + player.getPlayerHand().getBlue());
+        blueCards.setText("Blue: " + playerHand.getBlue());//FIXME Add a string resource with placeholders
         greenCards = v.findViewById(R.id.green);
-        greenCards.setText("Green: " + player.getPlayerHand().getGreen());
+        greenCards.setText("Green: " + playerHand.getGreen());
         purpleCards = v.findViewById(R.id.purple);
-        purpleCards.setText("Purple: " + player.getPlayerHand().getPurple());
+        purpleCards.setText("Purple: " + playerHand.getPurple());
         redCards = v.findViewById(R.id.red);
-        redCards.setText("Red: " + player.getPlayerHand().getRed());
+        redCards.setText("Red: " + playerHand.getRed());
         orangeCards = v.findViewById(R.id.orange);
-        orangeCards.setText("Orange: " + player.getPlayerHand().getOrange());
+        orangeCards.setText("Orange: " + playerHand.getOrange());
         yellowCards = v.findViewById(R.id.yellow);
-        yellowCards.setText("Yellow: " + player.getPlayerHand().getYellow());
+        yellowCards.setText("Yellow: " + playerHand.getYellow());
         blackCards = v.findViewById(R.id.black);
-        blackCards.setText("Black: " + player.getPlayerHand().getBlack());
+        blackCards.setText("Black: " + playerHand.getBlack());
         whiteCards = v.findViewById(R.id.white);
-        whiteCards.setText("White: " + player.getPlayerHand().getWhite());
+        whiteCards.setText("White: " + playerHand.getWhite());
         wildCards = v.findViewById(R.id.wild);
-        wildCards.setText("Locomotive: " + player.getPlayerHand().getLocomotive());
-        playerDestCards = player.getDestCards();
+        wildCards.setText("Locomotive: " + playerHand.getLocomotive());
+        playerDestCards = playerHand.getDestinationCards();
         destCards = v.findViewById(R.id.dest_card_list);
         destCards.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), playerDestCards);
@@ -75,10 +79,10 @@ public class ViewHandFragment extends Fragment {
 
     class Adapter extends RecyclerView.Adapter<Holder> {
 
-        private ArrayList<DestinationCard> cards;
+        private List<DestinationCard> cards;
         private LayoutInflater inflater;
 
-        public Adapter(Context context, ArrayList<DestinationCard> cards) {
+        public Adapter(Context context, List<DestinationCard> cards) {
             this.cards = cards;
             inflater = LayoutInflater.from(context);
         }

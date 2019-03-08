@@ -2,8 +2,8 @@ package com.tickettoride.database;
 
 import com.tickettoride.models.User;
 import exceptions.DatabaseException;
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

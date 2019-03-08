@@ -15,8 +15,8 @@ import com.tickettoride.R;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.facadeProxies.UserFacadeProxy;
 
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 
 public class LoginActivity extends MyBaseActivity {
     private Username user = new Username("");

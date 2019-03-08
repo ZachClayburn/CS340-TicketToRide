@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Player;
+import com.tickettoride.models.Player;
 
 import java.util.UUID;
 

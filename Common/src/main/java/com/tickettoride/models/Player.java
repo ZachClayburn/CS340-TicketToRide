@@ -2,8 +2,6 @@ package com.tickettoride.models;
 
 import java.util.*;
 
-import modelAttributes.PlayerColor;
-
 public class Player {
     private int turn = 0;
     private PlayerColor color = null;
@@ -11,6 +9,9 @@ public class Player {
     private UUID userID;
     private UUID gameID;
     private UUID playerID;
+
+    //FIXME Add this functionality
+    private int points;
 
     public Player(UUID user, UUID game) {
         this.userID = user;
@@ -38,6 +39,14 @@ public class Player {
         this.userID = userID;
         this.gameID = gameID;
         this.playerID = playerID;
+    }
+
+    public Player(Map<String, Object> playerMap) {
+        this.gameID = UUID.fromString((String) playerMap.get("gameID"));
+        this.playerID = UUID.fromString((String) playerMap.get("playerID"));
+        this.userID = UUID.fromString((String) playerMap.get("userID"));
+        this.turn = ((Double) playerMap.get("turn")).intValue();
+        this.color = PlayerColor.valueOf((String) playerMap.get("color"));
     }
 
     public UUID getUserID() { return userID; }
@@ -108,5 +117,9 @@ public class Player {
                 ", gameID=" + gameID +
                 ", playerID=" + playerID +
                 '}';
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

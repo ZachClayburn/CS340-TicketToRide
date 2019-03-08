@@ -4,18 +4,16 @@ import com.tickettoride.database.Database;
 import exceptions.DatabaseException;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.models.Game;
-import com.tickettoride.models.Player;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import command.Command;
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,6 +1,9 @@
 package com.tickettoride.models;
 
+import java.util.List;
+
 public class Hand {
+    private List<DestinationCard> destinationCards;//TODO Add DestinationCards functionality to the player hand
     private int blue = 0;
     private int green = 0;
     private int purple = 0;
@@ -63,5 +66,9 @@ public class Hand {
     }
     public int getLocomotive() {
         return locomotive;
+    }
+
+    public List<DestinationCard> getDestinationCards() {
+        return destinationCards;
     }
 }

@@ -2,18 +2,15 @@ package com.tickettoride.controllers;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.tickettoride.activities.CreateGameActivity;
-import com.tickettoride.activities.GameRoomActivity;
-import com.tickettoride.activities.JoinGameActivity;
-import com.tickettoride.activities.LobbyActivity;
-import com.tickettoride.activities.MyBaseActivity;
+import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Game;
-import com.tickettoride.clientModels.Player;
+import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class GameController extends BaseController {
@@ -46,7 +43,7 @@ public class GameController extends BaseController {
         Player player = new Player(gameID, sessionID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         // If user is the one joining game and becoming a player
-        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+        if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
@@ -66,7 +63,7 @@ public class GameController extends BaseController {
     public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
         Player player = new Player(gameID, sessionID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
-        if (DataManager.SINGLETON.getSession().getSessionId().equals(sessionID)) {
+        if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             DataManager.SINGLETON.setGame(game);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
@@ -88,7 +85,7 @@ public class GameController extends BaseController {
         joinGameActivity.JoinError();
     }
 
-    public void leave(ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
+    public void leave(List<Map<String, Object>> linkedTreeJoinGames, List<Map<String, Object>> linkedTreeRejoinGames) {
         ArrayList<Game> joinGames = Game.buildGames(linkedTreeJoinGames);
         ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
         DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
@@ -97,7 +94,7 @@ public class GameController extends BaseController {
         baseActivity.moveToJoin();
     }
 
-    public void start(ArrayList<LinkedTreeMap> players) {
+    public void start(ArrayList<LinkedTreeMap<String, Object>> players) {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);

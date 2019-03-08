@@ -2,9 +2,7 @@ package com.tickettoride.models;
 
 import java.util.UUID;
 
-import modelInterfaces.ISession;
-
-public class Session implements ISession {
+public class Session {
 
     private UUID userID;
     private UUID sessionID;

@@ -2,9 +2,7 @@ package com.tickettoride.models;
 
 import java.util.*;
 
-import modelInterfaces.IGame;
-
-public class Game implements IGame {
+public class Game {
     private UUID gameID;
     private String groupName;
     private int numPlayer;
@@ -29,6 +27,21 @@ public class Game implements IGame {
         this.curTurn = curTurn;
     }
 
+    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
+        this.gameID = gameID;
+        this.groupName = groupName;
+        this.maxPlayer = maxPlayer;
+        this.numPlayer = numPlayer;
+        this.isStarted = isStarted;
+    }
+
+    public Game(Map<String, Object> gameMap) {
+        this.gameID = UUID.fromString((String) gameMap.get("gameID"));
+        this.groupName = (String) gameMap.get("groupName");
+        this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
+        this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
+        this.isStarted = (Boolean) gameMap.get(("isStarted"));
+    }
 
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
@@ -109,5 +122,14 @@ public class Game implements IGame {
                 ", maxPlayer=" + maxPlayer +
                 ", isStarted=" + isStarted +
                 '}';
+    }
+
+    public static ArrayList<Game> buildGames(List<Map<String, Object>> gameMap) {
+        ArrayList<Game> games = new ArrayList<>();
+        for (Map<String, Object> singleGameHash : gameMap) {
+            Game game = new Game(singleGameHash);
+            games.add(game);
+        }
+        return games;
     }
 }

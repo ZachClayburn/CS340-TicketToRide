@@ -13,8 +13,6 @@ import java.sql.Array;
 import java.util.*;
 
 import command.Command;
-import modelAttributes.Color;
-import modelAttributes.PlayerColor;
 
 public class GameFacade extends BaseFacade {
     private static GameFacade SINGLETON = new GameFacade();
@@ -119,6 +117,7 @@ public class GameFacade extends BaseFacade {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
             Game game = new Game(gameName, maxPlayers);
+            game.setGameID(UUID.randomUUID());
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
             database.commit();
@@ -134,13 +133,7 @@ public class GameFacade extends BaseFacade {
     }
 
     Player createPlayer(UUID user, UUID game) throws DatabaseException {
-        try (Database database = new Database()) {
-            Player player = new Player(user, game);
-            PlayerDAO dao = database.getPlayerDAO();
-            dao.addPlayer(player);
-            database.commit();
-            return player;
-        }
+        return PlayerFacade.getSingleton().createPlayer(user, game);
     }
 
     void updateGamePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {

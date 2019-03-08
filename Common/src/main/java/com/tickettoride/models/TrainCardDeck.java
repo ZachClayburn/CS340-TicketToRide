@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import modelAttributes.Color;
-
 public class TrainCardDeck {
 
     // Index 0 is top of deck, last index is bottom of deck

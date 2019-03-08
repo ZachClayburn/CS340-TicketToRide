@@ -6,8 +6,8 @@ import com.tickettoride.command.ClientCommunicator;
 import java.util.UUID;
 
 import command.Command;
-import modelAttributes.Password;
-import modelAttributes.Username;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 
 public class SessionFacadeProxy {
 
@@ -22,7 +22,7 @@ public class SessionFacadeProxy {
     }
 
     public void delete() {
-        UUID sessionID = DataManager.SINGLETON.getSession().getSessionId();
+        UUID sessionID = DataManager.SINGLETON.getSession().getSessionID();
         Command command = new Command(FACADE_NAME, "delete", sessionID);
         ClientCommunicator.SINGLETON.send(command);
     }

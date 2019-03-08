@@ -18,14 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Player;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.City;
 import com.tickettoride.models.Line;
 import com.tickettoride.models.Route;
 import com.tickettoride.models.TrainCard;
 import java.util.ArrayList;
 import java.util.Arrays;
-import modelAttributes.Color;
+import com.tickettoride.models.Color;
 public class MapFragment extends Fragment {
     private ArrayList<Player> players = new ArrayList<>();
     private DrawView drawView;

@@ -1,6 +1,7 @@
 package command;
 
-import modelAttributes.*;
+import com.tickettoride.models.Password;
+import com.tickettoride.models.Username;
 
 public interface IServer {
     void login(Username user, Password pass);

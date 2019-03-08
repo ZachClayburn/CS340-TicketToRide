@@ -1,4 +1,4 @@
-package modelAttributes;
+package com.tickettoride.models;
 
 import java.util.Objects;
 
