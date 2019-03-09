@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.InitializeGameState;
 import com.tickettoride.clientModels.PlayerTurnState;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.City;
@@ -273,6 +272,13 @@ public class MapFragment extends Fragment {
         cardThree.setEnabled(false);
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        cardOne.setBackgroundResource(R.drawable.whitebackground);
+        cardTwo.setBackgroundResource(R.drawable.whitebackground);
+        cardThree.setBackgroundResource(R.drawable.whitebackground);
+        cardFour.setBackgroundResource(R.drawable.whitebackground);
+        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void onInitializeTurn() {
@@ -284,6 +290,13 @@ public class MapFragment extends Fragment {
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
         claimRoute.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        cardOne.setBackgroundResource(R.drawable.whitebackground);
+        cardTwo.setBackgroundResource(R.drawable.whitebackground);
+        cardThree.setBackgroundResource(R.drawable.whitebackground);
+        cardFour.setBackgroundResource(R.drawable.whitebackground);
+        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void makeWildCardToast(){
@@ -299,6 +312,13 @@ public class MapFragment extends Fragment {
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
         claimRoute.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        cardOne.setBackgroundResource(R.drawable.whitebackground);
+        cardTwo.setBackgroundResource(R.drawable.whitebackground);
+        cardThree.setBackgroundResource(R.drawable.whitebackground);
+        cardFour.setBackgroundResource(R.drawable.whitebackground);
+        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void onDrawDestination() {
@@ -310,6 +330,13 @@ public class MapFragment extends Fragment {
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
         claimRoute.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
+        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        cardOne.setBackgroundResource(R.drawable.whitebackground);
+        cardTwo.setBackgroundResource(R.drawable.whitebackground);
+        cardThree.setBackgroundResource(R.drawable.whitebackground);
+        cardFour.setBackgroundResource(R.drawable.whitebackground);
+        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void onDrawTrainCards() {
@@ -319,6 +346,13 @@ public class MapFragment extends Fragment {
         cardThree.setEnabled(true);
         cardFour.setEnabled(true);
         cardFive.setEnabled(true);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        trainDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
+        cardOne.setBackgroundResource(R.drawable.yellowbackground);
+        cardTwo.setBackgroundResource(R.drawable.yellowbackground);
+        cardThree.setBackgroundResource(R.drawable.yellowbackground);
+        cardFour.setBackgroundResource(R.drawable.yellowbackground);
+        cardFive.setBackgroundResource(R.drawable.yellowbackground);
         trainDeck.setEnabled(true);
         drawTrain.setEnabled(false);
         drawDest.setEnabled(false);

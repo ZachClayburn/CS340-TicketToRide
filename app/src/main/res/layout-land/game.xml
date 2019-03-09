@@ -102,7 +102,7 @@
             android:id="@+id/first_card"
             android:layout_width="60dp"
             android:layout_height="40dp"
-            android:src="@drawable/black_card" />
+            android:src="@drawable/black_card"/>
         <ImageView
             android:id="@+id/second_card"
             android:layout_width="60dp"
