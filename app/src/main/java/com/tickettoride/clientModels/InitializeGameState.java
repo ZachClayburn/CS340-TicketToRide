@@ -2,8 +2,6 @@ package com.tickettoride.clientModels;
 
 import com.tickettoride.activities.MapFragment;
 
-import java.util.Map;
-
 public class InitializeGameState extends PlayerState {
 
     public InitializeGameState(MapFragment mf) { mf.onInitializeTurn(); }

@@ -3,7 +3,7 @@ package com.tickettoride.clientModels;
 import com.tickettoride.activities.MapFragment;
 
 public class PlaceTrainsState extends PlayerState {
-    PlaceTrainsState(MapFragment mf) {
+    public PlaceTrainsState(MapFragment mf) {
 //        mf.onPlaceTrains();
     }
 

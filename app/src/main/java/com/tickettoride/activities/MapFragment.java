@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.InitializeGameState;
+import com.tickettoride.clientModels.PlayerTurnState;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.City;
 import com.tickettoride.clientModels.Line;
@@ -167,6 +169,7 @@ public class MapFragment extends Fragment {
                 viewListener.toViewHandFragment(DataManager.getSINGLETON().getPlayer().getPlayerID());//TODO get player ID
             }
         });
+        DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
         return v;
     }
     class Adapter extends RecyclerView.Adapter<Holder> {

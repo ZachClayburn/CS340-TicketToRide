@@ -4,7 +4,7 @@ import com.tickettoride.activities.MapFragment;
 
 public class PlayerTurnState extends PlayerState {
 
-    PlayerTurnState(MapFragment mf) { mf.onTurnStart(); }
+    public PlayerTurnState(MapFragment mf) { mf.onTurnStart(); }
 
     @Override
     public void moveToDrawDestinationCardsState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new DrawDestinationState(mf)); }
