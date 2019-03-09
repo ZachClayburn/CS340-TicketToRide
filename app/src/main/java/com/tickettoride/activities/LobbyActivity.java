@@ -32,7 +32,7 @@ public class LobbyActivity extends MyBaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lobby);
         this.game = DataManager.getSINGLETON().getGame();
-
+        if (game.IsStarted()) { moveToGame(); return; }
         gameName = (TextView) findViewById(R.id.group_name);
         gameID = (TextView) findViewById(R.id.game_id);
         numPlayers = (TextView) findViewById(R.id.num_player);
