@@ -17,6 +17,7 @@ public class DataManager {
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
+    private Integer destinationCardDeckSize;
     private Hand playerHand = new Hand();
     private PlayerState playerState;
     private int trainCardsDrawn;
@@ -115,5 +116,13 @@ public class DataManager {
                 playerHand.setLocomotive(1);
                 return;
         }
+    }
+
+    public Integer getDestinationCardDeckSize() {
+        return destinationCardDeckSize;
+    }
+
+    public void setDestinationCardDeckSize(Integer destinationCardDeckSize) {
+        this.destinationCardDeckSize = destinationCardDeckSize;
     }
 }

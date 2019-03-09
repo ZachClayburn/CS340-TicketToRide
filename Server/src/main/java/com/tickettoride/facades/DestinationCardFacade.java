@@ -1,5 +1,6 @@
 package com.tickettoride.facades;
 
+import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
@@ -27,7 +28,7 @@ public class DestinationCardFacade extends BaseFacade {
             db.getDestinationCardDAO().acceptCards(player, acceptedCards);
 
             var cmd = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards",
-                    player, acceptedCards); //FIXME Make this command point to a method on the client
+                    player, acceptedCards);
 
             sendResponseToRoom(connID, cmd);
 
@@ -35,6 +36,31 @@ public class DestinationCardFacade extends BaseFacade {
 
         } catch (DatabaseException e) {
             e.printStackTrace();//FIXME Add proper error handling
+        }
+    }
+
+    public void drawDestinationCards(UUID connID, Player player) {
+        logger.debug("Player " + player.getUsername() + " is drawing cards");
+        try (var db = new Database()){
+            var game = db.getGameDAO().getGame(player.getGameID());
+
+            Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
+
+            List<DestinationCard> offeredCards = new ArrayList<>();
+
+            offeredCards.add(destinationDeck.poll());
+            offeredCards.add(destinationDeck.poll());
+            offeredCards.add(destinationDeck.poll());
+
+            db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
+
+            var command = offerDestinationCards(player, offeredCards);
+            sendResponseToRoom(connID, command);
+
+            db.commit();
+
+        } catch (DatabaseException e) {
+            logger.catching(e);//FIXME add proper error handling
         }
     }
 
@@ -78,11 +104,11 @@ public class DestinationCardFacade extends BaseFacade {
     Command offerDestinationCards(Player player, List<DestinationCard> offeredCards,
                                   int requiredToKeep) {
         return new Command(CONTROLLER_NAME, "offerDestinationCards",
-                player, offeredCards, requiredToKeep); //FIXME Make this command point to a method on the client
+                player, offeredCards, requiredToKeep);
     }
 
     Command sendDestinationDeck(Queue<DestinationCard> deck) {
         return new Command(CONTROLLER_NAME, "updateDestinationDeck",
-                deck.size()); //FIXME Make this command point to a method on the client
+                deck.size());
     }
 }
