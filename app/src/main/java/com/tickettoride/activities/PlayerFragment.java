@@ -51,12 +51,10 @@ public class PlayerFragment extends Fragment {
         pointsText = (TextView) v.findViewById(R.id.player_points);
         returnToGameButton = (Button)v.findViewById(R.id.return_to_game);
 
-        // TODO: Change 0 to model data
-
-        usernameText.setText(getResources().getString(R.string.player_label, player.getTurn()));
-        trainCardsText.setText(getResources().getString(R.string.train_card_label, 0));
-        destCardsText.setText(getResources().getString(R.string.destination_card_label, 0));
-        carsText.setText(getResources().getString(R.string.cars_label, 0));
+        usernameText.setText(getResources().getString(R.string.player_label, player.getUsername()));
+        trainCardsText.setText(getResources().getString(R.string.train_card_label, player.getHandCount()));
+        destCardsText.setText(getResources().getString(R.string.destination_card_label, player.getDestinationCardCount()));
+        carsText.setText(getResources().getString(R.string.cars_label, player.getTrainCarCount()));
         turnText.setText(getResources().getString(R.string.turn_label, player.getTurn()));
         pointsText.setText(getResources().getString(R.string.points_label, player.getPoints()));
 

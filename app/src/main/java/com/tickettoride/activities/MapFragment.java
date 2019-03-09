@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.InitializeGameState;
@@ -57,35 +59,60 @@ public class MapFragment extends Fragment {
     private View.OnClickListener card1ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(0) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+                makeWildCardToast();
+                return;
+            }
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(0);
+            setCardColor(0);
             finishDrawFaceUpTrainCard(card);
         }
     };
     private View.OnClickListener card2ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(1) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+                makeWildCardToast();
+                return;
+            }
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(1);
+            setCardColor(1);
             finishDrawFaceUpTrainCard(card);
         }
     };
     private View.OnClickListener card3ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(2) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+                makeWildCardToast();
+                return;
+            }
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(2);
+            setCardColor(2);
             finishDrawFaceUpTrainCard(card);
         }
     };
     private View.OnClickListener card4ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(3) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+                makeWildCardToast();
+                return;
+            }
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(3);
+            setCardColor(3);
             finishDrawFaceUpTrainCard(card);
         }
     };
     private View.OnClickListener card5ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(4) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+                makeWildCardToast();
+                return;
+            }
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(4);
+            setCardColor(4);
             finishDrawFaceUpTrainCard(card);
         }
     };
@@ -93,7 +120,7 @@ public class MapFragment extends Fragment {
         @Override
         public void onClick(View view) {
             TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceDown();
-            // TODO: Add to Hand
+            DataManager.SINGLETON.addToHand(card);
             int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
             if (trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
             else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
@@ -137,10 +164,15 @@ public class MapFragment extends Fragment {
         board = (ImageView) v.findViewById(R.id.game_board);
         board.setImageBitmap(actualMap);
         cardOne = (ImageView) v.findViewById(R.id.first_card);
+        setCardColor(0);
         cardTwo = (ImageView) v.findViewById(R.id.second_card);
+        setCardColor(1);
         cardThree = (ImageView) v.findViewById(R.id.third_card);
+        setCardColor(2);
         cardFour = (ImageView) v.findViewById(R.id.fourth_card);
+        setCardColor(3);
         cardFive = (ImageView) v.findViewById(R.id.fifth_card);
+        setCardColor(4);
         trainDeck = (TextView) v.findViewById(R.id.train_deck);
         destDeck = (TextView) v.findViewById(R.id.dest_deck);
         chatWindow = (EditText) v.findViewById(R.id.chat_room);
@@ -226,7 +258,7 @@ public class MapFragment extends Fragment {
     }
 
     public void finishDrawFaceUpTrainCard(TrainCard card) {
-        // TODO: Add to Hand
+        DataManager.SINGLETON.addToHand(card);
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
         else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
@@ -252,6 +284,10 @@ public class MapFragment extends Fragment {
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
         claimRoute.setEnabled(false);
+    }
+
+    public void makeWildCardToast(){
+        Toast.makeText(this.context, R.string.wildcard_error, Toast.LENGTH_SHORT).show();
     }
 
     public void onNotTurnStart() {
@@ -287,6 +323,56 @@ public class MapFragment extends Fragment {
         drawTrain.setEnabled(false);
         drawDest.setEnabled(false);
         claimRoute.setEnabled(false);
+    }
+
+    public void setCardColor(int i){
+        switch(i){
+            case 0:
+                cardOne.setImageResource(
+                        findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));
+                return;
+            case 1:
+                cardTwo.setImageResource(
+                        findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(1)));
+                return;
+            case 2:
+                cardThree.setImageResource(
+                        findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(2)));
+                return;
+            case 3:
+                cardFour.setImageResource(
+                        findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(3)));
+                return;
+            case 4:
+                cardFive.setImageResource(
+                        findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(4)));
+                return;
+        }
+    }
+
+    public int findCardColor(Color color){
+        switch(color) {
+            case GREEN:
+                return R.drawable.green_card;
+            case RED:
+                return R.drawable.red_card;
+            case BLUE:
+                return R.drawable.blue_card;
+            case YELLOW:
+                return R.drawable.yellow_card;
+            case PURPLE:
+                return R.drawable.purple_card;
+            case ORANGE:
+                return R.drawable.orange_card;
+            case BLACK:
+                return R.drawable.black_card;
+            case WHITE:
+                return R.drawable.white_card;
+            case WILD:
+                return R.drawable.locomotive;
+            default:
+                return R.drawable.locomotive;
+        }
     }
 
     public void routeLineInit() {

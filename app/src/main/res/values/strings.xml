@@ -11,7 +11,7 @@
     <string name="three_label">3</string>
     <string name="four_label">4</string>
     <string name="five_label">5</string>
-    <string name="player_label">Player %1$d</string>
+    <string name="player_label">Username: %1$s</string>
     <string name="train_card_label">Train Cards: %1$d</string>
     <string name="destination_card_label">Destination Cards: %1$d</string>
     <string name="cars_label">Train Cars Left: %1$d</string>
@@ -68,4 +68,5 @@
     <string name="setup_game_error">Could not setup the game</string>
     <string name="return_to_game">Return to Game</string>
     <string name="player_info">Player Information</string>
+    <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
 </resources>

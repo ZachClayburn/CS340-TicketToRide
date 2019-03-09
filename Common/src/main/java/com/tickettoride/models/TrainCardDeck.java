@@ -50,8 +50,7 @@ public class TrainCardDeck {
 
     public TrainCard drawFromFaceUp(int i){
         TrainCard card = faceUpDeck.get(i);
-        faceUpDeck.remove(card);
-        faceUpDeck.add(faceDownDeck.get(0));
+        faceUpDeck.set(i, faceDownDeck.get(0));
         faceDownDeck.remove(0);
         checkForEmptyDeck();
         return card;
@@ -71,4 +70,15 @@ public class TrainCardDeck {
             discardPile.clear();
         }
     }
+
+    // Checks if the card that the player wants to draw is a wild card
+    public Boolean isFaceupWild(int i){
+        return faceUpDeck.get(i).getColor() == Color.WILD;
+    }
+
+    public Color getFaceupColor(int i){
+        return faceUpDeck.get(i).getColor();
+    }
+
+    // TODO: Check if three or more locomotives in faceup pile and discards
 }

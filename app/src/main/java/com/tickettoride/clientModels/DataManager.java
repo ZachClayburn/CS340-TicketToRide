@@ -83,4 +83,28 @@ public class DataManager {
 
     public int getTrainCardsDrawn() { return this.trainCardsDrawn; }
 
+
+    public void addToHand(TrainCard card){
+        Color color = card.getColor();
+        switch(color) {
+            case GREEN:
+                playerHand.setGreen(playerHand.getGreen() + 1);
+            case RED:
+                playerHand.setRed(playerHand.getRed() + 1);
+            case BLUE:
+                playerHand.setBlue(playerHand.getBlue() + 1);
+            case YELLOW:
+                playerHand.setYellow(playerHand.getYellow() + 1);
+            case PURPLE:
+                playerHand.setPurple(playerHand.getPurple() + 1);
+            case ORANGE:
+                playerHand.setOrange(playerHand.getOrange() + 1);
+            case BLACK:
+                playerHand.setBlack(playerHand.getBlack() + 1);
+            case WHITE:
+                playerHand.setWhite(playerHand.getWhite() + 1);
+            case WILD:
+                playerHand.setLocomotive(playerHand.getLocomotive() + 1);
+        }
+    }
 }
