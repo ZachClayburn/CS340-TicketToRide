@@ -1,5 +1,6 @@
 package com.tickettoride.clientModels;
 
+import com.tickettoride.activities.MapFragment;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
 
@@ -17,6 +18,8 @@ public class DataManager {
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
     private Hand playerHand = new Hand();
+    private PlayerState playerState;
+    private int trainCardsDrawn;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -71,4 +74,13 @@ public class DataManager {
     public Hand getPlayerHand() {
         return playerHand;
     }
+
+    public void setPlayerState(PlayerState playerState) { this.playerState = playerState; }
+
+    public PlayerState getPlayerState() { return this.playerState; }
+
+    public void setTrainCardsDrawn(int trainCardsDrawn) { this.trainCardsDrawn = trainCardsDrawn; }
+
+    public int getTrainCardsDrawn() { return this.trainCardsDrawn; }
+
 }

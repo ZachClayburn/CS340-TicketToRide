@@ -45,15 +45,73 @@ public class MapFragment extends Fragment {
     private RecyclerView playerList;
     private Adapter adapter;
     private Context context;
-    private int cardsDrawn = 0;
     private ArrayList<Route> routes = new ArrayList<>();
     private PlayerFragmentListener playerListener;
+    MapFragment selfMapFragment = this;
+    private View.OnClickListener drawTrainViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawTrainCardsState(selfMapFragment); }
+    };
+    private View.OnClickListener card1ViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(0);
+            finishDrawFaceUpTrainCard(card);
+        }
+    };
+    private View.OnClickListener card2ViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(1);
+            finishDrawFaceUpTrainCard(card);
+        }
+    };
+    private View.OnClickListener card3ViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(2);
+            finishDrawFaceUpTrainCard(card);
+        }
+    };
+    private View.OnClickListener card4ViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(3);
+            finishDrawFaceUpTrainCard(card);
+        }
+    };
+    private View.OnClickListener card5ViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(4);
+            finishDrawFaceUpTrainCard(card);
+        }
+    };
+    private View.OnClickListener faceDownCardViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceDown();
+            // TODO: Add to Hand
+            int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
+            if (trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
+            else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
+        }
+    };
+    private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
+    };
+
+    private View.OnClickListener claimRouteListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment); }
+    };
     public ViewHandListener viewListener;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        playerListener = (PlayerFragmentListener) getActivity();
-        viewListener = (ViewHandListener) getActivity();
+//        playerListener = (PlayerFragmentListener) getActivity();
+//        viewListener = (ViewHandListener) getActivity();
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -91,132 +149,22 @@ public class MapFragment extends Fragment {
         playerList = (RecyclerView) v.findViewById(R.id.player_list);
         context = getActivity();
         //playerList.setAdapter(adapter);
-        cardOne.setEnabled(false);
-        cardTwo.setEnabled(false);
-        cardThree.setEnabled(false);
-        cardFour.setEnabled(false);
-        cardFive.setEnabled(false);
-        trainDeck.setEnabled(false);
-        destDeck.setEnabled(false);
-        drawTrain.setEnabled(false);
-        drawDest.setEnabled(false);
-        claimRoute.setEnabled(false);
         playerList = v.findViewById(R.id.player_list);
         playerList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), players);
-        cardOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(0);
-                // TODO: Add to Hand
-                if ((card.getColor() == Color.WILD) || cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        cardTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(1);
-                // TODO: Add to Hand
-                if ((card.getColor() == Color.WILD) || cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        cardThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(2);
-                // TODO: Add to Hand
-                if ((card.getColor() == Color.WILD) || cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        cardFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(3);
-                // TODO: Add to Hand
-                if ((card.getColor() == Color.WILD) || cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        cardFive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(4);
-                // TODO: Add to Hand
-                if ((card.getColor() == Color.WILD) || cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        trainDeck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceDown();
-                // TODO: Add to Hand
-                if (cardsDrawn == 1){
-                    endDrawTrainCards();
-                }
-                else{
-                    cardsDrawn++;
-                }
-            }
-        });
-        drawTrain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cardsDrawn = 0;
-                cardOne.setEnabled(true);
-                cardTwo.setEnabled(true);
-                cardThree.setEnabled(true);
-                cardFour.setEnabled(true);
-                cardFive.setEnabled(true);
-                trainDeck.setEnabled(true);
-                drawTrain.setEnabled(false);
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-            }
-        });
-        drawDest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawTrain.setEnabled(false);
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-            }
-        });
-        claimRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawTrain.setEnabled(false);
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-            }
-        });
+        cardOne.setOnClickListener(card1ViewListener);
+        cardTwo.setOnClickListener(card2ViewListener);
+        cardThree.setOnClickListener(card3ViewListener);
+        cardFour.setOnClickListener(card4ViewListener);
+        cardFive.setOnClickListener(card5ViewListener);
+        trainDeck.setOnClickListener(faceDownCardViewListener);
+        drawTrain.setOnClickListener(drawTrainViewListener);
+        drawDest.setOnClickListener(drawDestinationListener);
+        claimRoute.setOnClickListener(claimRouteListener);
         viewHand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewListener.toViewHandFragment(players.get(0).getPlayerID());//TODO get player ID
+                viewListener.toViewHandFragment(DataManager.getSINGLETON().getPlayer().getPlayerID());//TODO get player ID
             }
         });
         return v;
@@ -273,19 +221,69 @@ public class MapFragment extends Fragment {
         }
 
     }
+
+    public void finishDrawFaceUpTrainCard(TrainCard card) {
+        // TODO: Add to Hand
+        int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
+        if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
+        else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
+    }
+
     public void onTurnStart() {
         drawTrain.setEnabled(true);
         drawDest.setEnabled(true);
         claimRoute.setEnabled(true);
-    }
-
-    public void endDrawTrainCards(){
         cardOne.setEnabled(false);
         cardTwo.setEnabled(false);
         cardThree.setEnabled(false);
         cardFour.setEnabled(false);
         cardFive.setEnabled(false);
-        // TODO: Change Turn
+    }
+
+    public void onInitializeTurn() {
+        drawDest.setEnabled(true);
+        drawTrain.setEnabled(false);
+        cardOne.setEnabled(false);
+        cardTwo.setEnabled(false);
+        cardThree.setEnabled(false);
+        cardFour.setEnabled(false);
+        cardFive.setEnabled(false);
+        claimRoute.setEnabled(false);
+    }
+
+    public void onNotTurnStart() {
+        drawDest.setEnabled(false);
+        drawTrain.setEnabled(false);
+        cardOne.setEnabled(false);
+        cardTwo.setEnabled(false);
+        cardThree.setEnabled(false);
+        cardFour.setEnabled(false);
+        cardFive.setEnabled(false);
+        claimRoute.setEnabled(false);
+    }
+
+    public void onDrawDestination() {
+        drawDest.setEnabled(false);
+        drawTrain.setEnabled(false);
+        cardOne.setEnabled(false);
+        cardTwo.setEnabled(false);
+        cardThree.setEnabled(false);
+        cardFour.setEnabled(false);
+        cardFive.setEnabled(false);
+        claimRoute.setEnabled(false);
+    }
+
+    public void onDrawTrainCards() {
+        DataManager.SINGLETON.setTrainCardsDrawn(0);
+        cardOne.setEnabled(true);
+        cardTwo.setEnabled(true);
+        cardThree.setEnabled(true);
+        cardFour.setEnabled(true);
+        cardFive.setEnabled(true);
+        trainDeck.setEnabled(true);
+        drawTrain.setEnabled(false);
+        drawDest.setEnabled(false);
+        claimRoute.setEnabled(false);
     }
 
     public void routeLineInit() {
