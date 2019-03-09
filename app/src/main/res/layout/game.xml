@@ -1,4 +1,4 @@
-<!-- <?xml version="1.0" encoding="utf-8"?> -->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_fragment"
     android:orientation="horizontal"
@@ -128,7 +128,6 @@
             android:gravity="center"
             android:layout_width="60dp"
             android:layout_height="40dp"
-
             android:background="@drawable/deck"
             android:textColor="#000"
             android:text="@string/train_deck"/>
@@ -140,8 +139,6 @@
             android:background="@drawable/deck"
             android:textColor="#000"
             android:text="@string/dest_deck"/>
-
-
 
 
 
