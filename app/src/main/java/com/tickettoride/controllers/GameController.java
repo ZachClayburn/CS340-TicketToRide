@@ -53,7 +53,7 @@ public class GameController extends BaseController {
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToLobbyJoin(game);
         }
-        else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
+        else if (DataManager.SINGLETON.getGame().getGameID().equals(game.getGameID())) {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
         }
