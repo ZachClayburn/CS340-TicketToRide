@@ -8,4 +8,6 @@
     <color name="greenPlayer">#88FF72</color>
     <color name="yellowPlayer">#FFFF72</color>
     <color name="blackPlayer">#C2C2C2</color>
+    
+    <color name="destinationCardUnselected">#dac3ac</color>
 </resources>

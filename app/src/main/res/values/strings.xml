@@ -62,11 +62,52 @@
     <string name="start_city">Start: </string>
     <string name="end_city">Destination: </string>
     <string name="dest_points">Points: </string>
-    <string name="dest_draw_hint">Click on a destination card you want to keep.</string>
     <string name="cancel_select">Cancel</string>
-    <string name="final_choice">Finished</string>
     <string name="setup_game_error">Could not setup the game</string>
     <string name="return_to_game">Return to Game</string>
     <string name="player_info">Player Information</string>
+
+    <string name="dest_draw_hint">Please select %1$d Destination cards to keep.</string>
+    <string name="final_choice">Finished</string>
+    <string name="destination_card_to">to</string>
+
     <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
+    <string name="vancouver_name">Vancouver</string>
+    <string name="calgary_name">Calgary</string>
+    <string name="winnipeg_name">Winnipeg</string>
+    <string name="saul_st_marie_name">Saul St. Marie</string>
+    <string name="montreal_name">Montreal</string>
+    <string name="seattle_name">Seattle</string>
+    <string name="helena_name">Helena</string>
+    <string name="duluth_name">Duluth</string>
+    <string name="toronto_name">Toronto</string>
+    <string name="boston_name">Boston</string>
+    <string name="portland_name">Portland</string>
+    <string name="salt_lake_city_name">Salt Lake City</string>
+    <string name="san_francisco_name">San Francisco</string>
+    <string name="los_angeles_name">Los Angeles</string>
+    <string name="phoenix_name">Phoenix</string>
+    <string name="las_vegas_name">Las Vegas</string>
+    <string name="santa_fe_name">Santa Fe</string>
+    <string name="el_paso_name">El Paso</string>
+    <string name="dallas_name">Dallas</string>
+    <string name="houston_name">Houston</string>
+    <string name="new_orleans_name">New Orleans</string>
+    <string name="miami_name">Miami</string>
+    <string name="charleston_name">Charleston</string>
+    <string name="atlanta_name">Atlanta</string>
+    <string name="little_rock_name">Little Rock</string>
+    <string name="oklahoma_city_name">Oklahoma City</string>
+    <string name="denver_name">Denver</string>
+    <string name="omaha_name">Omaha</string>
+    <string name="chicago_name">Chicago</string>
+    <string name="pittsburgh_name">Pittsburgh</string>
+    <string name="saint_louis_name">St. Louis</string>
+    <string name="kansas_city_name">Kansas City</string>
+    <string name="nashville_name">Nashville</string>
+    <string name="raleigh_name">Raleigh</string>
+    <string name="washington_name">Washington D.C.</string>
+    <string name="new_york_name">New York City</string>
+    <string name="invalid_city_name">Error! Invalid city!</string>
+
 </resources>
