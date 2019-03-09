@@ -4,16 +4,18 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Game;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
+import com.tickettoride.models.Player;
 
 import java.util.UUID;
 
-public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapListener {
+public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapListener, ViewHandListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
@@ -55,7 +57,8 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
             getSupportFragmentManager().beginTransaction().remove(playerFragment).commit();
         }
         else if (viewHandFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(playerFragment).commit();
+            //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
+            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
         }
     }
 
@@ -70,15 +73,26 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
                     .commit();
         }
     }
-    public void toViewHandFragment(UUID playerID){
+    public void toViewHandFragment(){
         if (viewHandFragment == null) {
             viewHandFragment = new ViewHandFragment();
             Bundle arguments = new Bundle();
-            arguments.putString("player", playerID.toString());
-            playerFragment.setArguments(arguments);
+            //arguments.p("player", player);
+            viewHandFragment.setArguments(arguments);
             fm.beginTransaction()
-                    .add(R.id.view_cards, viewHandFragment)
+                    .replace(R.id.map_fragment, viewHandFragment)
                     .commit();
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        System.out.print("");
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                onReturnToMap();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 }

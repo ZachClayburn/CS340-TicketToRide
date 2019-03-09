@@ -1,4 +1,5 @@
 package com.tickettoride.activities;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -129,7 +130,6 @@ public class MapFragment extends Fragment {
         @Override
         public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
     };
-
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment); }
@@ -197,14 +197,15 @@ public class MapFragment extends Fragment {
         viewHand.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewListener.toViewHandFragment(DataManager.getSINGLETON().getPlayer().getPlayerID());//TODO get player ID
+                viewListener = (ViewHandListener) getActivity();
+                viewListener.toViewHandFragment();//DataManager.getSINGLETON().getPlayer());//TODO get player ID
             }
         });
         DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
         return v;
     }
-    class Adapter extends RecyclerView.Adapter<Holder> {
 
+    class Adapter extends RecyclerView.Adapter<Holder> {
         private ArrayList<Player> players;
         private LayoutInflater inflater;
 

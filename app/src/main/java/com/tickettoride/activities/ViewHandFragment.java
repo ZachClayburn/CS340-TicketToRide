@@ -2,7 +2,9 @@ package com.tickettoride.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,11 +15,15 @@ import android.widget.TextView;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.models.City;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.DestinationCard;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 public class ViewHandFragment extends Fragment {
@@ -39,18 +45,21 @@ public class ViewHandFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        UUID playerID = UUID.fromString(args.getString("player", null));
-        this.player = DataManager.SINGLETON.getPlayer();
-        fragmentListener = (OnReturnToMapListener) getActivity();
+        //Bundle args = getArguments();
+        //UUID playerID = UUID.fromString(args.getString("player", null));
+        //this.player = DataManager.SINGLETON.getPlayer();
+        //fragmentListener = (OnReturnToMapListener) getActivity();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.view_hand, container, false);
-
+        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.show();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         Hand playerHand = DataManager.getSINGLETON().getPlayerHand();
-
+        this.player = DataManager.SINGLETON.getPlayer();
+        fragmentListener = (OnReturnToMapListener) getActivity();
         blueCards = v.findViewById(R.id.blue);
         blueCards.setText("Blue: " + playerHand.getBlue());//FIXME Add a string resource with placeholders
         greenCards = v.findViewById(R.id.green);
@@ -69,7 +78,7 @@ public class ViewHandFragment extends Fragment {
         whiteCards.setText("White: " + playerHand.getWhite());
         wildCards = v.findViewById(R.id.wild);
         wildCards.setText("Locomotive: " + playerHand.getLocomotive());
-        playerDestCards = playerHand.getDestinationCards();
+        playerDestCards = playerHand.getDestinationCards();//TODO will compile when destCards are not null
         destCards = v.findViewById(R.id.dest_card_list);
         destCards.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), playerDestCards);
@@ -125,15 +134,5 @@ public class ViewHandFragment extends Fragment {
             endCity.setText(card.getDestination2().toString());
             points.setText(card.getPointValue().toString());
         }
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                fragmentListener.onReturnToMap();
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 }
