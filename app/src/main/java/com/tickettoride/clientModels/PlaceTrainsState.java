@@ -8,7 +8,10 @@ public class PlaceTrainsState extends PlayerState {
     }
 
     @Override
-    public void moveToNotTurnState(MapFragment mf) {
-        DataManager.SINGLETON.setPlayerState(new NotTurnState(mf));
+    public void moveToNotTurnState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new NotTurnState(mf)); }
+
+    @Override
+    public void applyState(MapFragment mf) {
+//        mf.onNotTurnStart();
     }
 }

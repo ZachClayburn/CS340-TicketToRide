@@ -201,7 +201,9 @@ public class MapFragment extends Fragment {
                 viewListener.toViewHandFragment();//DataManager.getSINGLETON().getPlayer());//TODO get player ID
             }
         });
-        DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
+        if (DataManager.SINGLETON.getPlayerState() == null) {
+            DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
+        } else { DataManager.SINGLETON.getPlayerState().applyState(selfMapFragment); }
         return v;
     }
 
