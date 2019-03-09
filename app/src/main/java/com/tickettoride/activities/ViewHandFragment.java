@@ -80,9 +80,9 @@ public class ViewHandFragment extends Fragment {
         wildCards.setText("Locomotive: " + playerHand.getLocomotive());
         playerDestCards = playerHand.getDestinationCards();//TODO will compile when destCards are not null
         destCards = v.findViewById(R.id.dest_card_list);
-        destCards.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new Adapter(getContext(), playerDestCards);
-        destCards.setAdapter(adapter);
+//        destCards.setLayoutManager(new LinearLayoutManager(getContext()));
+//        adapter = new Adapter(getContext(), playerDestCards);
+//        destCards.setAdapter(adapter);
         return v;
     }
 
