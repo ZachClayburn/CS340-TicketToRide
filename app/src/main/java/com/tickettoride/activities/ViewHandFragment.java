@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.tickettoride.R;
@@ -37,6 +38,7 @@ public class ViewHandFragment extends Fragment {
     private TextView blackCards;
     private TextView whiteCards;
     private TextView wildCards;
+    private Button returnMap;
     private Player player;
     private List<DestinationCard> playerDestCards;
     private RecyclerView destCards;
@@ -60,6 +62,7 @@ public class ViewHandFragment extends Fragment {
         Hand playerHand = DataManager.getSINGLETON().getPlayerHand();
         this.player = DataManager.SINGLETON.getPlayer();
         fragmentListener = (OnReturnToMapListener) getActivity();
+        returnMap = v.findViewById(R.id.return_map);
         blueCards = v.findViewById(R.id.blue);
         blueCards.setText("Blue: " + playerHand.getBlue());//FIXME Add a string resource with placeholders
         greenCards = v.findViewById(R.id.green);
@@ -80,6 +83,12 @@ public class ViewHandFragment extends Fragment {
         wildCards.setText("Locomotive: " + playerHand.getLocomotive());
         playerDestCards = playerHand.getDestinationCards();//TODO will compile when destCards are not null
         destCards = v.findViewById(R.id.dest_card_list);
+        returnMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentListener.onReturnToMap();
+            }
+        });
 //        destCards.setLayoutManager(new LinearLayoutManager(getContext()));
 //        adapter = new Adapter(getContext(), playerDestCards);
 //        destCards.setAdapter(adapter);

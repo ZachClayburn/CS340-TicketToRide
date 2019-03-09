@@ -88,23 +88,32 @@ public class DataManager {
         Color color = card.getColor();
         switch(color) {
             case GREEN:
-                playerHand.setGreen(playerHand.getGreen() + 1);
+                playerHand.setGreen(1);
+                return;
             case RED:
-                playerHand.setRed(playerHand.getRed() + 1);
+                playerHand.setRed(1);
+                return;
             case BLUE:
-                playerHand.setBlue(playerHand.getBlue() + 1);
+                playerHand.setBlue(1);
+                return;
             case YELLOW:
-                playerHand.setYellow(playerHand.getYellow() + 1);
+                playerHand.setYellow(1);
+                return;
             case PURPLE:
-                playerHand.setPurple(playerHand.getPurple() + 1);
+                playerHand.setPurple(1);
+                return;
             case ORANGE:
-                playerHand.setOrange(playerHand.getOrange() + 1);
+                playerHand.setOrange(1);
+                return;
             case BLACK:
-                playerHand.setBlack(playerHand.getBlack() + 1);
+                playerHand.setBlack(1);
+                return;
             case WHITE:
-                playerHand.setWhite(playerHand.getWhite() + 1);
+                playerHand.setWhite(1);
+                return;
             case WILD:
-                playerHand.setLocomotive(playerHand.getLocomotive() + 1);
+                playerHand.setLocomotive(1);
+                return;
         }
     }
 }

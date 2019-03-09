@@ -59,6 +59,7 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         else if (viewHandFragment != null) {
             //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
             fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            viewHandFragment = null;
         }
     }
 

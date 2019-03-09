@@ -18,7 +18,7 @@
     <string name="turn_label">Player Turn: %1$d</string>
     <string name="points_label">Points: %1$d</string>
     <string name="game_option">Click a game to join or create a game</string>
-
+    <string name="return_map">Return To Map</string>
     <string name="join_game">Join Game</string>
     <string name="rejoin_game">Rejoin Game</string>
     <string name="login_welcome">WELCOME TO TICKET TO RIDE</string>
