@@ -85,7 +85,7 @@ public class DestinationCardFacade extends BaseFacade {
             var game = db.getGameDAO().getGame(gameID);
             assert game != null;
 
-            Queue<DestinationCard> destinationDeck = DestinationCard.getShuffledDeck();
+            Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
 
             for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
                 List<DestinationCard> offeredCards = new ArrayList<>();

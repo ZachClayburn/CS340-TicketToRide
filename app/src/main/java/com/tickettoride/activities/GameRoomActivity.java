@@ -115,7 +115,9 @@ public class GameRoomActivity extends MyBaseActivity implements
 
         fm.beginTransaction()
                 .replace(R.id.fragment_holder, destinationCardFragment)
-                .addToBackStack(null)//FIXME This should let you look back at the map by hitting the back button, but it isn't working for some reason, figure that out later
+                .addToBackStack(null)
+                //FIXME addToBackStack This should let you look back at the map by hitting the back button,
+                // but it isn't working for some reason, figure that out later
                 .commit();
     }
 
@@ -123,7 +125,8 @@ public class GameRoomActivity extends MyBaseActivity implements
     public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
         DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
         onReturnToMap();
-        DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
+        DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
+        //FIXME This should eventually check if it is the players turn or not and move them to the appropriate state
 
     }
 }

@@ -41,7 +41,7 @@ public class DestinationCardController extends BaseController {
         }
     }
 
-    public void updateDestinationDeck(int deckSize) {
+    public void updateDestinationDeck(Integer deckSize) {
         DataManager.getSINGLETON().setDestinationCardDeckSize(deckSize);
     }
 }

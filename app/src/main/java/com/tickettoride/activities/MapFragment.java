@@ -20,12 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.PlayerTurnState;
+import com.tickettoride.clientModels.*;
+import com.tickettoride.clientModels.Route;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.*;
-import com.tickettoride.clientModels.Line;
-import com.tickettoride.clientModels.Route;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -205,7 +203,7 @@ public class MapFragment extends Fragment {
             }
         });
         if (DataManager.SINGLETON.getPlayerState() == null) {
-            DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
+            DataManager.SINGLETON.setPlayerState(new InitializeGameState(selfMapFragment));
         } else { DataManager.SINGLETON.getPlayerState().applyState(selfMapFragment); }
         return v;
     }
@@ -288,7 +286,7 @@ public class MapFragment extends Fragment {
     }
 
     public void onInitializeTurn() {
-        drawDest.setEnabled(true);
+        drawDest.setEnabled(false);
         drawTrain.setEnabled(false);
         cardOne.setEnabled(false);
         cardTwo.setEnabled(false);

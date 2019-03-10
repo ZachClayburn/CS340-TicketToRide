@@ -96,6 +96,14 @@ public class GameFacade extends BaseFacade {
         PlayerFacade.getSingleton().pickColors(players);
         var command = new Command(CONTROLLER_NAME, "start", players);
         sendResponseToRoom(connID, command);
+
+        try {//FIXME Actually wait for the clients to report that they are ready to receive the commands
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+
+        DestinationCardFacade.getSingleton().dealCards(connID, gameID);
     }
 
     public void startGame(UUID gameID) throws DatabaseException {

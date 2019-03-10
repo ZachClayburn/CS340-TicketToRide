@@ -114,6 +114,8 @@ public class DestinationCardDAO extends Database.DataAccessObject {
          //FIXME There is the possibility of an error if the collection of cards offered to the player is not in the
          // correct order
 
+        String preSQL = "ALTER TABLE destinationcards DROP CONSTRAINT validPosition;";
+
         String sql1 = "UPDATE destinationcards " +
                 "SET sequenceposition=NULL, state='offeredToPlayer', playerid=? " +
                 "WHERE gameid=?" +
@@ -123,8 +125,15 @@ public class DestinationCardDAO extends Database.DataAccessObject {
                 "SET sequenceposition=sequenceposition-1 " +
                 "WHERE gameid=? AND state='inDeck'";
 
-        try (var statement1 = connection.prepareStatement(sql1);
-             var statement2 = connection.prepareStatement(sql2)) {
+        String postSQL = "ALTER TABLE destinationcards ADD CONSTRAINT validPosition " +
+                "CHECK ( sequencePosition >= 0 AND sequencePosition < 30 )";
+
+        try (var preStatement = connection.prepareStatement(preSQL);
+             var statement1 = connection.prepareStatement(sql1);
+             var statement2 = connection.prepareStatement(sql2);
+             var postStatement = connection.prepareStatement(postSQL)) {
+
+            preStatement.executeUpdate();
 
             statement1.setString(1, player.getPlayerID().toString());
             statement1.setString(2, player.getGameID().toString());
@@ -140,6 +149,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
                 statement2.executeUpdate();
             }
 
+            postStatement.executeUpdate();
 
         } catch (SQLException e) {
             logger.catching(e);
