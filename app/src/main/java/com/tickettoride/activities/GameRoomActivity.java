@@ -14,6 +14,7 @@ import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
@@ -103,14 +104,18 @@ public class GameRoomActivity extends MyBaseActivity implements
 
     }
 
-    public void toDestinationCardFragment(DestinationCard card1, DestinationCard card2, DestinationCard card3,
-                                          int requiredToKeep) {
+    public void toDestinationCardFragment() {
+
+        List<DestinationCard> offeredCards = DataManager.getSINGLETON().getOfferedCards();
+        Integer requiredToKeep = DataManager.getSINGLETON().getDestCardsRequiredToKeep();
 
         if (destinationCardFragment == null)
-            destinationCardFragment = DestinationCardFragment.newInstance(card1, card2, card3, requiredToKeep);
+            destinationCardFragment = DestinationCardFragment
+                    .newInstance(offeredCards.get(0), offeredCards.get(1), offeredCards.get(2), requiredToKeep);
 
         fm.beginTransaction()
                 .replace(R.id.fragment_holder, destinationCardFragment)
+                .addToBackStack(null)//FIXME This should let you look back at the map by hitting the back button, but it isn't working for some reason, figure that out later
                 .commit();
     }
 

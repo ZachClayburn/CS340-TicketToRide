@@ -344,7 +344,13 @@ public class MapFragment extends Fragment {
         cardFour.setBackgroundResource(R.drawable.whitebackground);
         cardFive.setBackgroundResource(R.drawable.whitebackground);
 
-        DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
+        if (DataManager.getSINGLETON().hasOfferedCards())
+        {
+            GameRoomActivity activity = (GameRoomActivity) getActivity();
+            activity.toDestinationCardFragment();
+
+        } else
+            DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
     }
 
     public void onDrawTrainCards() {

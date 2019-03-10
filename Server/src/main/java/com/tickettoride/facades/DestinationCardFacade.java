@@ -109,19 +109,13 @@ public class DestinationCardFacade extends BaseFacade {
         commands.forEach(command -> sendResponseToRoom(conID, command));
     }
 
-    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards, int requiredToKeep) {
-        return offerDestinationCards(player,  offeredCards.get(0), offeredCards.get(1), offeredCards.get(2), requiredToKeep);
-    }
-
     Command offerDestinationCards(Player player, List<DestinationCard> offeredCards) {
-        return offerDestinationCards(player,  offeredCards.get(0), offeredCards.get(1), offeredCards.get(2),
-                1);
+        return offerDestinationCards(player,  offeredCards, 1);
     }
 
-    Command offerDestinationCards(Player player, DestinationCard card1, DestinationCard card2, DestinationCard card3,
-                                  int requiredToKeep) {
+    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards, int requiredToKeep) {
         return new Command(CONTROLLER_NAME, "offerDestinationCards",
-                player, card1, card2, card3, requiredToKeep);
+                player, offeredCards, requiredToKeep);
     }
 
     Command sendDestinationDeck(Queue<DestinationCard> deck) {

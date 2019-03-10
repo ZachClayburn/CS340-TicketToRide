@@ -7,7 +7,6 @@ import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class DestinationCardController extends BaseController {
@@ -20,7 +19,9 @@ public class DestinationCardController extends BaseController {
     }
 
     public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards) {
+
         List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
+
         if (isUserPlayer(player)){
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
         } else {
@@ -28,12 +29,13 @@ public class DestinationCardController extends BaseController {
         }
     }
 
-    public void offerDestinationCards(Player player,
-                                      DestinationCard card1, DestinationCard card2, DestinationCard card3,
-                                      Integer requiredToKeep) {
+    public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
+
+        List<DestinationCard> offeredCards = DestinationCard.unGsonCards(gsonCards);
         if (isUserPlayer(player)) {
+            DataManager.getSINGLETON().setOfferedCards(requiredToKeep, offeredCards);
             GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-            activity.toDestinationCardFragment(card1, card2, card3, requiredToKeep);
+            activity.toDestinationCardFragment();
         } else {
             //TODO Notify that other player is drawing destination cards
         }

@@ -1,9 +1,11 @@
 package com.tickettoride.clientModels;
 
+import com.tickettoride.BuildConfig;
 import com.tickettoride.activities.MapFragment;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
 
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.List;
@@ -21,6 +23,8 @@ public class DataManager {
     private Hand playerHand = new Hand();
     private PlayerState playerState;
     private int trainCardsDrawn;
+    private List<DestinationCard> offeredCards = null;
+    private Integer destCardsRequiredToKeep = null;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -124,5 +128,29 @@ public class DataManager {
 
     public void setDestinationCardDeckSize(Integer destinationCardDeckSize) {
         this.destinationCardDeckSize = destinationCardDeckSize;
+    }
+
+    public boolean hasOfferedCards() {
+        return offeredCards != null;
+    }
+
+    public List<DestinationCard> getOfferedCards() {
+        return offeredCards;
+    }
+
+    public void setOfferedCards(Integer requiredToKeep, List<DestinationCard> offeredCards) {
+        assert this.offeredCards == null;
+
+        this.offeredCards = offeredCards;
+        this.destCardsRequiredToKeep = requiredToKeep;
+    }
+
+    public void removeOfferedCards() {
+        offeredCards = null;
+        destCardsRequiredToKeep = null;
+    }
+
+    public Integer getDestCardsRequiredToKeep() {
+        return destCardsRequiredToKeep;
     }
 }
