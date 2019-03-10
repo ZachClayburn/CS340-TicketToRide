@@ -61,8 +61,11 @@ public class GameRoomActivity extends MyBaseActivity implements
         }
         else if (viewHandFragment != null) {
             //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
-            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             viewHandFragment = null;
+        } else if (destinationCardFragment != null) {
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
+            destinationCardFragment = null;
         }
     }
 
@@ -108,12 +111,14 @@ public class GameRoomActivity extends MyBaseActivity implements
 
         fm.beginTransaction()
                 .replace(R.id.fragment_holder, destinationCardFragment)
-//                .addToBackStack(null)
                 .commit();
     }
 
     @Override
     public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
         DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
+        onReturnToMap();
+        DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
+
     }
 }
