@@ -1,7 +1,9 @@
 package com.tickettoride.facades;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 
@@ -56,7 +58,8 @@ public class DestinationCardFacade extends BaseFacade {
     }
 
     public void acceptDestinationCards(UUID connID, Player player,
-                                       Collection<DestinationCard> acceptedCards) {
+                                       ArrayList<LinkedTreeMap> gsonCards) {
+        List<DestinationCard> acceptedCards = DestinationCard.unGsonCards(gsonCards);
         try (var db = new Database()) {
             //FIXME Come up with way to track that everyone has accepted their first cards
             db.getDestinationCardDAO().acceptCards(player, acceptedCards);

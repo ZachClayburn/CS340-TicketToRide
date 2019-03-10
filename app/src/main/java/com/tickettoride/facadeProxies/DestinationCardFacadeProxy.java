@@ -7,7 +7,9 @@ import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.Session;
 import command.Command;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class DestinationCardFacadeProxy {
@@ -29,7 +31,7 @@ public class DestinationCardFacadeProxy {
         }
     }
 
-    public static void acceptDestinationCards(Player player, Collection<DestinationCard> acceptedCards) {
+    public static void acceptDestinationCards(Player player, ArrayList<DestinationCard> acceptedCards) {
 
         try {
 

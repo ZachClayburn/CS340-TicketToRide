@@ -2,15 +2,13 @@ package com.tickettoride.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.tickettoride.R;
 import com.tickettoride.models.DestinationCard;
 
-import java.util.Deque;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Queue;
 
 public class TestingActivity extends AppCompatActivity implements DestinationCardFragment.OnFragmentInteractionListener{
@@ -31,7 +29,7 @@ public class TestingActivity extends AppCompatActivity implements DestinationCar
     }
 
     @Override
-    public void onAcceptCards(List<DestinationCard> destinationCards) {
+    public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
         Toast.makeText(this, destinationCards.toString(), Toast.LENGTH_LONG).show();
     }
 }

@@ -3,7 +3,6 @@ package com.tickettoride.activities;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -14,7 +13,7 @@ import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
@@ -22,6 +21,7 @@ public class GameRoomActivity extends MyBaseActivity implements
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
+    private DestinationCardFragment destinationCardFragment;
     private FragmentManager fm;
     private MapFragment mapFragment;
 
@@ -30,10 +30,10 @@ public class GameRoomActivity extends MyBaseActivity implements
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_holder);
         if (mapFragment == null) {
             mapFragment = new MapFragment();
-            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().add(R.id.fragment_holder, mapFragment).commit();
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
@@ -103,15 +103,17 @@ public class GameRoomActivity extends MyBaseActivity implements
     public void toDestinationCardFragment(DestinationCard card1, DestinationCard card2, DestinationCard card3,
                                           int requiredToKeep) {
 
-        Fragment fragment = DestinationCardFragment.newInstance(card1, card2, card3, requiredToKeep);
+        if (destinationCardFragment == null)
+            destinationCardFragment = DestinationCardFragment.newInstance(card1, card2, card3, requiredToKeep);
+
         fm.beginTransaction()
-                .replace(R.id.map_fragment, fragment)
-                .addToBackStack(null)
+                .replace(R.id.fragment_holder, destinationCardFragment)
+//                .addToBackStack(null)
                 .commit();
     }
 
     @Override
-    public void onAcceptCards(List<DestinationCard> destinationCards) {
+    public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
         DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
     }
 }

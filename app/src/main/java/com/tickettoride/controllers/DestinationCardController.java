@@ -1,5 +1,6 @@
 package com.tickettoride.controllers;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.DestinationCard;
@@ -18,9 +19,10 @@ public class DestinationCardController extends BaseController {
         return SINGLETON;
     }
 
-    public void setPlayerAcceptedCards(Player player, Collection<DestinationCard> acceptedCards) {
+    public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards) {
+        List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
         if (isUserPlayer(player)){
-            //TODO Update players hand
+            DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
         } else {
             //TODO Update card count of other player
         }
