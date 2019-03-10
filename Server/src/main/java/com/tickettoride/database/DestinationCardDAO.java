@@ -50,7 +50,10 @@ public class DestinationCardDAO extends Database.DataAccessObject {
     }
 
     public void addDeck(Game game, Queue<DestinationCard> deck) throws DatabaseException {
+        addDeck(game.getGameID(), deck);
+    }
 
+    public void addDeck(UUID gameID, Queue<DestinationCard> deck) throws DatabaseException {
         deck = new ArrayDeque<>(deck);
 
         String sql = "INSERT INTO destinationcards " +
@@ -59,7 +62,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
         try (var statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, game.getGameID().toString());
+            statement.setString(1, gameID.toString());
 
             for (int deckPosition = 0; !deck.isEmpty(); deckPosition++) {
 

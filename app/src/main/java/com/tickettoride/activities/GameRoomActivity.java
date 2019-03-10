@@ -3,19 +3,22 @@ package com.tickettoride.activities;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
+import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
-import com.tickettoride.facadeProxies.GameFacadeProxy;
-import com.tickettoride.models.Player;
 
+import java.util.List;
 import java.util.UUID;
 
-public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapListener, ViewHandListener{
+public class GameRoomActivity extends MyBaseActivity implements
+        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
@@ -95,5 +98,20 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    public void toDestinationCardFragment(DestinationCard card1, DestinationCard card2, DestinationCard card3,
+                                          int requiredToKeep) {
+
+        Fragment fragment = DestinationCardFragment.newInstance(card1, card2, card3, requiredToKeep);
+        fm.beginTransaction()
+                .replace(R.id.map_fragment, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void onAcceptCards(List<DestinationCard> destinationCards) {
+        DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
     }
 }

@@ -101,6 +101,7 @@ public class GameFacade extends BaseFacade {
     public void startGame(UUID gameID) throws DatabaseException {
         try (var db = new Database()){
             db.getGameDAO().setGameToStarted(gameID);
+            db.getDestinationCardDAO().addDeck(gameID, DestinationCard.getShuffledDeck());
             db.commit();
         }
     }

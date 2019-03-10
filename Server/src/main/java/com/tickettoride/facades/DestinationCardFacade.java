@@ -18,31 +18,22 @@ import command.Command;
 import exceptions.DatabaseException;
 
 public class DestinationCardFacade extends BaseFacade {
+
     private static String CONTROLLER_NAME = "DestinationCardController";
     private static Logger logger = LogManager.getLogger(DestinationCardFacade.class.getName());
+    private static DestinationCardFacade SINGLETON = new DestinationCardFacade();
 
-    public void acceptDestinationCards(UUID connID, UUID sessionID, Player player,
-                                       Collection<DestinationCard> acceptedCards) {
-        try (var db = new Database()) {
-            //FIXME Come up with way to track that everyone has accepted their first cards
-            db.getDestinationCardDAO().acceptCards(player, acceptedCards);
-
-            var cmd = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards",
-                    player, acceptedCards);
-
-            sendResponseToRoom(connID, cmd);
-
-            db.commit();
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();//FIXME Add proper error handling
-        }
+    public static DestinationCardFacade getSingleton() {
+        return SINGLETON;
     }
+
+    private DestinationCardFacade() {}
 
     public void drawDestinationCards(UUID connID, Player player) {
         logger.debug("Player " + player.getUsername() + " is drawing cards");
         try (var db = new Database()){
             var game = db.getGameDAO().getGame(player.getGameID());
+            assert game != null;
 
             Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
 
@@ -61,6 +52,24 @@ public class DestinationCardFacade extends BaseFacade {
 
         } catch (DatabaseException e) {
             logger.catching(e);//FIXME add proper error handling
+        }
+    }
+
+    public void acceptDestinationCards(UUID connID, Player player,
+                                       Collection<DestinationCard> acceptedCards) {
+        try (var db = new Database()) {
+            //FIXME Come up with way to track that everyone has accepted their first cards
+            db.getDestinationCardDAO().acceptCards(player, acceptedCards);
+
+            var cmd = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards",
+                    player, acceptedCards);
+
+            sendResponseToRoom(connID, cmd);
+
+            db.commit();
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();//FIXME Add proper error handling
         }
     }
 
@@ -97,18 +106,22 @@ public class DestinationCardFacade extends BaseFacade {
         commands.forEach(command -> sendResponseToRoom(conID, command));
     }
 
-    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards) {
-        return offerDestinationCards(player, offeredCards, 1);
+    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards, int requiredToKeep) {
+        return offerDestinationCards(player,  offeredCards.get(0), offeredCards.get(1), offeredCards.get(2), requiredToKeep);
     }
 
-    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards,
+    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards) {
+        return offerDestinationCards(player,  offeredCards.get(0), offeredCards.get(1), offeredCards.get(2),
+                1);
+    }
+
+    Command offerDestinationCards(Player player, DestinationCard card1, DestinationCard card2, DestinationCard card3,
                                   int requiredToKeep) {
         return new Command(CONTROLLER_NAME, "offerDestinationCards",
-                player, offeredCards, requiredToKeep);
+                player, card1, card2, card3, requiredToKeep);
     }
 
     Command sendDestinationDeck(Queue<DestinationCard> deck) {
-        return new Command(CONTROLLER_NAME, "updateDestinationDeck",
-                deck.size());
+        return new Command(CONTROLLER_NAME, "updateDestinationDeck", deck.size());
     }
 }

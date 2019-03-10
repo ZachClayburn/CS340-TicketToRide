@@ -22,14 +22,14 @@ import android.widget.Toast;
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.PlayerTurnState;
-import com.tickettoride.models.Player;
-import com.tickettoride.models.City;
+import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
+import com.tickettoride.models.*;
 import com.tickettoride.clientModels.Line;
 import com.tickettoride.clientModels.Route;
-import com.tickettoride.models.TrainCard;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import com.tickettoride.models.Color;
+
 public class MapFragment extends Fragment {
     private ArrayList<Player> players = new ArrayList<>();
     private DrawView drawView;
@@ -128,7 +128,10 @@ public class MapFragment extends Fragment {
     };
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
+        public void onClick(View view) {
+            DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
+
+        }
     };
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
@@ -340,6 +343,8 @@ public class MapFragment extends Fragment {
         cardThree.setBackgroundResource(R.drawable.whitebackground);
         cardFour.setBackgroundResource(R.drawable.whitebackground);
         cardFive.setBackgroundResource(R.drawable.whitebackground);
+
+        DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
     }
 
     public void onDrawTrainCards() {
