@@ -22,9 +22,9 @@ public class PlayerTurnFaker {
         Random rand = new Random();
         int r = rand.nextInt(3);
         switch (r) {
-            case 0: { fakeCollectTrains(player);}
-            case 1: { fakeDrawDestinations(player); }
-            case 2: { fakeCollectTrains(player); }
+            case 0: { fakeCollectTrains(player); return; }
+            case 1: { fakeDrawDestinations(player); return; }
+            case 2: { fakeCollectTrains(player); return; }
         }
     }
 

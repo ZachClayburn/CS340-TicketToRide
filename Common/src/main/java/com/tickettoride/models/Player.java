@@ -149,4 +149,5 @@ public class Player {
     public void setDestinationCardCount(int destinationCardCount) {
         this.destinationCardCount = destinationCardCount;
     }
+    public void setPoints(int points) { this.points = points; }
 }

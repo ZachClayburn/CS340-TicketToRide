@@ -75,6 +75,8 @@ public class GameController extends BaseController {
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
             DataManager.SINGLETON.setGamePlayers(players);
+            DataManager.SINGLETON.initializeDeck();
+            GameControllerHelper.getSingleton().setupPlayerHands();
             DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(1);

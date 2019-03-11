@@ -72,6 +72,17 @@ public class Hand {
         return locomotive;
     }
 
+    public void discardBlue(int amount) { blue = blue - amount; }
+    public void discardGreen(int amount) {green = green - amount; }
+    public void discardPurple(int amount) { purple = purple - amount; }
+    public void discardRed(int amount) { red = red - amount; }
+    public void discardOrange(int amount) { orange = orange - amount; }
+    public void discardYellow(int amount) { yellow = yellow - amount; }
+    public void discardBlack(int amount) { black = black - amount; }
+    public void discardWhite(int amount) { white = white - amount; }
+    public void discardLocomotive(int amount) { locomotive = locomotive - amount; }
+
+
     public int getHandSize(){
         return blue + green + purple + red + orange + yellow + black + white + locomotive;
     }

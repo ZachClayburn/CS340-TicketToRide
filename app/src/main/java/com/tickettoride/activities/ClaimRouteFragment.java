@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Route;
 import com.tickettoride.clientModels.helpers.RouteHelper;
 
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 public class ClaimRouteFragment extends Fragment {
     private RecyclerView routeList;
     private RecyclerView.Adapter adapter;
-    private OnReturnToMapListener returnMap;
+    private GameRoomActivity returnMap;
     private Button mapReturn;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,7 @@ public class ClaimRouteFragment extends Fragment {
         mapReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                returnMap = (OnReturnToMapListener) getActivity();
+                returnMap = (GameRoomActivity) getActivity();
                 returnMap.onReturnToMap();
             }
         });
@@ -96,9 +95,11 @@ public class ClaimRouteFragment extends Fragment {
         }
     }
     public void claimRoute(Route curRoute) {
-        curRoute.setIsClaimed(true);
-        curRoute.setLineColor(DataManager.getSINGLETON().getPlayer().getColor());
-        returnMap = (OnReturnToMapListener) getActivity();
+        RouteHelper.getSingleton().claimRoute(curRoute);
+        returnMap = (GameRoomActivity) getActivity();
+        returnMap.incrementTurn();
         returnMap.onReturnToMap();
     }
+
+
 }
