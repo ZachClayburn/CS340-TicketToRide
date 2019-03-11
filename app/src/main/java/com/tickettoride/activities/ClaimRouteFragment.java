@@ -21,6 +21,7 @@ public class ClaimRouteFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private GameRoomActivity returnMap;
     private Button mapReturn;
+    private DiscardFragmentListener discardFragmentListener;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +97,11 @@ public class ClaimRouteFragment extends Fragment {
     }
     public void claimRoute(Route curRoute) {
         RouteHelper.getSingleton().claimRoute(curRoute);
-        returnMap = (GameRoomActivity) getActivity();
-        returnMap.incrementTurn();
-        returnMap.onReturnToMap();
+        discardFragmentListener = (DiscardFragmentListener) getActivity();
+        discardFragmentListener.moveToDiscard();
+        //returnMap = (GameRoomActivity) getActivity();
+        //returnMap.incrementTurn();
+        //returnMap.onReturnToMap();
     }
 
 

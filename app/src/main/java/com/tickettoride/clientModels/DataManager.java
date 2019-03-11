@@ -23,6 +23,7 @@ public class DataManager {
     private Integer destCardsRequiredToKeep = null;
     private ArrayList<Route> routes;
     private int turn = 0;
+    private Route currentRoute;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -92,6 +93,13 @@ public class DataManager {
     }
     public ArrayList<Route> getRoutes() {
         return routes;
+    }
+    public void setCurrentRoute(Route currentRoute) {
+        this.currentRoute = currentRoute;
+    }
+
+    public Route getCurrentRoute() {
+        return currentRoute;
     }
     public void addTrainCardToHand(TrainCard card){
         Color color = card.getColor();

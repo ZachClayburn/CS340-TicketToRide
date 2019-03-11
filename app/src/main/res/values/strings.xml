@@ -110,4 +110,7 @@
     <string name="new_york_name">New York City</string>
     <string name="invalid_city_name">Error! Invalid city!</string>
     <string name="wild_card_error">You cannot draw a locomotive on your second draw</string>
+    <string name="discard_hint">Click cards to discard</string>
+    <string name="discard_number">Discarded: </string>
+    <string name="discard">Discard</string>
 </resources>

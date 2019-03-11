@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
-        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener, ClaimRouteListener{
+        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener, ClaimRouteListener, DiscardFragmentListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
@@ -30,6 +30,7 @@ public class GameRoomActivity extends MyBaseActivity implements
     private FragmentManager fm;
     private MapFragment mapFragment;
     private ClaimRouteFragment claimRouteFragment;
+    private DiscardFragment discardFragment;
 
     public MapFragment getMapFragment() { return mapFragment; }
 
@@ -101,6 +102,13 @@ public class GameRoomActivity extends MyBaseActivity implements
         if (claimRouteFragment == null) {
             claimRouteFragment = new ClaimRouteFragment();
             fm.beginTransaction().replace(R.id.fragment_holder, claimRouteFragment).commit();
+        }
+    }
+    public void moveToDiscard() {
+        if (claimRouteFragment != null) {
+            claimRouteFragment = null;
+            discardFragment = new DiscardFragment();
+            fm.beginTransaction().replace(R.id.fragment_holder, discardFragment).commit();
         }
     }
     @Override
