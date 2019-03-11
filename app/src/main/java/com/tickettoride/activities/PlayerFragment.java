@@ -12,6 +12,7 @@ import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerFragment extends Fragment {
@@ -23,6 +24,7 @@ public class PlayerFragment extends Fragment {
     private TextView pointsText;
     private Button returnToGameButton;
     private Player player;
+    private List<Player> players;
     private OnReturnToMapListener fragmentListener;
 
     public PlayerFragment(){}
@@ -32,8 +34,14 @@ public class PlayerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
+        players = DataManager.getSINGLETON().getGamePlayers();
         UUID playerID = UUID.fromString(args.getString("player", null));
-        this.player = DataManager.SINGLETON.getPlayer();
+        for (Player player : players) {
+            if(player.getPlayerID().equals(playerID)) {
+                this.player = player;
+            }
+        }
+        //this.player = DataManager.SINGLETON.getPlayer();
         fragmentListener = (OnReturnToMapListener) getActivity();
     }
 
@@ -58,7 +66,7 @@ public class PlayerFragment extends Fragment {
         turnText.setText(getResources().getString(R.string.turn_label, player.getTurn()));
         pointsText.setText(getResources().getString(R.string.points_label, player.getPoints()));
 
-        setBackgroundColor(player);
+        setBackgroundColor(player, v);
 
         returnToGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,22 +78,22 @@ public class PlayerFragment extends Fragment {
         return v;
     }
 
-    public void setBackgroundColor(Player player){
+    public void setBackgroundColor(Player player, View v){
         switch(player.getColor()){
             case BLACK:
-                getView().setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
+                v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
                 break;
             case RED:
-                getView().setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
+                v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
                 break;
             case BLUE:
-                getView().setBackgroundColor(getResources().getColor(R.color.bluePlayer, getActivity().getTheme()));
+                v.setBackgroundColor(getResources().getColor(R.color.bluePlayer, getActivity().getTheme()));
                 break;
             case GREEN:
-                getView().setBackgroundColor(getResources().getColor(R.color.greenPlayer, getActivity().getTheme()));
+                v.setBackgroundColor(getResources().getColor(R.color.greenPlayer, getActivity().getTheme()));
                 break;
             case YELLOW:
-                getView().setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
+                v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
                 break;
         }
     }

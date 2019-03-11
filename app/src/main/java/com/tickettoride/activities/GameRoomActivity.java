@@ -19,13 +19,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
-        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener{
+        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener, ClaimRouteListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
     private DestinationCardFragment destinationCardFragment;
     private FragmentManager fm;
     private MapFragment mapFragment;
+    private ClaimRouteFragment claimRouteFragment;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,8 @@ public class GameRoomActivity extends MyBaseActivity implements
     public void onReturnToMap() {
         // The login fragment is removed if it exists (if we log in from the login fragment)
         if(playerFragment != null) {
-            getSupportFragmentManager().beginTransaction().remove(playerFragment).commit();
+            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            playerFragment = null;
         }
         else if (viewHandFragment != null) {
             //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
@@ -68,6 +70,10 @@ public class GameRoomActivity extends MyBaseActivity implements
         } else if (destinationCardFragment != null) {
             fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             destinationCardFragment = null;
+        }
+        else if (claimRouteFragment != null) {
+            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            claimRouteFragment = null;
         }
     }
 
@@ -78,7 +84,7 @@ public class GameRoomActivity extends MyBaseActivity implements
             arguments.putString("player", playerID.toString());
             playerFragment.setArguments(arguments);
             fm.beginTransaction()
-                    .add(R.id.player_layout, playerFragment)
+                    .replace(R.id.map_fragment, playerFragment)
                     .commit();
         }
     }
@@ -93,7 +99,12 @@ public class GameRoomActivity extends MyBaseActivity implements
                     .commit();
         }
     }
-
+    public void moveToClaimRoute() {
+        if (claimRouteFragment == null) {
+            claimRouteFragment = new ClaimRouteFragment();
+            fm.beginTransaction().replace(R.id.map_fragment, claimRouteFragment).commit();
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         System.out.print("");

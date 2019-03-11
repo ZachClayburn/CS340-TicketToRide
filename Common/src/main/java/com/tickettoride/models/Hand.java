@@ -68,7 +68,6 @@ public class Hand {
     public int getLocomotive() {
         return locomotive;
     }
-
     public List<DestinationCard> getDestinationCards() {
         return destinationCards;
     }

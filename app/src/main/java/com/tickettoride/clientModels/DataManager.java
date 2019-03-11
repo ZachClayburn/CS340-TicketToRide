@@ -5,7 +5,7 @@ import com.tickettoride.activities.MapFragment;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
@@ -25,6 +25,7 @@ public class DataManager {
     private int trainCardsDrawn;
     private List<DestinationCard> offeredCards = null;
     private Integer destCardsRequiredToKeep = null;
+    private ArrayList<Route> routes;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -67,8 +68,8 @@ public class DataManager {
     }
 
     public void setGamePlayers(List<Player> players) { this.gamePlayers = players; }
-
-    public List<Player> getGamePlayers(List<Player> players) { return players; }
+    public void setPlayerList(Player player) {gamePlayers.add(player);}
+    public List<Player> getGamePlayers() { return gamePlayers; }
 
     public void setTrainCardDeck() {
         trainCardDeck = new TrainCardDeck();
@@ -88,7 +89,12 @@ public class DataManager {
 
     public int getTrainCardsDrawn() { return this.trainCardsDrawn; }
 
-
+    public void setRoutes(ArrayList<Route> routes) {
+        this.routes = routes;
+    }
+    public ArrayList<Route> getRoutes() {
+        return routes;
+    }
     public void addToHand(TrainCard card){
         Color color = card.getColor();
         switch(color) {

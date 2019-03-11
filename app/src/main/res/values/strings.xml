@@ -70,7 +70,9 @@
     <string name="dest_draw_hint">Please select %1$d Destination cards to keep.</string>
     <string name="final_choice">Finished</string>
     <string name="destination_card_to">to</string>
-
+    <string name="first_city">First City: </string>
+    <string name="second_city">Second City: </string>
+    <string name="claim_hint">Click a route you want to claim</string>
     <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
     <string name="vancouver_name">Vancouver</string>
     <string name="calgary_name">Calgary</string>
