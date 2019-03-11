@@ -42,6 +42,7 @@ public class TrainCardFacadeProxy {
 
     public void drawFacedownCard(UUID playerID){
         Command command = new Command(FACADE_NAME, "drawFacedownCard", playerID);
+        tempDrawFacedownCardLogic(playerID);
         // ClientCommunicator.SINGLETON.send(command);
         // Send to server
     }
