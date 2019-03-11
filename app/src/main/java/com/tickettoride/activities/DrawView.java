@@ -241,7 +241,7 @@ public class DrawView extends View {
         //canvas.drawLine(1125, 495, 1160, 455, paint);
         //canvas.drawLine(1160, 455, 1210, 420, paint);
         //canvas.drawLine(1210, 420, 1240, 380, paint);//end
-        canvas.drawLine(1110, 570, 1070, 605, paint);//start
+        //canvas.drawLine(1110, 570, 1070, 605, paint);//start
         //canvas.drawLine(1070, 605, 1020, 625, paint);
         //canvas.drawLine(1020, 625, 965, 630, paint);
     }
