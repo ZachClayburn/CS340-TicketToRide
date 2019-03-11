@@ -15,6 +15,12 @@ public class TrainCardDeck {
         initializeDecks();
     }
 
+    public TrainCardDeck(List<TrainCard> faceup, List<TrainCard> facedown, List<TrainCard> discard){
+        faceUpDeck = faceup;
+        faceDownDeck = facedown;
+        discardPile = discard;
+    }
+
     private void initializeDecks(){
         faceDownDeck = new ArrayList<>();
         faceUpDeck = new ArrayList<>();
