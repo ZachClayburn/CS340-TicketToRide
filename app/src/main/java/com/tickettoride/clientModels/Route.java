@@ -5,6 +5,7 @@ import android.graphics.Paint;
 
 import com.tickettoride.models.City;
 import com.tickettoride.models.Color;
+import com.tickettoride.models.PlayerColor;
 
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class Route {
     private City firstCity;
     private City secondCity;
     private boolean isClaimed;
-    private Color lineColor;
-    public Route(List<Line> lines, Color color, int spaces, City firstCity, City secondCity, boolean isClaimed, Color lineColor) {
+    private PlayerColor lineColor;
+    public Route(List<Line> lines, Color color, int spaces, City firstCity, City secondCity, boolean isClaimed, PlayerColor lineColor) {
         this.lines = lines;
         this.color = color;
         this.spaces = spaces;
@@ -25,7 +26,8 @@ public class Route {
         this.isClaimed = isClaimed;
         this.lineColor = lineColor;
     }
-    private int convertLineColor(Color lineColor) {
+    private int convertLineColor(PlayerColor lineColor) {
+        if (lineColor == null) { return android.graphics.Color.TRANSPARENT; }
         switch(lineColor) {
             case BLUE:
                 return android.graphics.Color.BLUE;
@@ -43,6 +45,7 @@ public class Route {
     }
     public void drawRoute(Canvas canvas) {
         Paint paint = new Paint();
+        paint.setStrokeWidth(3);
         int color = convertLineColor(lineColor);
         if (color == android.graphics.Color.TRANSPARENT) {
             paint.setStyle(Paint.Style.STROKE);
@@ -73,10 +76,10 @@ public class Route {
     public boolean getIsClaimed() {
         return isClaimed;
     }
-    public void setLineColor(Color lineColor) {
+    public void setLineColor(PlayerColor lineColor) {
         this.lineColor = lineColor;
     }
-    public Color getPlayer() {
+    public PlayerColor getPlayer() {
         return lineColor;
     }
     public City getFirstCity() {

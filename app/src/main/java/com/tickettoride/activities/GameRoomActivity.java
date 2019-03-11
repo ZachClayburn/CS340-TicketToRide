@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.tickettoride.R;
@@ -92,6 +93,7 @@ public class GameRoomActivity extends MyBaseActivity implements
                     .commit();
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         System.out.print("");

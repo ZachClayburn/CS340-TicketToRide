@@ -13,7 +13,7 @@ public class PlayerTurnState extends PlayerState {
     public void moveToDrawTrainCardsState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new DrawTrainCardsState(mf)); }
 
     @Override
-    public void moveToPlaceTrainsState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new PlaceTrainsState(mf)); }
+    public void moveToPlaceTrainsState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new ClaimRouteState(mf)); }
 
     @Override
     public void applyState(MapFragment mf) { mf.onTurnStart(); }

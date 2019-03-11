@@ -1,5 +1,4 @@
 package com.tickettoride.controllers;
-import android.graphics.Paint;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -8,8 +7,8 @@ import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
+import com.tickettoride.models.Session;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class GameController extends BaseController {
     public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         try { createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
-        try { createGameOnCreateGameActivity(game, sessionID, playerID); return; } catch (ClassCastException e) {
+        try { createGameOnCreateGameActivity(game, playerID); return; } catch (ClassCastException e) {
             Log.i("GAME_CONTROLLER", e.getMessage(), e);
         }
     }
@@ -34,11 +33,10 @@ public class GameController extends BaseController {
         joinGameActivity.updateUI();
     }
 
-    private void createGameOnCreateGameActivity(Game game, UUID sessionID, UUID playerID) throws ClassCastException {
+    private void createGameOnCreateGameActivity(Game game, UUID playerID) throws ClassCastException {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
-        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
-        UUID gameID = game.getGameID();
-        Player player = new Player(userID, gameID, playerID);
+        Session session = DataManager.getSINGLETON().getSession();
+        Player player = new Player(session.getUserID(), game.getGameID(), playerID);
         DataManager.SINGLETON.setGame(game);
         DataManager.SINGLETON.setPlayer(player);
         DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
@@ -46,8 +44,8 @@ public class GameController extends BaseController {
     }
 
     public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
-        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
-        Player player = new Player(userID, gameID, playerID);
+        Session session = DataManager.getSINGLETON().getSession();
+        Player player = new Player(session.getUserID(), gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
@@ -68,8 +66,8 @@ public class GameController extends BaseController {
     }
     
     public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
-        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
-        Player player = new Player(userID, gameID, playerID);
+        Session session = DataManager.getSINGLETON().getSession();
+        Player player = new Player(session.getUserID(), gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
@@ -105,8 +103,17 @@ public class GameController extends BaseController {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
+        setPlayerInfo(playerList);
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
+    }
+
+    public void setPlayerInfo(List<Player> playerList) {
+        for (Player player : playerList) {
+            if (player.getPlayerID().equals(DataManager.SINGLETON.getPlayer().getPlayerID())) {
+                DataManager.SINGLETON.setPlayer(player);
+            }
+        }
     }
 
 

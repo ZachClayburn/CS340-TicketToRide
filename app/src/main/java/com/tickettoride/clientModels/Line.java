@@ -23,12 +23,6 @@ public class Line {
         setPath();
         setRegion();
     }
-    public int getStartX() {
-        return startX;
-    }
-    public int getStartY() {
-        return startY;
-    }
     private void setPath() {
         double slope = 0;
         slope = -1 * (((double)(startX - endX)) / (startY - endY));
@@ -39,6 +33,7 @@ public class Line {
         Point point2 = new Point(startX - (int)x, startY - (int)y);
         Point point3 = new Point(endX - (int)x, endY - (int)y);
         Point point4 = new Point(endX + (int)x, endY + (int)y);
+        path.setFillType(Path.FillType.EVEN_ODD);
         path.moveTo(point1.x, point1.y);
         path.lineTo(point2.x, point2.y);
         path.lineTo(point3.x, point3.y);
@@ -47,6 +42,7 @@ public class Line {
         path.close();
     }
     public void drawPath(Canvas canvas, Paint paint) {
+//        canvas.drawLine(startX, startY, endX, endY, paint);
         canvas.drawPath(path, paint);
     }
     public boolean contains(int x, int y) {
@@ -57,12 +53,6 @@ public class Line {
         path.computeBounds(rectF, true);
         region = new Region();
         region.setPath(path, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
-    }
-    public int getEndX() {
-        return endX;
-    }
-    public int getEndY() {
-        return endY;
     }
     //private Color lineColor;
 }

@@ -1,5 +1,4 @@
 package com.tickettoride.activities;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -49,7 +49,9 @@ public class MapFragment extends Fragment {
     private Context context;
     private ArrayList<Route> routes = new ArrayList<>();
     private PlayerFragmentListener playerListener;
+    private View v;
     MapFragment selfMapFragment = this;
+
     private View.OnClickListener drawTrainViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawTrainCardsState(selfMapFragment); }
@@ -124,6 +126,31 @@ public class MapFragment extends Fragment {
             else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
         }
     };
+
+    private View.OnTouchListener routeClickListener = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            board = (ImageView) v.findViewById(R.id.game_board);
+            int[] points = new int[2];
+            board.getLocationInWindow(points);
+            int[] points2 = new int[2];
+            board.getLocationOnScreen(points2);
+            int x = (int) (event.getX() * (21.0/20) - points[0]);
+            int y = (int) (event.getY() * (21.0/20))  - 15;
+            for (Route route: routes) {
+                if (!route.contains(x, y)) { continue; }
+                route.setIsClaimed(true);
+                route.setLineColor(DataManager.getSINGLETON().getPlayer().getColor());
+                Bitmap actualMap = draw();
+                board.setImageBitmap(actualMap);
+                v.invalidate();
+                return false;
+            }
+            return false;
+        }
+    };
+
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -142,25 +169,31 @@ public class MapFragment extends Fragment {
 //        playerListener = (PlayerFragmentListener) getActivity();
 //        viewListener = (ViewHandListener) getActivity();
     }
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View v = inflater.inflate(R.layout.game, container, false);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        Resources res = getResources();
+
+    public Bitmap draw() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
         Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         Canvas canvas = new Canvas(actualMap);
-        drawView = new DrawView(getActivity());
-        drawView.draw(canvas);
+        this.drawView.draw(canvas);
+        return actualMap;
+    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        this.v = inflater.inflate(R.layout.game, container, false);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        Resources res = getResources();
         // DON'T UNCOMMENT THIS
         //getActivity().setContentView(R.layout.game);
+        routeLineInit();
+        this.drawView = new DrawView(getActivity());
+        drawView.setRoutes(routes);
+        Bitmap actualMap = draw();
         View decorView = getActivity().getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.hide();
-        routeLineInit();
         board = (ImageView) v.findViewById(R.id.game_board);
         board.setImageBitmap(actualMap);
         cardOne = (ImageView) v.findViewById(R.id.first_card);
@@ -205,6 +238,7 @@ public class MapFragment extends Fragment {
         if (DataManager.SINGLETON.getPlayerState() == null) {
             DataManager.SINGLETON.setPlayerState(new InitializeGameState(selfMapFragment));
         } else { DataManager.SINGLETON.getPlayerState().applyState(selfMapFragment); }
+        v.setOnTouchListener(routeClickListener);
         return v;
     }
 
@@ -263,44 +297,26 @@ public class MapFragment extends Fragment {
     public void finishDrawFaceUpTrainCard(TrainCard card) {
         DataManager.SINGLETON.addToHand(card);
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
-        if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
+        if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
+            DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment);
+        }
         else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
     }
 
     public void onTurnStart() {
+        disableDrawTrainCards();
         drawTrain.setEnabled(true);
         drawDest.setEnabled(true);
         claimRoute.setEnabled(true);
-        cardOne.setEnabled(false);
-        cardTwo.setEnabled(false);
-        cardThree.setEnabled(false);
-        cardFour.setEnabled(false);
-        cardFive.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        cardOne.setBackgroundResource(R.drawable.whitebackground);
-        cardTwo.setBackgroundResource(R.drawable.whitebackground);
-        cardThree.setBackgroundResource(R.drawable.whitebackground);
-        cardFour.setBackgroundResource(R.drawable.whitebackground);
-        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void onInitializeTurn() {
-        drawDest.setEnabled(false);
-        drawTrain.setEnabled(false);
-        cardOne.setEnabled(false);
-        cardTwo.setEnabled(false);
-        cardThree.setEnabled(false);
-        cardFour.setEnabled(false);
-        cardFive.setEnabled(false);
+        disableDrawTrainCards();
+        drawDest.setEnabled(true);
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
         trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        cardOne.setBackgroundResource(R.drawable.whitebackground);
-        cardTwo.setBackgroundResource(R.drawable.whitebackground);
-        cardThree.setBackgroundResource(R.drawable.whitebackground);
-        cardFour.setBackgroundResource(R.drawable.whitebackground);
-        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void makeWildCardToast(){
@@ -308,57 +324,43 @@ public class MapFragment extends Fragment {
     }
 
     public void onNotTurnStart() {
+        disableDrawTrainCards();
         drawDest.setEnabled(false);
         drawTrain.setEnabled(false);
-        cardOne.setEnabled(false);
-        cardTwo.setEnabled(false);
-        cardThree.setEnabled(false);
-        cardFour.setEnabled(false);
-        cardFive.setEnabled(false);
-        claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        cardOne.setBackgroundResource(R.drawable.whitebackground);
-        cardTwo.setBackgroundResource(R.drawable.whitebackground);
-        cardThree.setBackgroundResource(R.drawable.whitebackground);
-        cardFour.setBackgroundResource(R.drawable.whitebackground);
-        cardFive.setBackgroundResource(R.drawable.whitebackground);
     }
 
     public void onDrawDestination() {
+        disableDrawTrainCards();
         drawDest.setEnabled(false);
         drawTrain.setEnabled(false);
-        cardOne.setEnabled(false);
-        cardTwo.setEnabled(false);
-        cardThree.setEnabled(false);
-        cardFour.setEnabled(false);
-        cardFive.setEnabled(false);
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
-        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-        cardOne.setBackgroundResource(R.drawable.whitebackground);
-        cardTwo.setBackgroundResource(R.drawable.whitebackground);
-        cardThree.setBackgroundResource(R.drawable.whitebackground);
-        cardFour.setBackgroundResource(R.drawable.whitebackground);
-        cardFive.setBackgroundResource(R.drawable.whitebackground);
-
-        if (DataManager.getSINGLETON().hasOfferedCards())
-        {
-            GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.toDestinationCardFragment();
-
-        } else
-            DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
     }
 
     public void onDrawTrainCards() {
         DataManager.SINGLETON.setTrainCardsDrawn(0);
+        enableDrawTrainCards();
+        drawTrain.setEnabled(false);
+        drawDest.setEnabled(false);
+        claimRoute.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+    }
+
+    public void onClaimRoute() {
+        disableDrawTrainCards();
+        drawTrain.setEnabled(false);
+        drawDest.setEnabled(false);
+        claimRoute.setEnabled(false);
+        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+    }
+
+    public void enableDrawTrainCards() {
         cardOne.setEnabled(true);
         cardTwo.setEnabled(true);
         cardThree.setEnabled(true);
         cardFour.setEnabled(true);
         cardFive.setEnabled(true);
-        destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
         trainDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
         cardOne.setBackgroundResource(R.drawable.yellowbackground);
         cardTwo.setBackgroundResource(R.drawable.yellowbackground);
@@ -366,10 +368,24 @@ public class MapFragment extends Fragment {
         cardFour.setBackgroundResource(R.drawable.yellowbackground);
         cardFive.setBackgroundResource(R.drawable.yellowbackground);
         trainDeck.setEnabled(true);
-        drawTrain.setEnabled(false);
-        drawDest.setEnabled(false);
-        claimRoute.setEnabled(false);
     }
+
+    public void disableDrawTrainCards() {
+        cardOne.setEnabled(false);
+        cardTwo.setEnabled(false);
+        cardThree.setEnabled(false);
+        cardFour.setEnabled(false);
+        cardFive.setEnabled(false);
+        trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        cardOne.setBackgroundResource(R.drawable.whitebackground);
+        cardTwo.setBackgroundResource(R.drawable.whitebackground);
+        cardThree.setBackgroundResource(R.drawable.whitebackground);
+        cardFour.setBackgroundResource(R.drawable.whitebackground);
+        cardFive.setBackgroundResource(R.drawable.whitebackground);
+        trainDeck.setEnabled(false);
+    }
+
+
 
     public void setCardColor(int i){
         switch(i){

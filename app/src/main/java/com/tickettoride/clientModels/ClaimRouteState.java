@@ -2,16 +2,12 @@ package com.tickettoride.clientModels;
 
 import com.tickettoride.activities.MapFragment;
 
-public class PlaceTrainsState extends PlayerState {
-    public PlaceTrainsState(MapFragment mf) {
-//        mf.onPlaceTrains();
-    }
+public class ClaimRouteState extends PlayerState {
+    public ClaimRouteState(MapFragment mf) { mf.onClaimRoute(); }
 
     @Override
     public void moveToNotTurnState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new NotTurnState(mf)); }
 
     @Override
-    public void applyState(MapFragment mf) {
-//        mf.onNotTurnStart();
-    }
+    public void applyState(MapFragment mf) { mf.onNotTurnStart(); }
 }
