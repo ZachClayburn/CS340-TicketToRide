@@ -6,6 +6,7 @@ import com.tickettoride.clientModels.Route;
 import com.tickettoride.models.City;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Hand;
+import com.tickettoride.models.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -390,7 +391,13 @@ public class RouteHelper {
         int spaces = curRoute.getSpaces();
         int playerPoints = DataManager.SINGLETON.getPlayer().getPoints();
         DataManager.SINGLETON.getPlayer().setPoints(playerPoints + spaces);
-        DataManager.getSINGLETON().setCurrentRoute(curRoute);
+    }
+
+    public void claimRoute(Route curRoute, Player player) {
+        curRoute.setIsClaimed(true);
+        curRoute.setLineColor(player.getColor());
+        int spaces = curRoute.getSpaces();
+        player.setPoints(player.getPoints() + spaces);
     }
 
 }

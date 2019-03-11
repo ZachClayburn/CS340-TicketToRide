@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.tickettoride.R;
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Route;
 import com.tickettoride.clientModels.helpers.RouteHelper;
 
@@ -96,12 +97,9 @@ public class ClaimRouteFragment extends Fragment {
         }
     }
     public void claimRoute(Route curRoute) {
-        RouteHelper.getSingleton().claimRoute(curRoute);
+        DataManager.getSINGLETON().setCurrentRoute(curRoute);
         discardFragmentListener = (DiscardFragmentListener) getActivity();
         discardFragmentListener.moveToDiscard();
-        //returnMap = (GameRoomActivity) getActivity();
-        //returnMap.incrementTurn();
-        //returnMap.onReturnToMap();
     }
 
 

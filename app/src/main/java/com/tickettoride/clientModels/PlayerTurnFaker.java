@@ -2,12 +2,14 @@ package com.tickettoride.clientModels;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.controllers.DestinationCardController;
+import com.tickettoride.controllers.RoutesController;
 import com.tickettoride.controllers.TrainCardController;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class PlayerTurnFaker {
@@ -21,11 +23,12 @@ public class PlayerTurnFaker {
     public void fakePlayerturn(Player player) {
         Random rand = new Random();
         int r = rand.nextInt(3);
-        switch (r) {
-            case 0: { fakeCollectTrains(player); return; }
-            case 1: { fakeDrawDestinations(player); return; }
-            case 2: { fakeCollectTrains(player); return; }
-        }
+        fakeCollectTrains(player);
+//        switch (r) {
+//            case 0: { fakeCollectTrains(player); return; }
+//            case 1: { fakeDrawDestinations(player); return; }
+//            case 2: { fakeCollectTrains(player); return; }
+//        }
     }
 
     private void fakeCollectTrains(Player player) {
@@ -50,7 +53,14 @@ public class PlayerTurnFaker {
     }
 
     private void fakeClaimRoute(Player player) {
-
+        Random rand = new Random();
+        List<Route> routes = DataManager.getSINGLETON().getRoutes();
+        int routeindex = rand.nextInt(routes.size());
+        Route toClaimRoute = routes.get(routeindex);
+        toClaimRoute.setIsClaimed(true);
+        toClaimRoute.setLineColor(player.getColor());
+        player.setPoints(player.getPoints() + toClaimRoute.getSpaces());
+        RoutesController.getSingleton().claimRoute(player, toClaimRoute);
     }
 
     private void fakeDrawTrainFaceDown(Player player) {
