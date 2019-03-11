@@ -2,6 +2,7 @@ package com.tickettoride.controllers;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
+import com.tickettoride.activities.MapFragment;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
@@ -29,6 +30,9 @@ public class DestinationCardController extends BaseController {
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         activity.incrementTurn();
+
+        MapFragment fragment = activity.getMapFragment();
+        fragment.updateDeckNumbers();
     }
 
     public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
