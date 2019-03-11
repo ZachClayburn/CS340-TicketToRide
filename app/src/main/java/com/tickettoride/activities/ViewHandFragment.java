@@ -53,9 +53,6 @@ public class ViewHandFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.view_hand, container, false);
-        android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        actionBar.show();
-        actionBar.setDisplayHomeAsUpEnabled(true);
         Hand playerHand = DataManager.getSINGLETON().getPlayerHand();
         this.player = DataManager.SINGLETON.getPlayer();
         fragmentListener = (OnReturnToMapListener) getActivity();
@@ -86,9 +83,9 @@ public class ViewHandFragment extends Fragment {
                 fragmentListener.onReturnToMap();
             }
         });
-//        destCards.setLayoutManager(new LinearLayoutManager(getContext()));
-//        adapter = new Adapter(getContext(), playerDestCards);
-//        destCards.setAdapter(adapter);
+        destCards.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new Adapter(getContext(), playerDestCards);
+        destCards.setAdapter(adapter);
         return v;
     }
 

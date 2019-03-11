@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.*;
+import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.City;
@@ -58,6 +59,14 @@ public class MapFragment extends Fragment {
     private View v;
     private ClaimRouteListener claimListener;
     MapFragment selfMapFragment = this;
+
+    private View.OnClickListener destDeckViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            destDeck.setEnabled(false);
+            DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
+        }
+    };
 
     private View.OnClickListener drawTrainViewListener = new View.OnClickListener() {
         @Override
@@ -146,11 +155,9 @@ public class MapFragment extends Fragment {
 
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) {
-            DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
-
-        }
+        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
     };
+
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -170,6 +177,7 @@ public class MapFragment extends Fragment {
         this.drawView.draw(canvas);
         return actualMap;
     }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.v = inflater.inflate(R.layout.game, container, false);
@@ -216,6 +224,7 @@ public class MapFragment extends Fragment {
         cardFour.setOnClickListener(card4ViewListener);
         cardFive.setOnClickListener(card5ViewListener);
         trainDeck.setOnClickListener(faceDownCardViewListener);
+        destDeck.setOnClickListener(destDeckViewListener);
         drawTrain.setOnClickListener(drawTrainViewListener);
         drawDest.setOnClickListener(drawDestinationListener);
         claimRoute.setOnClickListener(claimRouteListener);
@@ -321,6 +330,7 @@ public class MapFragment extends Fragment {
         drawDest.setEnabled(true);
         claimRoute.setEnabled(true);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        destDeck.setEnabled(false);
     }
 
     public void onInitializeTurn() {
@@ -329,6 +339,7 @@ public class MapFragment extends Fragment {
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
         trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        destDeck.setEnabled(false);
     }
 
     public void makeWildCardToast() { Toast.makeText(this.context, R.string.wild_card_error, Toast.LENGTH_SHORT).show(); }
@@ -338,6 +349,7 @@ public class MapFragment extends Fragment {
         drawDest.setEnabled(false);
         drawTrain.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        destDeck.setEnabled(false);
     }
 
     public void onDrawDestination() {
@@ -346,6 +358,7 @@ public class MapFragment extends Fragment {
         drawTrain.setEnabled(false);
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
+        destDeck.setEnabled(true);
     }
 
     public void onDrawTrainCards() {
@@ -355,6 +368,7 @@ public class MapFragment extends Fragment {
         drawDest.setEnabled(false);
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        destDeck.setEnabled(false);
     }
 
     public void onClaimRoute() {
@@ -363,6 +377,7 @@ public class MapFragment extends Fragment {
         drawDest.setEnabled(false);
         claimRoute.setEnabled(false);
         destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+        destDeck.setEnabled(false);
     }
 
     public void enableDrawTrainCards() {
