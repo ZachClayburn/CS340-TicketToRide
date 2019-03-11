@@ -36,7 +36,9 @@ public class GameController extends BaseController {
 
     private void createGameOnCreateGameActivity(Game game, UUID sessionID, UUID playerID) throws ClassCastException {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
-        Player player = new Player(game.getGameID(), sessionID, playerID);
+        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
+        UUID gameID = game.getGameID();
+        Player player = new Player(userID, gameID, playerID);
         DataManager.SINGLETON.setGame(game);
         DataManager.SINGLETON.setPlayer(player);
         DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
@@ -44,7 +46,8 @@ public class GameController extends BaseController {
     }
 
     public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
-        Player player = new Player(gameID, sessionID, playerID);
+        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
+        Player player = new Player(userID, gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
@@ -65,7 +68,8 @@ public class GameController extends BaseController {
     }
     
     public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
-        Player player = new Player(gameID, sessionID, playerID);
+        UUID userID = DataManager.getSINGLETON().getSession().getUserID();
+        Player player = new Player(userID, gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);

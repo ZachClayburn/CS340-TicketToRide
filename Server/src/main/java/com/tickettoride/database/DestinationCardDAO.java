@@ -50,7 +50,10 @@ public class DestinationCardDAO extends Database.DataAccessObject {
     }
 
     public void addDeck(Game game, Queue<DestinationCard> deck) throws DatabaseException {
+        addDeck(game.getGameID(), deck);
+    }
 
+    public void addDeck(UUID gameID, Queue<DestinationCard> deck) throws DatabaseException {
         deck = new ArrayDeque<>(deck);
 
         String sql = "INSERT INTO destinationcards " +
@@ -59,7 +62,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
         try (var statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, game.getGameID().toString());
+            statement.setString(1, gameID.toString());
 
             for (int deckPosition = 0; !deck.isEmpty(); deckPosition++) {
 
@@ -111,6 +114,8 @@ public class DestinationCardDAO extends Database.DataAccessObject {
          //FIXME There is the possibility of an error if the collection of cards offered to the player is not in the
          // correct order
 
+        String preSQL = "ALTER TABLE destinationcards DROP CONSTRAINT validPosition;";
+
         String sql1 = "UPDATE destinationcards " +
                 "SET sequenceposition=NULL, state='offeredToPlayer', playerid=? " +
                 "WHERE gameid=?" +
@@ -120,8 +125,15 @@ public class DestinationCardDAO extends Database.DataAccessObject {
                 "SET sequenceposition=sequenceposition-1 " +
                 "WHERE gameid=? AND state='inDeck'";
 
-        try (var statement1 = connection.prepareStatement(sql1);
-             var statement2 = connection.prepareStatement(sql2)) {
+        String postSQL = "ALTER TABLE destinationcards ADD CONSTRAINT validPosition " +
+                "CHECK ( sequencePosition >= 0 AND sequencePosition < 30 )";
+
+        try (var preStatement = connection.prepareStatement(preSQL);
+             var statement1 = connection.prepareStatement(sql1);
+             var statement2 = connection.prepareStatement(sql2);
+             var postStatement = connection.prepareStatement(postSQL)) {
+
+            preStatement.executeUpdate();
 
             statement1.setString(1, player.getPlayerID().toString());
             statement1.setString(2, player.getGameID().toString());
@@ -137,6 +149,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
                 statement2.executeUpdate();
             }
 
+            postStatement.executeUpdate();
 
         } catch (SQLException e) {
             logger.catching(e);

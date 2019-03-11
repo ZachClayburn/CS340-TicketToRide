@@ -1,6 +1,8 @@
 package com.tickettoride.models;
 
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.*;
 
 public class DestinationCard implements Comparable<DestinationCard> {
@@ -140,7 +142,21 @@ public class DestinationCard implements Comparable<DestinationCard> {
         return new ArrayDeque<>(list);
     }
 
-        @Override
+    public static List<DestinationCard> unGsonCards(List<LinkedTreeMap> gsonCards){
+        List<DestinationCard> cards = new ArrayList<> ();
+        for (LinkedTreeMap gsonCard : gsonCards) {
+            City destination1 = City.valueOf((String) gsonCard.get("destination1"));
+            City destination2 = City.valueOf((String) gsonCard.get("destination2"));
+            Value pointValue = Value.valueOf((String) gsonCard.get("pointValue"));
+
+            cards.add(new DestinationCard(destination1, destination2, pointValue));
+        }
+        return cards;
+    }
+
+
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DestinationCard)) return false;

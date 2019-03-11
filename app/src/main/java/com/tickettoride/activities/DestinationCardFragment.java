@@ -2,7 +2,6 @@ package com.tickettoride.activities;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -224,7 +223,7 @@ public class DestinationCardFragment extends Fragment {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<DestinationCard> acceptedCards = new ArrayList<>();
+                ArrayList<DestinationCard> acceptedCards = new ArrayList<>();
                 if (card1OnClick.isSelected())
                     acceptedCards.add(card1);
                 if (card2OnClick.isSelected())
@@ -318,7 +317,7 @@ public class DestinationCardFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
 
-        void onAcceptCards(List<DestinationCard> destinationCards);
+        void onAcceptCards(ArrayList<DestinationCard> destinationCards);
     }
 
     private String getCityNameResource(City city){

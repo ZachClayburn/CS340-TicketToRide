@@ -1,9 +1,10 @@
 package com.tickettoride.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hand {
-    private List<DestinationCard> destinationCards;//TODO Add DestinationCards functionality to the player hand
+    private List<DestinationCard> destinationCards = new ArrayList<>();
     private int blue = 0;
     private int green = 0;
     private int purple = 0;

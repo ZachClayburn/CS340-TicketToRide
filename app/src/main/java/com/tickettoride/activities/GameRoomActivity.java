@@ -9,16 +9,20 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
+import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
-import com.tickettoride.facadeProxies.GameFacadeProxy;
-import com.tickettoride.models.Player;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapListener, ViewHandListener{
+public class GameRoomActivity extends MyBaseActivity implements
+        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
+    private DestinationCardFragment destinationCardFragment;
     private FragmentManager fm;
     private MapFragment mapFragment;
 
@@ -27,10 +31,10 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.map_fragment);
+        mapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_holder);
         if (mapFragment == null) {
             mapFragment = new MapFragment();
-            fm.beginTransaction().add(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().add(R.id.fragment_holder, mapFragment).commit();
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
@@ -58,8 +62,11 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
         }
         else if (viewHandFragment != null) {
             //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
-            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             viewHandFragment = null;
+        } else if (destinationCardFragment != null) {
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
+            destinationCardFragment = null;
         }
     }
 
@@ -94,6 +101,32 @@ public class GameRoomActivity extends MyBaseActivity implements OnReturnToMapLis
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+    }
+
+    public void toDestinationCardFragment() {
+
+        List<DestinationCard> offeredCards = DataManager.getSINGLETON().getOfferedCards();
+        Integer requiredToKeep = DataManager.getSINGLETON().getDestCardsRequiredToKeep();
+
+        if (destinationCardFragment == null)
+            destinationCardFragment = DestinationCardFragment
+                    .newInstance(offeredCards.get(0), offeredCards.get(1), offeredCards.get(2), requiredToKeep);
+
+        fm.beginTransaction()
+                .replace(R.id.fragment_holder, destinationCardFragment)
+                .addToBackStack(null)
+                //FIXME addToBackStack This should let you look back at the map by hitting the back button,
+                // but it isn't working for some reason, figure that out later
+                .commit();
+    }
+
+    @Override
+    public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
+        DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
+        onReturnToMap();
+        DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
+        //FIXME This should eventually check if it is the players turn or not and move them to the appropriate state
 
     }
 }

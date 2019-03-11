@@ -20,16 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
-import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.PlayerTurnState;
-import com.tickettoride.models.Player;
-import com.tickettoride.models.City;
-import com.tickettoride.clientModels.Line;
+import com.tickettoride.clientModels.*;
 import com.tickettoride.clientModels.Route;
-import com.tickettoride.models.TrainCard;
+import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
+import com.tickettoride.models.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import com.tickettoride.models.Color;
+
 public class MapFragment extends Fragment {
     private ArrayList<Player> players = new ArrayList<>();
     private DrawView drawView;
@@ -128,7 +126,10 @@ public class MapFragment extends Fragment {
     };
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
+        public void onClick(View view) {
+            DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
+
+        }
     };
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
@@ -202,7 +203,7 @@ public class MapFragment extends Fragment {
             }
         });
         if (DataManager.SINGLETON.getPlayerState() == null) {
-            DataManager.SINGLETON.setPlayerState(new PlayerTurnState(selfMapFragment));
+            DataManager.SINGLETON.setPlayerState(new InitializeGameState(selfMapFragment));
         } else { DataManager.SINGLETON.getPlayerState().applyState(selfMapFragment); }
         return v;
     }
@@ -285,7 +286,7 @@ public class MapFragment extends Fragment {
     }
 
     public void onInitializeTurn() {
-        drawDest.setEnabled(true);
+        drawDest.setEnabled(false);
         drawTrain.setEnabled(false);
         cardOne.setEnabled(false);
         cardTwo.setEnabled(false);
@@ -340,6 +341,14 @@ public class MapFragment extends Fragment {
         cardThree.setBackgroundResource(R.drawable.whitebackground);
         cardFour.setBackgroundResource(R.drawable.whitebackground);
         cardFive.setBackgroundResource(R.drawable.whitebackground);
+
+        if (DataManager.getSINGLETON().hasOfferedCards())
+        {
+            GameRoomActivity activity = (GameRoomActivity) getActivity();
+            activity.toDestinationCardFragment();
+
+        } else
+            DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer());
     }
 
     public void onDrawTrainCards() {

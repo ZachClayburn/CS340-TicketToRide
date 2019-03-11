@@ -43,9 +43,14 @@ public class Command {
     public void execute() throws Throwable {
         try {
             Class targetClass = null;
-            try { targetClass = Class.forName("com.tickettoride.facades." + facadeName); }
+            try {
+                targetClass = Class.forName("com.tickettoride.facades." + facadeName);
+            }
             catch (ClassNotFoundException e) {}
-            if (targetClass == null) targetClass = Class.forName("com.tickettoride.controllers." + facadeName);
+
+            if (targetClass == null)
+                targetClass = Class.forName("com.tickettoride.controllers." + facadeName);
+
             Method getSingletonMethod = targetClass.getMethod(GET_SINGLETON_METHOD_NAME);
             Object singleton = getSingletonMethod.invoke(targetClass);
             Class[] parameterTypes = parameterTypes();
