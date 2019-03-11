@@ -42,6 +42,12 @@ public class PlayerHelper extends BaseFacade {
         }
     }
 
+    public void setUsernames(List<Player> players) throws DatabaseException {
+        try (var db = new Database()){
+            db.getPlayerDAO().setPlayersUserName(players);
+        }
+    }
+
 
     public void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {

@@ -129,4 +129,27 @@ public class PlayerDAO extends Database.DataAccessObject {
 
         }
     }
+
+    public void setPlayersUserName(List<Player> players) throws DatabaseException {
+
+        String sql = "SELECT username FROM users WHERE userid=?";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            for (var player : players) {
+
+                statement.setString(1, player.getUserID().toString());
+                var result = statement.executeQuery();
+
+                result.next();
+
+                player.setUsername(result.getString("username"));
+            }
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not set the name of Player!", e);
+        }
+
+    }
 }

@@ -50,6 +50,7 @@ public class Player {
         this.userID = UUID.fromString((String) playerMap.get("userID"));
         this.turn = ((Double) playerMap.get("turn")).intValue();
         this.color = PlayerColor.valueOf((String) playerMap.get("color"));
+        this.username = (String) playerMap.get("username");
     }
 
     public UUID getUserID() { return userID; }
