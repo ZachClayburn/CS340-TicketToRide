@@ -264,7 +264,7 @@ public class DiscardFragment extends Fragment {
                             ++discardedColor;
                             ++discardedCards;
                             currentHand.setOrange(-1);
-                            numberOrange.setText("Blue: " + currentHand.getOrange());
+                            numberOrange.setText("Orange: " + currentHand.getOrange());
                             discarded.setText("Discarded: " + discardedCards);
                             break;
                         }
@@ -327,7 +327,7 @@ public class DiscardFragment extends Fragment {
                             ++discardedCards;
                             ++discardedColor;
                             currentHand.setYellow(-1);
-                            numberYellow.setText("Blue: " + currentHand.getYellow());
+                            numberYellow.setText("Yellow: " + currentHand.getYellow());
                             discarded.setText("Discarded: " + discardedCards);
                             break;
                         }
@@ -411,7 +411,7 @@ public class DiscardFragment extends Fragment {
                             ++discardedCards;
                             ++discardedColor;
                             currentHand.setWhite(-1);
-                            numberWhite.setText("Blue: " + currentHand.getWhite());
+                            numberWhite.setText("White: " + currentHand.getWhite());
                             discarded.setText("Discarded: " + discardedCards);
                             break;
                         }
@@ -536,7 +536,9 @@ public class DiscardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (discardedWild != currentRoute.getSpaces() && discardedCards == currentRoute.getSpaces()) {
-                    //go paint the line
+                    GameRoomActivity activity = (GameRoomActivity) getActivity();
+                    activity.incrementTurn();
+                    activity.onReturnToMap();
                     Toast.makeText(getContext(), "Congratulations", Toast.LENGTH_SHORT).show();
                 }
                 else {

@@ -391,7 +391,6 @@ public class RouteHelper {
         int playerPoints = DataManager.SINGLETON.getPlayer().getPoints();
         DataManager.SINGLETON.getPlayer().setPoints(playerPoints + spaces);
         DataManager.getSINGLETON().setCurrentRoute(curRoute);
-        //payForRoute(curRoute);
     }
 
 }

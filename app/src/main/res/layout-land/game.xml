@@ -130,7 +130,8 @@
             android:layout_height="40dp"
             android:background="@drawable/deck"
             android:textColor="#000"
-            android:text="@string/train_deck"/>
+            android:text="@string/train_deck"
+            android:textSize="15dp"/>
         <TextView
             android:id="@+id/dest_deck"
             android:gravity="center"

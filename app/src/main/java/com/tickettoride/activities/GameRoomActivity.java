@@ -79,6 +79,10 @@ public class GameRoomActivity extends MyBaseActivity implements
             fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             claimRouteFragment = null;
         }
+        else if (discardFragment != null) {
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
+            discardFragment = null;
+        }
     }
 
     public void toPlayerFragment(UUID playerID){
