@@ -23,6 +23,8 @@ public class TrainCardController extends BaseController {
             player.setTrainCardCount(player.getTrainCardCount() + 1);
         }
         fragment.setAllColors();
+        DataManager.SINGLETON.updateTrainCardDeckSize();
+        fragment.updateDeckNumbers();
         fragment.finishDrawFaceUpTrainCard(card);
     }
 
@@ -36,6 +38,8 @@ public class TrainCardController extends BaseController {
             Player player = DataManager.SINGLETON.findPlayerByID(playerID);
             player.setTrainCardCount(player.getTrainCardCount() + 1);
         }
+        DataManager.SINGLETON.updateTrainCardDeckSize();
+        fragment.updateDeckNumbers();
         fragment.finishDrawFacedownCard();
     }
 }

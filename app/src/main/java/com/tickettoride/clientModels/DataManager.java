@@ -15,6 +15,7 @@ public class DataManager {
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
+    private int trainCardDeckSize;
     private Integer destinationCardDeckSize;
     private Hand playerHand = new Hand();
     private PlayerState playerState;
@@ -70,6 +71,7 @@ public class DataManager {
 
     public void initializeDeck(){
         trainCardDeck = new TrainCardDeck();
+        updateTrainCardDeckSize();
     }
 
     public TrainCardDeck getTrainCardDeck() { return trainCardDeck; }
@@ -141,6 +143,10 @@ public class DataManager {
     public void setDestinationCardDeckSize(Integer destinationCardDeckSize) {
         this.destinationCardDeckSize = destinationCardDeckSize;
     }
+
+    public int getTrainCardDeckSize(){return trainCardDeckSize;}
+
+    public void updateTrainCardDeckSize(){trainCardDeckSize = trainCardDeck.getFaceDownDeck().size();}
 
     public boolean hasOfferedCards() {
         return offeredCards != null;

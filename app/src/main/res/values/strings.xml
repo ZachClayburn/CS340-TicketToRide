@@ -44,8 +44,8 @@
     <string name="draw_dest">Draw Dest Cards</string>
     <string name="claim_route">Claim Route</string>
     <string name="view_cards">View Cards</string>
-    <string name="train_deck">Trains: 120</string>
-    <string name="dest_deck">Dests: 30</string>
+    <string name="train_deck">Trains: %1$d</string>
+    <string name="dest_deck">Dests: %1$d</string>
     <string name="player_username">Player: </string>
     <string name="points">Points: </string>
     <string name="player_hand">Current Hand</string>

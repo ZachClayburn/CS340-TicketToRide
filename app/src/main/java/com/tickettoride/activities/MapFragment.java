@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -175,6 +176,7 @@ public class MapFragment extends Fragment {
         playerListener = (PlayerFragmentListener) getActivity();
         trainDeck = v.findViewById(R.id.train_deck);
         destDeck = v.findViewById(R.id.dest_deck);
+        updateDeckNumbers();
         chatWindow = v.findViewById(R.id.chat_room);
         drawTrain = v.findViewById(R.id.draw_train);
         drawDest = v.findViewById(R.id.draw_dest);
@@ -395,6 +397,11 @@ public class MapFragment extends Fragment {
         cardFour.setBackgroundResource(R.drawable.whitebackground);
         cardFive.setBackgroundResource(R.drawable.whitebackground);
         trainDeck.setEnabled(false);
+    }
+
+    public void updateDeckNumbers(){
+        trainDeck.setText(getResources().getString(R.string.train_deck, DataManager.SINGLETON.getTrainCardDeckSize()));
+        destDeck.setText(getResources().getString(R.string.dest_deck, DataManager.SINGLETON.getDestinationCardDeckSize()));
     }
 
     public void setCardColor(int i){
