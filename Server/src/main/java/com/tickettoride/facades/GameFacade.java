@@ -46,6 +46,7 @@ public class GameFacade extends BaseFacade {
             Session session = new Session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
             List<Player> players = PlayerHelper.getSingleton().getGamePlayers(game);
+            PlayerHelper.getSingleton().setUsernames(players);
             Player player = PlayerHelper.getSingleton().isAlreadyPlayer(user,players);
             Command command;
             if (player == null) { command = GameFacadeHelper.getSingleton().joinCommand(game, user, sessionID); }
@@ -84,6 +85,7 @@ public class GameFacade extends BaseFacade {
         ArrayList<Player> players = (ArrayList) PlayerHelper.getSingleton().getGamePlayers(gameID);
         PlayerHelper.getSingleton().pickTurnOrder(players);
         PlayerHelper.getSingleton().pickColors(players);
+        PlayerHelper.getSingleton().setUsernames(players);
         var command = new Command(CONTROLLER_NAME, "start", players);
         sendResponseToRoom(connID, command);
     }

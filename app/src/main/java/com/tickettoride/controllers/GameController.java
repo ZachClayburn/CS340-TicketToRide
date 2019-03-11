@@ -67,7 +67,9 @@ public class GameController extends BaseController {
         }
     }
 
-    public void rejoinIsStarted(UUID sessionID, UUID gameID, String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap, ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount){
+    public void rejoinIsStarted(UUID sessionID, UUID gameID,
+                                String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap,
+                                ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount){
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
             List<DestinationCard> playerHand = DestinationCard.unGsonCards(playerHandMap);
