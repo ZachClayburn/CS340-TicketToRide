@@ -66,14 +66,12 @@
     <string name="setup_game_error">Could not setup the game</string>
     <string name="return_to_game">Return to Game</string>
     <string name="player_info">Player Information</string>
-
     <string name="dest_draw_hint">Please select %1$d Destination cards to keep.</string>
     <string name="final_choice">Finished</string>
     <string name="destination_card_to">to</string>
     <string name="first_city">First City: </string>
     <string name="second_city">Second City: </string>
     <string name="claim_hint">Click a route you want to claim</string>
-    <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
     <string name="vancouver_name">Vancouver</string>
     <string name="calgary_name">Calgary</string>
     <string name="winnipeg_name">Winnipeg</string>
@@ -111,5 +109,5 @@
     <string name="washington_name">Washington D.C.</string>
     <string name="new_york_name">New York City</string>
     <string name="invalid_city_name">Error! Invalid city!</string>
-    <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
+    <string name="wild_card_error">You cannot draw a locomotive on your second draw</string>
 </resources>

@@ -29,6 +29,8 @@ public class GameRoomActivity extends MyBaseActivity implements
     private MapFragment mapFragment;
     private ClaimRouteFragment claimRouteFragment;
 
+    public MapFragment getMapFragment() { return mapFragment; }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_room);
@@ -61,7 +63,7 @@ public class GameRoomActivity extends MyBaseActivity implements
     public void onReturnToMap() {
         // The login fragment is removed if it exists (if we log in from the login fragment)
         if(playerFragment != null) {
-            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             playerFragment = null;
         }
         else if (viewHandFragment != null) {
@@ -84,26 +86,21 @@ public class GameRoomActivity extends MyBaseActivity implements
             Bundle arguments = new Bundle();
             arguments.putString("player", playerID.toString());
             playerFragment.setArguments(arguments);
-            fm.beginTransaction()
-                    .replace(R.id.map_fragment, playerFragment)
-                    .commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, playerFragment).commit();
         }
     }
     public void toViewHandFragment(){
         if (viewHandFragment == null) {
             viewHandFragment = new ViewHandFragment();
             Bundle arguments = new Bundle();
-            //arguments.p("player", player);
             viewHandFragment.setArguments(arguments);
-            fm.beginTransaction()
-                    .replace(R.id.map_fragment, viewHandFragment)
-                    .commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, viewHandFragment).commit();
         }
     }
     public void moveToClaimRoute() {
         if (claimRouteFragment == null) {
             claimRouteFragment = new ClaimRouteFragment();
-            fm.beginTransaction().replace(R.id.map_fragment, claimRouteFragment).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, claimRouteFragment).commit();
         }
     }
     @Override

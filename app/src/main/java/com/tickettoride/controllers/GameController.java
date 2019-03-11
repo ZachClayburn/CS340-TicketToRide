@@ -1,4 +1,5 @@
 package com.tickettoride.controllers;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -107,15 +108,16 @@ public class GameController extends BaseController {
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
         setPlayerInfo(playerList);
+        DataManager.SINGLETON.initializeDeck();
+        setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
-        setupPlayerHands();
     }
 
     public void drawFaceupCard(UUID playerID, TrainCard card, TrainCardDeck deck){
         DataManager.SINGLETON.setTrainCardDeck(deck);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        MapFragment fragment = (MapFragment) activity.getCurrentFragment();
+        MapFragment fragment = activity.getMapFragment();
 
         if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
             DataManager.SINGLETON.addToHand(card);
@@ -133,7 +135,7 @@ public class GameController extends BaseController {
     public void drawFaceDownCard(UUID playerID, TrainCard card, TrainCardDeck deck){
         DataManager.SINGLETON.setTrainCardDeck(deck);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        MapFragment fragment = (MapFragment) activity.getCurrentFragment();
+        MapFragment fragment = activity.getMapFragment();
 
         if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
             DataManager.SINGLETON.addToHand(card);

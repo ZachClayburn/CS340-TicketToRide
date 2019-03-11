@@ -72,8 +72,6 @@ public class DataManager {
     public void setPlayerList(Player player) {gamePlayers.add(player);}
     public List<Player> getGamePlayers() { return gamePlayers; }
 
-    public List<Player> getGamePlayers() { return gamePlayers; }
-
     public void setTrainCardDeck(TrainCardDeck deck) {
         trainCardDeck = deck;
     }
@@ -82,7 +80,7 @@ public class DataManager {
         trainCardDeck = new TrainCardDeck();
     }
 
-    public TrainCardDeck getTrainCardDeck(){return trainCardDeck;}
+    public TrainCardDeck getTrainCardDeck() { return trainCardDeck; }
 
     public Hand getPlayerHand() {
         return playerHand;

@@ -47,11 +47,8 @@ public class ViewHandFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Bundle args = getArguments();
-        //UUID playerID = UUID.fromString(args.getString("player", null));
-        //this.player = DataManager.SINGLETON.getPlayer();
-        //fragmentListener = (OnReturnToMapListener) getActivity();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);

@@ -1,12 +1,10 @@
 package com.tickettoride.activities;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +25,6 @@ import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.City;
 import com.tickettoride.clientModels.Route;
-import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.*;
 
 import java.util.ArrayList;
@@ -35,12 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.tickettoride.models.Color;
-
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.GREEN;
-import static android.graphics.Color.RED;
-import static android.graphics.Color.YELLOW;
 
 public class MapFragment extends Fragment {
     private List<Player> players;
@@ -133,7 +124,7 @@ public class MapFragment extends Fragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            board = (ImageView) v.findViewById(R.id.game_board);
+            board = v.findViewById(R.id.game_board);
             int[] points = new int[2];
             board.getLocationInWindow(points);
             int[] points2 = new int[2];
@@ -169,13 +160,8 @@ public class MapFragment extends Fragment {
         }
     };
     public ViewHandListener viewListener;
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
 
-//        playerListener = (PlayerFragmentListener) getActivity();
-//        viewListener = (ViewHandListener) getActivity();
-    }
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
     public Bitmap draw() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
@@ -187,11 +173,6 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.v = inflater.inflate(R.layout.game, container, false);
-        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        Resources res = getResources();
-        // DON'T UNCOMMENT THIS
-        //getActivity().setContentView(R.layout.game);
         routeLineInit();
         this.drawView = new DrawView(getActivity());
         drawView.setRoutes(routes);
@@ -201,31 +182,29 @@ public class MapFragment extends Fragment {
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.hide();
-        board = (ImageView) v.findViewById(R.id.game_board);
+        board = v.findViewById(R.id.game_board);
         board.setImageBitmap(actualMap);
-        cardOne = (ImageView) v.findViewById(R.id.first_card);
+        cardOne = v.findViewById(R.id.first_card);
         setCardColor(0);
-        cardTwo = (ImageView) v.findViewById(R.id.second_card);
+        cardTwo = v.findViewById(R.id.second_card);
         setCardColor(1);
-        cardThree = (ImageView) v.findViewById(R.id.third_card);
+        cardThree = v.findViewById(R.id.third_card);
         setCardColor(2);
-        cardFour = (ImageView) v.findViewById(R.id.fourth_card);
+        cardFour = v.findViewById(R.id.fourth_card);
         setCardColor(3);
-        cardFive = (ImageView) v.findViewById(R.id.fifth_card);
+        cardFive = v.findViewById(R.id.fifth_card);
         setCardColor(4);
         playerListener = (PlayerFragmentListener) getActivity();
-        trainDeck = (TextView) v.findViewById(R.id.train_deck);
-        destDeck = (TextView) v.findViewById(R.id.dest_deck);
-        chatWindow = (EditText) v.findViewById(R.id.chat_room);
-        drawTrain = (Button) v.findViewById(R.id.draw_train);
-        drawDest = (Button) v.findViewById(R.id.draw_dest);
-        viewHand = (Button) v.findViewById(R.id.view_cards);
-        claimRoute = (Button) v.findViewById(R.id.claim_route);
-        playerList = (RecyclerView) v.findViewById(R.id.player_recycler_view);
+        trainDeck = v.findViewById(R.id.train_deck);
+        destDeck = v.findViewById(R.id.dest_deck);
+        chatWindow = v.findViewById(R.id.chat_room);
+        drawTrain = v.findViewById(R.id.draw_train);
+        drawDest = v.findViewById(R.id.draw_dest);
+        viewHand = v.findViewById(R.id.view_cards);
+        claimRoute = v.findViewById(R.id.claim_route);
+        playerList = v.findViewById(R.id.player_recycler_view);
         players = DataManager.getSINGLETON().getGamePlayers();
         context = getActivity();
-        //playerList.setAdapter(adapter);
-        //playerList = v.findViewById(R.id.player_list);
         getContext();
         playerList.setLayoutManager(new LinearLayoutManager(getContext()));
         player = DataManager.SINGLETON.getPlayer();
@@ -244,7 +223,7 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 viewListener = (ViewHandListener) getActivity();
-                viewListener.toViewHandFragment();//DataManager.getSINGLETON().getPlayer());//TODO get player ID
+                viewListener.toViewHandFragment();
             }
         });
         if (DataManager.SINGLETON.getPlayerState() == null) {
@@ -305,7 +284,7 @@ public class MapFragment extends Fragment {
 
         void bind(Player curPlayer) {
             this.curPlayer = curPlayer;
-            points.setText("Points: " + curPlayer.getPoints());//curPlayer.getPoints());
+            points.setText("Points: " + curPlayer.getPoints());
             playerName.setText("Username: " + curPlayer.getUsername());
         }
 
@@ -326,9 +305,7 @@ public class MapFragment extends Fragment {
         }
 
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
-        if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
-            DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment);
-        }
+        if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) { DataManager.SINGLETON.getPlayerState().moveToNotTurnState(selfMapFragment); }
         else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
     }
 
@@ -354,9 +331,7 @@ public class MapFragment extends Fragment {
         trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
     }
 
-    public void makeWildCardToast(){
-        Toast.makeText(this.context, R.string.wildcard_error, Toast.LENGTH_SHORT).show();
-    }
+    public void makeWildCardToast() { Toast.makeText(this.context, R.string.wild_card_error, Toast.LENGTH_SHORT).show(); }
 
     public void onNotTurnStart() {
         disableDrawTrainCards();
@@ -405,11 +380,7 @@ public class MapFragment extends Fragment {
         trainDeck.setEnabled(true);
     }
 
-    public void setAllColors(){
-        for (int i = 0; i < 5; i++){
-            setCardColor(i);
-        }
-    }
+    public void setAllColors(){ for (int i = 0; i < 5; i++){ setCardColor(i); } }
 
     public void disableDrawTrainCards() {
         cardOne.setEnabled(false);
