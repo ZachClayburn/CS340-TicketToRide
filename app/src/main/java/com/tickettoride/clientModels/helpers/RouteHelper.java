@@ -140,8 +140,8 @@ public class RouteHelper {
             routes.add(new Route(Arrays.asList(new Line(1292, 538, 1213, 607)), Color.GREY, 2, City.RALEIGH, City.ATLANTA, false, null));
             routes.add(new Route(Arrays.asList(new Line(1281, 524, 1202, 593)), Color.GREY, 2, City.RALEIGH, City.ATLANTA, false, null));
             routes.add(new Route(Arrays.asList(new Line(1281, 494, 1258, 385)), Color.GREY, 2, City.RALEIGH, City.PITTSBURGH, false, null));
-            routes.add(new Route(Arrays.asList(new Line(1265, 365, 995, 502)), Color.GREY, 2, City.WASHINGTON, City.PITTSBURGH, false, null));
-            routes.add(new Route(Arrays.asList(new Line(1230, 365, 1365, 415)), Color.GREEN, 5, City.PITTSBURGH, City.SAINT_LOUIS, false, null));
+            routes.add(new Route(Arrays.asList(new Line(1265, 365, 1365, 415)), Color.GREY, 2, City.WASHINGTON, City.PITTSBURGH, false, null));
+            routes.add(new Route(Arrays.asList(new Line(1230, 365, 995, 502)), Color.GREEN, 5, City.PITTSBURGH, City.SAINT_LOUIS, false, null));
             routes.add(new Route(Arrays.asList(new Line(990, 524, 1090, 554)), Color.GREY, 2, City.SAINT_LOUIS, City.NASHVILLE, false, null));
             routes.add(new Route(Arrays.asList(new Line(975, 514, 947, 602)), Color.GREY, 2, City.KANSAS_CITY, City.LITTLE_ROCK, false, null));
             routes.add(new Route(Arrays.asList(new Line(937, 625, 832, 630)), Color.GREY, 2, City.LITTLE_ROCK, City.OKLAHOMA_CITY, false, null));
@@ -150,7 +150,7 @@ public class RouteHelper {
             routes.add(new Route(Arrays.asList(new Line(808, 612, 837, 510)), Color.GREY, 2, City.OKLAHOMA_CITY, City.KANSAS_CITY, false, null));
             routes.add(new Route(Arrays.asList(new Line(828, 615, 857, 513)), Color.GREY, 2, City.OKLAHOMA_CITY, City.KANSAS_CITY, false, null));
             routes.add(new Route(Arrays.asList(new Line(857, 505, 959, 502)), Color.PURPLE, 2, City.KANSAS_CITY, City.SAINT_LOUIS, false, null));
-            routes.add(new Route(Arrays.asList(new Line(857, 485, 1040, 392)), Color.BLUE, 2, City.KANSAS_CITY, City.SAINT_LOUIS, false, null));
+            routes.add(new Route(Arrays.asList(new Line(857, 485, 959, 486)), Color.BLUE, 2, City.KANSAS_CITY, City.SAINT_LOUIS, false, null));
             routes.add(new Route(Arrays.asList(new Line(964, 475, 1025, 382)), Color.GREEN, 2, City.SAINT_LOUIS, City.CHICAGO, false, null));
             routes.add(new Route(Arrays.asList(new Line(980, 485, 1040, 392)), Color.WHITE, 2, City.SAINT_LOUIS, City.CHICAGO, false, null));
             routes.add(new Route(Arrays.asList(new Line(937, 640, 867, 740)), Color.GREY, 2, City.LITTLE_ROCK, City.DALLAS, false, null));
@@ -171,9 +171,9 @@ public class RouteHelper {
             routes.add(new Route(Arrays.asList(new Line(590, 662, 760, 641)), Color.BLUE, 3, City.SANTA_FE, City.OKLAHOMA_CITY, false, null));
             routes.add(new Route(Arrays.asList(new Line(575, 647, 580, 540)), Color.GREY, 2, City.SANTA_FE, City.DENVER, false, null));
             routes.add(new Route(Arrays.asList(new Line(575, 677, 570, 784)), Color.GREY, 2, City.EL_PASO, City.SANTA_FE, false, null));
-            routes.add(new Route(Arrays.asList(new Line(160, 195, 220, 195), new Line(220, 195, 265, 190),
+            routes.add(new Route(Arrays.asList(new Line(160, 195, 220, 196), new Line(220, 195, 265, 190),
                     new Line(265, 190, 320, 150), new Line(320, 150, 340, 105)), Color.GREY, 4, City.SEATTLE, City.CALGARY, false, null));
-            routes.add(new Route(Arrays.asList(new Line(360, 85, 415, 62), new Line(415, 62, 465, 53),
+            routes.add(new Route(Arrays.asList(new Line(360, 85, 415, 62), new Line(415, 62, 465, 53), new Line(465, 53, 520, 50),
                     new Line(520, 50, 580, 53), new Line(580, 53, 625, 65), new Line(625, 65, 675, 90)), Color.WHITE,
                     6, City.CALGARY, City.WINNIPEG, false, null));
             routes.add(new Route(Arrays.asList(new Line(1065, 165, 1100, 132), new Line(1100, 132, 1150, 107),
@@ -185,9 +185,9 @@ public class RouteHelper {
                     new Line(1115, 275, 1070, 310), new Line(1070, 310, 1035, 350)), Color.WHITE, 4, City.TORONTO,
                     City.CHICAGO, false, null));
             routes.add(new Route(Arrays.asList(new Line(1055, 350, 1105, 337), new Line(1105, 337, 1160, 330),
-                    new Line(1160, 330, 1215, 330)), Color.ORANGE, 3, City.CHICAGO, City.PITTSBURGH, false, null));
+                    new Line(1160, 330, 1215, 331)), Color.ORANGE, 3, City.CHICAGO, City.PITTSBURGH, false, null));
             routes.add(new Route(Arrays.asList(new Line(1060, 370, 1115, 355), new Line(1115, 355, 1165, 350),
-                    new Line(1165, 350, 1220, 350)), Color.BLACK, 3, City.CHICAGO, City.PITTSBURGH, false, null));
+                    new Line(1165, 350, 1220, 351)), Color.BLACK, 3, City.CHICAGO, City.PITTSBURGH, false, null));
             routes.add(new Route(Arrays.asList(new Line(1025, 352, 965, 337), new Line(965, 337, 915, 320),
                     new Line(915, 320, 865, 290)), Color.RED, 3, City.DULUTH, City.CHICAGO, false, null));
             routes.add(new Route(Arrays.asList(new Line(1025, 375, 920, 355), new Line(915, 360, 830, 415)),
@@ -195,10 +195,10 @@ public class RouteHelper {
             routes.add(new Route(Arrays.asList(new Line(795, 425, 745, 435), new Line(745, 435, 693, 450),
                     new Line(693, 450, 643, 470), new Line(643, 470, 593, 510)), Color.PURPLE, 4, City.OMAHA,
                     City.DENVER, false, null));
-            routes.add(new Route(Arrays.asList(new Line(613, 520, 663, 525), new Line(663, 525, 718, 525),
+            routes.add(new Route(Arrays.asList(new Line(613, 520, 663, 525), new Line(663, 525, 718, 526),
                     new Line(718, 525, 768, 515), new Line(768, 515, 823, 495)), Color.BLACK, 4, City.DENVER,
                     City.KANSAS_CITY, false, null));
-            routes.add(new Route(Arrays.asList(new Line(613, 542, 663, 545), new Line(663, 545, 713, 545),
+            routes.add(new Route(Arrays.asList(new Line(613, 542, 663, 545), new Line(663, 545, 713, 546),
                     new Line(713, 545, 773, 535), new Line(773, 535, 823, 515)), Color.ORANGE, 4, City.DENVER,
                     City.KANSAS_CITY, false, null));
             routes.add(new Route(Arrays.asList(new Line(596, 550, 636, 590), new Line(636, 590, 686, 613),
@@ -213,10 +213,10 @@ public class RouteHelper {
             routes.add(new Route(Arrays.asList(new Line(538, 802, 488, 815), new Line(488, 815, 428, 820),
                     new Line(428, 820, 373, 812), new Line(373, 812, 318, 800), new Line(318, 800, 268, 780),
                     new Line(268, 780, 218, 740)), Color.BLACK, 6, City.LOS_ANGELES, City.EL_PASO, false, null));
-            routes.add(new Route(Arrays.asList(new Line(218, 725, 268, 717), new Line(268, 717, 318, 717),
+            routes.add(new Route(Arrays.asList(new Line(218, 725, 268, 717), new Line(268, 717, 318, 718),
                     new Line(318, 717, 378, 727)), Color.GREY, 3, City.LOS_ANGELES, City.PHOENIX, false, null));
             routes.add(new Route(Arrays.asList(new Line(393, 727, 413, 677), new Line(413, 677, 443, 627),
-                    new Line(443, 677, 443, 627), new Line(478, 577, 518, 547), new Line(518, 547, 563, 537)),
+                    new Line(443, 627, 478, 577), new Line(478, 577, 518, 547), new Line(518, 547, 563, 537)),
                     Color.WHITE, 5, City.PHOENIX, City.DENVER, false, null));
             routes.add(new Route(Arrays.asList(new Line(193, 720, 158, 678), new Line(158, 678, 123, 628),
                     new Line(123, 628, 103, 578)), Color.PURPLE, 3, City.SAN_FRANCISCO, City.LOS_ANGELES, false, null));
