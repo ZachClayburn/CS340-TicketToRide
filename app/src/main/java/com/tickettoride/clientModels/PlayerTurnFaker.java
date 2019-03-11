@@ -1,4 +1,6 @@
 package com.tickettoride.clientModels;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.controllers.DestinationCardController;
@@ -24,11 +26,11 @@ public class PlayerTurnFaker {
         Random rand = new Random();
         int r = rand.nextInt(3);
         fakeCollectTrains(player);
-//        switch (r) {
-//            case 0: { fakeCollectTrains(player); return; }
-//            case 1: { fakeDrawDestinations(player); return; }
-//            case 2: { fakeCollectTrains(player); return; }
-//        }
+        switch (r) {
+            case 0: { fakeCollectTrains(player); return; }
+            case 1: { fakeDrawDestinations(player); return; }
+            case 2: { fakeClaimRoute(player); return; }
+        }
     }
 
     private void fakeCollectTrains(Player player) {

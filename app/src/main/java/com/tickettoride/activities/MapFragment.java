@@ -149,6 +149,15 @@ public class MapFragment extends Fragment {
         return actualMap;
     }
 
+    public void externalDraw() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
+        Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(actualMap);
+        this.drawView.draw(canvas);
+        board.setImageBitmap(actualMap);
+        v.invalidate();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.v = inflater.inflate(R.layout.game, container, false);
@@ -264,6 +273,7 @@ public class MapFragment extends Fragment {
 
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
+            DataManager.getSINGLETON().setTrainCardsDrawn(0);
             GameRoomActivity activity = (GameRoomActivity) getActivity();
             activity.incrementTurn();
         }
@@ -273,10 +283,13 @@ public class MapFragment extends Fragment {
     public void finishDrawFacedownCard(){
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if (trainCardsDrawn == 1) {
+            DataManager.getSINGLETON().setTrainCardsDrawn(0);
             GameRoomActivity activity = (GameRoomActivity) getActivity();
             activity.incrementTurn();
         }
-        else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);}
+        else {
+            DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
+        }
     }
 
     public void onTurnStart() {

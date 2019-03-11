@@ -1,5 +1,7 @@
 package com.tickettoride.controllers;
 
+import android.widget.Toast;
+
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.clientModels.DataManager;
@@ -22,7 +24,11 @@ public class DestinationCardController extends BaseController {
         if (isUserPlayer(player)){
             List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
+            player.setDestinationCardCount(player.getDestinationCardCount() + destinationDeckCount);
         } else {
+            try {
+                Toast.makeText(getCurrentActivity(), "DRAW DESTINATION CARDS", Toast.LENGTH_LONG).show();
+            } catch (Throwable t) {}
             Player managedPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
             managedPlayer.setDestinationCardCount(managedPlayer.getDestinationCardCount() + acceptedCards.size());
         }

@@ -93,7 +93,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (currentColor == null && (currentHand.getBlue() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getBlue() > 0)) {
+                        if (currentColor == null && (currentHand.getBlue() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getBlue() > 0)) {
                             currentColor = Color.BLUE;
                             ++discardedColor;
                             ++discardedCards;
@@ -135,7 +135,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getGreen() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getGreen() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getGreen() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getGreen() > 0)) {
                             currentColor = Color.GREEN;
                             ++discardedColor;
                             ++discardedCards;
@@ -177,7 +177,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getPurple() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getPurple() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getPurple() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getPurple() > 0)) {
                             currentColor = Color.PURPLE;
                             ++discardedColor;
                             ++discardedCards;
@@ -219,7 +219,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getRed() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getRed() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getRed() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getRed() > 0)) {
                             currentColor = Color.RED;
                             ++discardedColor;
                             ++discardedCards;
@@ -261,7 +261,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getOrange() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getOrange() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getOrange() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getOrange() > 0)) {
                             currentColor = Color.ORANGE;
                             ++discardedColor;
                             ++discardedCards;
@@ -303,7 +303,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (currentColor == null && (currentHand.getYellow() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getYellow() > 0)) {
+                        if (currentColor == null && (currentHand.getYellow() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getYellow() > 0)) {
                             currentColor = Color.YELLOW;
                             ++discardedColor;
                             ++discardedCards;
@@ -345,7 +345,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getBlack() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getBlack() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getBlack() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getBlack() > 0)) {
                             currentColor = Color.BLACK;
                             ++discardedColor;
                             ++discardedCards;
@@ -387,7 +387,7 @@ public class DiscardFragment extends Fragment {
             public void onClick(View view) {
                 switch (currentRoute.getColor()) {
                     case GREY:
-                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getWhite() + currentHand.getLocomotive()) >= currentRoute.getSpaces() && (currentHand.getWhite() > 0)) {
+                        if (discardedCards != currentRoute.getSpaces() && currentColor == null && (currentHand.getWhite() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getWhite() > 0)) {
                             currentColor = Color.WHITE;
                             ++discardedColor;
                             ++discardedCards;

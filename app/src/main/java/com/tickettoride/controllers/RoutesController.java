@@ -1,5 +1,7 @@
 package com.tickettoride.controllers;
 
+import android.widget.Toast;
+
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.clientModels.Route;
 import com.tickettoride.clientModels.helpers.RouteHelper;
@@ -20,7 +22,11 @@ public class RoutesController extends BaseController {
             RouteHelper.getSingleton().claimRoute(route);
             activity.onReturnToMap();
         } else {
+            try {
+                Toast.makeText(getCurrentActivity(), "CLAIM ROUTE", Toast.LENGTH_LONG).show();
+            } catch (Throwable t) {}
             RouteHelper.getSingleton().claimRoute(route, player);
+            activity.getMapFragment().externalDraw();
         }
     }
 }

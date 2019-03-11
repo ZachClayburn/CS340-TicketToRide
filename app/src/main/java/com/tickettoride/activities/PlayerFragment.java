@@ -35,13 +35,7 @@ public class PlayerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         players = DataManager.getSINGLETON().getGamePlayers();
-        UUID playerID = UUID.fromString(args.getString("player", null));
-        for (Player player : players) {
-            if(player.getPlayerID().equals(playerID)) {
-                this.player = player;
-            }
-        }
-        //this.player = DataManager.SINGLETON.getPlayer();
+        this.player = DataManager.SINGLETON.getPlayer();
         fragmentListener = (OnReturnToMapListener) getActivity();
     }
 
