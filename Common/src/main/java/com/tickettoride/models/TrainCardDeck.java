@@ -40,6 +40,8 @@ public class TrainCardDeck {
             faceUpDeck.add(faceDownDeck.get(0));
             faceDownDeck.remove(0);
         }
+
+        checkForWild();
     }
 
     public List<TrainCard> getFaceDownDeck(){return faceDownDeck;}
@@ -80,5 +82,61 @@ public class TrainCardDeck {
         return faceUpDeck.get(i).getColor();
     }
 
-    // TODO: Check if three or more locomotives in faceup pile and discards
+    public Boolean checkForWild(){
+        int wildCount = 0;
+        for (TrainCard card: faceUpDeck){
+            if (card.getColor() == Color.WILD){
+                wildCount += 1;
+            }
+        }
+
+        if (wildCount >= 3){
+            discardPile.addAll(faceUpDeck);
+            faceUpDeck.clear();
+            for (int i = 0; i < 5; i++){
+                faceUpDeck.add(faceDownDeck.get(0));
+                faceDownDeck.remove(0);
+                checkForEmptyDeck();
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    public Hand getInitialHand(){
+        Hand hand = new Hand();
+
+        for (int i = 0; i < 4; i++){
+            TrainCard card = drawFromFaceDown();
+            if (card.getColor() == Color.RED){
+                hand.setRed(1);
+            }
+            if (card.getColor() == Color.GREEN){
+                hand.setGreen(1);
+            }
+            if (card.getColor() == Color.BLUE){
+                hand.setBlue(1);
+            }
+            if (card.getColor() == Color.YELLOW){
+                hand.setYellow(1);
+            }
+            if (card.getColor() == Color.PURPLE){
+                hand.setPurple(1);
+            }
+            if (card.getColor() == Color.ORANGE){
+                hand.setOrange(1);
+            }
+            if (card.getColor() == Color.BLACK){
+                hand.setBlack(1);
+            }
+            if (card.getColor() == Color.WHITE){
+                hand.setWhite(1);
+            }
+            if (card.getColor() == Color.WILD){
+                hand.setLocomotive(1);
+            }
+        }
+        return hand;
+    }
 }

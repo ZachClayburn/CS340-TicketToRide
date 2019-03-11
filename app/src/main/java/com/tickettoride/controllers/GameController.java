@@ -5,9 +5,12 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
 import com.tickettoride.models.Session;
+import com.tickettoride.models.TrainCard;
+import com.tickettoride.models.TrainCardDeck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,8 +109,43 @@ public class GameController extends BaseController {
         setPlayerInfo(playerList);
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
+        setupPlayerHands();
     }
 
+    public void drawFaceupCard(UUID playerID, TrainCard card, TrainCardDeck deck){
+        DataManager.SINGLETON.setTrainCardDeck(deck);
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        MapFragment fragment = (MapFragment) activity.getCurrentFragment();
+
+        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
+            DataManager.SINGLETON.addToHand(card);
+        }
+        else{
+            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+            player.setHandCount(player.getHandCount() + 1);
+        }
+
+        fragment.setAllColors();
+        fragment.finishDrawFaceUpTrainCard(card);
+    }
+
+
+    public void drawFaceDownCard(UUID playerID, TrainCard card, TrainCardDeck deck){
+        DataManager.SINGLETON.setTrainCardDeck(deck);
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        MapFragment fragment = (MapFragment) activity.getCurrentFragment();
+
+        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
+            DataManager.SINGLETON.addToHand(card);
+        }
+        else{
+            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+            player.setHandCount(player.getHandCount() + 1);
+        }
+
+        fragment.finishDrawFacedownCard();
+    }
+    
     public void setPlayerInfo(List<Player> playerList) {
         for (Player player : playerList) {
             if (player.getPlayerID().equals(DataManager.SINGLETON.getPlayer().getPlayerID())) {
@@ -116,6 +154,18 @@ public class GameController extends BaseController {
         }
     }
 
+    // Move this logic to server for Phase 3
+    public void setupPlayerHands(){
+        UUID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
+        for (Player player: DataManager.SINGLETON.getGamePlayers()){
+            Hand hand = DataManager.SINGLETON.getTrainCardDeck().getInitialHand();
+            player.setHandCount(hand.getHandSize());
+
+            if (player.getPlayerID() == playerID){
+                DataManager.SINGLETON.setPlayerHand(hand);
+            }
+        }
+    }
 
     public void errorSetup() {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();

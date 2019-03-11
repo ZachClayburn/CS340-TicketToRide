@@ -14,6 +14,9 @@ public class Hand {
     private int black = 0;
     private int white = 0;
     private int locomotive = 0;
+
+    public Hand(){}
+
     public void setBlue(int amount) {
         blue = blue + amount;
     }
@@ -68,6 +71,11 @@ public class Hand {
     public int getLocomotive() {
         return locomotive;
     }
+
+    public int getHandSize(){
+        return blue + green + purple + red + orange + yellow + black + white + locomotive;
+    }
+
     public List<DestinationCard> getDestinationCards() {
         return destinationCards;
     }

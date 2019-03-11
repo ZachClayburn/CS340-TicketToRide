@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DataManager {
     
@@ -71,7 +72,13 @@ public class DataManager {
     public void setPlayerList(Player player) {gamePlayers.add(player);}
     public List<Player> getGamePlayers() { return gamePlayers; }
 
-    public void setTrainCardDeck() {
+    public List<Player> getGamePlayers() { return gamePlayers; }
+
+    public void setTrainCardDeck(TrainCardDeck deck) {
+        trainCardDeck = deck;
+    }
+
+    public void initializeDeck(){
         trainCardDeck = new TrainCardDeck();
     }
 
@@ -80,6 +87,8 @@ public class DataManager {
     public Hand getPlayerHand() {
         return playerHand;
     }
+
+    public void setPlayerHand(Hand hand) {this.playerHand = hand;}
 
     public void setPlayerState(PlayerState playerState) { this.playerState = playerState; }
 
@@ -158,5 +167,14 @@ public class DataManager {
 
     public Integer getDestCardsRequiredToKeep() {
         return destCardsRequiredToKeep;
+    }
+
+    public Player findPlayerByID(UUID playerID){
+        for (Player player:gamePlayers){
+            if (player.getPlayerID() == playerID){
+                return player;
+            }
+        }
+        return null;
     }
 }

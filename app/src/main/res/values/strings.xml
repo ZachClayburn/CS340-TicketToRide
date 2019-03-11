@@ -111,5 +111,5 @@
     <string name="washington_name">Washington D.C.</string>
     <string name="new_york_name">New York City</string>
     <string name="invalid_city_name">Error! Invalid city!</string>
-
+    <string name="wildcard_error">You cannot draw a locomotive on your second draw</string>
 </resources>

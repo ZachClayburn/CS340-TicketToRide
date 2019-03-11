@@ -3,6 +3,7 @@ package com.tickettoride.activities;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -41,7 +42,7 @@ public class GameRoomActivity extends MyBaseActivity implements
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
         Game game = DataManager.getSINGLETON().getGame();
-        DataManager.SINGLETON.setTrainCardDeck();
+        DataManager.SINGLETON.initializeDeck();
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }
 
