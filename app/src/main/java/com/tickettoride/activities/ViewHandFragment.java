@@ -79,9 +79,7 @@ public class ViewHandFragment extends Fragment {
         destCards = v.findViewById(R.id.dest_card_list);
         returnMap.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                fragmentListener.onReturnToMap();
-            }
+            public void onClick(View view) { fragmentListener.onReturnToMap(); }
         });
         destCards.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), playerDestCards);

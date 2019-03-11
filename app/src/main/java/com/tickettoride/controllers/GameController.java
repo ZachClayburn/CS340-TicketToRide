@@ -1,10 +1,10 @@
 package com.tickettoride.controllers;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
@@ -25,32 +25,16 @@ public class GameController extends BaseController {
 
     public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
-        try { createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
-        try { createGameOnCreateGameActivity(game, playerID); return; } catch (ClassCastException e) {
+        try { GameControllerHelper.getSingleton().createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
+        try { GameControllerHelper.getSingleton().createGameOnCreateGameActivity(game, playerID); return; } catch (ClassCastException e) {
             Log.i("GAME_CONTROLLER", e.getMessage(), e);
         }
     }
 
-    private void createGameOnJoinActivity(Game game) throws ClassCastException {
-        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
-        DataManager.getSINGLETON().getGameIndex().addJoinGame(game);
-        joinGameActivity.updateUI();
-    }
-
-    private void createGameOnCreateGameActivity(Game game, UUID playerID) throws ClassCastException {
-        CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
-        Session session = DataManager.getSINGLETON().getSession();
-        Player player = new Player(session.getUserID(), game.getGameID(), playerID);
-        DataManager.SINGLETON.setGame(game);
-        DataManager.SINGLETON.setPlayer(player);
-        DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
-        createGameActivity.moveToLobbyCreate(game);
-    }
-
-    public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
+    public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
         Session session = DataManager.getSINGLETON().getSession();
         Player player = new Player(session.getUserID(), gameID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, false);
         // If user is the one joining game and becoming a player
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
@@ -62,17 +46,16 @@ public class GameController extends BaseController {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
         }
-        // Update game index for all other players
         else {
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.updateUI();
         }
     }
     
-    public void rejoin(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted){
+    public void rejoinNotStarted(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer){
         Session session = DataManager.getSINGLETON().getSession();
         Player player = new Player(session.getUserID(), gameID, playerID);
-        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
+        Game game = new Game(gameID, groupName, numPlayer, maxPlayer, false);
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             DataManager.SINGLETON.setPlayer(player);
             DataManager.SINGLETON.setGame(game);
@@ -81,6 +64,22 @@ public class GameController extends BaseController {
         } else if (DataManager.SINGLETON.getPlayer().getGameID().equals(game.getGameID())) {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
+        }
+    }
+
+    public void rejoinIsStarted(UUID sessionID, UUID gameID, String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap, ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount){
+        if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
+            List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
+            List<DestinationCard> playerHand = DestinationCard.unGsonCards(playerHandMap);
+            Game game = new Game(gameID, groupName,true);
+            GameControllerHelper.getSingleton().setPlayerInfo(players);
+            DataManager.SINGLETON.setGame(game);
+            DataManager.SINGLETON.setGamePlayers(players);
+            DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
+            DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
+            DataManager.SINGLETON.setTurn(1);
+            JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+            joinGameActivity.moveToGame();
         }
     }
 
@@ -99,74 +98,18 @@ public class GameController extends BaseController {
         ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
         DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
-//        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
-//        joinGameActivity.updateUI();
     }
 
     public void start(ArrayList<LinkedTreeMap<String, Object>> players) {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
-        setPlayerInfo(playerList);
+        GameControllerHelper.getSingleton().setPlayerInfo(playerList);
         DataManager.SINGLETON.initializeDeck();
-        setupPlayerHands();
+        DataManager.SINGLETON.setDestinationCardDeckSize(30);
+        GameControllerHelper.getSingleton().setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
-    }
-
-    public void drawFaceupCard(UUID playerID, TrainCard card, TrainCardDeck deck){
-        DataManager.SINGLETON.setTrainCardDeck(deck);
-        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        MapFragment fragment = activity.getMapFragment();
-
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
-            DataManager.SINGLETON.addToHand(card);
-        }
-        else{
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setHandCount(player.getHandCount() + 1);
-        }
-
-        fragment.setAllColors();
-        fragment.finishDrawFaceUpTrainCard(card);
-    }
-
-
-    public void drawFaceDownCard(UUID playerID, TrainCard card, TrainCardDeck deck){
-        DataManager.SINGLETON.setTrainCardDeck(deck);
-        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        MapFragment fragment = activity.getMapFragment();
-
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
-            DataManager.SINGLETON.addToHand(card);
-        }
-        else{
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setHandCount(player.getHandCount() + 1);
-        }
-
-        fragment.finishDrawFacedownCard();
-    }
-    
-    public void setPlayerInfo(List<Player> playerList) {
-        for (Player player : playerList) {
-            if (player.getPlayerID().equals(DataManager.SINGLETON.getPlayer().getPlayerID())) {
-                DataManager.SINGLETON.setPlayer(player);
-            }
-        }
-    }
-
-    // Move this logic to server for Phase 3
-    public void setupPlayerHands(){
-        UUID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
-        for (Player player: DataManager.SINGLETON.getGamePlayers()){
-            Hand hand = DataManager.SINGLETON.getTrainCardDeck().getInitialHand();
-            player.setHandCount(hand.getHandSize());
-
-            if (player.getPlayerID() == playerID){
-                DataManager.SINGLETON.setPlayerHand(hand);
-            }
-        }
     }
 
     public void errorSetup() {

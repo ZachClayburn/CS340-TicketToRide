@@ -4,6 +4,7 @@ import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import exceptions.DatabaseException;
 import com.tickettoride.database.UserDAO;
+import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
@@ -30,9 +31,9 @@ public class UserFacade extends BaseFacade {
         try {
             User user = create_user(username , password);
             Session session = SessionFacade.getSingleton().create_session(user);
-            ArrayList<Game> games = GameFacade.getSingleton().allGames();
-            ArrayList<Game> joinGames = GameFacade.getSingleton().determineJoinGames(user, games);
-            ArrayList<Game> rejoinGames = GameFacade.getSingleton().determineRejoinGames(user, games);
+            ArrayList<Game> games = GameFacadeHelper.getSingleton().allGames();
+            ArrayList<Game> joinGames = GameFacadeHelper.getSingleton().determineJoinGames(user, games);
+            ArrayList<Game> rejoinGames = GameFacadeHelper.getSingleton().determineRejoinGames(user, games);
             Command command = new Command(CONTROLLER_NAME, "create", session.getSessionID(), user.getUserID(), joinGames, rejoinGames);
             ServerCommunicator.getINSTANCE().moveToMainLobby(connID);
             sendResponseToOne(connID, command);

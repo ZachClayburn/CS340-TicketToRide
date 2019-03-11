@@ -60,7 +60,7 @@ public class PlayerFragment extends Fragment {
         returnToGameButton = (Button)v.findViewById(R.id.return_to_game);
 
         usernameText.setText(getResources().getString(R.string.player_label, player.getUsername()));
-        trainCardsText.setText(getResources().getString(R.string.train_card_label, player.getHandCount()));
+        trainCardsText.setText(getResources().getString(R.string.train_card_label, player.getTrainCardCount()));
         destCardsText.setText(getResources().getString(R.string.destination_card_label, player.getDestinationCardCount()));
         carsText.setText(getResources().getString(R.string.cars_label, player.getTrainCarCount()));
         turnText.setText(getResources().getString(R.string.turn_label, player.getTurn()));

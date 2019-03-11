@@ -10,7 +10,7 @@ public class Player {
     private UUID gameID;
     private UUID playerID;
     private int trainCarCount = 45;
-    private int handCount = 4;
+    private int trainCardCount = 4;
     private int destinationCardCount = 0;
 
     //FIXME Add this functionality
@@ -134,12 +134,12 @@ public class Player {
         this.trainCarCount = trainCarCount;
     }
 
-    public int getHandCount() {
-        return handCount;
+    public int getTrainCardCount() {
+        return trainCardCount;
     }
 
-    public void setHandCount(int handCount) {
-        this.handCount = handCount;
+    public void setTrainCardCount(int trainCardCount) {
+        this.trainCardCount = trainCardCount;
     }
 
     public int getDestinationCardCount() {

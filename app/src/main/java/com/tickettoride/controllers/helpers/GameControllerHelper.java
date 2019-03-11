@@ -1,12 +1,20 @@
 package com.tickettoride.controllers.helpers;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.tickettoride.activities.CreateGameActivity;
+import com.tickettoride.activities.JoinGameActivity;
+import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.controllers.BaseController;
+import com.tickettoride.models.Game;
+import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class GameControllerHelper {
+public class GameControllerHelper extends BaseController {
     private static GameControllerHelper SINGLETON = new GameControllerHelper();
     public static GameControllerHelper getSingleton() { return SINGLETON; }
     private GameControllerHelper() {}
@@ -18,5 +26,42 @@ public class GameControllerHelper {
             playerList.add(player);
         }
         return playerList;
+    }
+
+    public void setPlayerInfo(List<Player> playerList) {
+        for (Player player : playerList) {
+            if (player.getUserID().equals(DataManager.SINGLETON.getSession().getUserID())) {
+                DataManager.SINGLETON.setPlayer(player);
+            }
+        }
+    }
+
+    // Move this logic to server for Phase 3
+    public void setupPlayerHands(){
+        UUID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
+        for (Player player: DataManager.SINGLETON.getGamePlayers()){
+            Hand hand = DataManager.SINGLETON.getTrainCardDeck().getInitialHand();
+            player.setTrainCardCount(hand.getHandSize());
+
+            if (player.getPlayerID() == playerID){
+                DataManager.SINGLETON.setPlayerHand(hand);
+            }
+        }
+    }
+
+    public void createGameOnJoinActivity(Game game) throws ClassCastException {
+        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+        DataManager.getSINGLETON().getGameIndex().addJoinGame(game);
+        joinGameActivity.updateUI();
+    }
+
+    public void createGameOnCreateGameActivity(Game game, UUID playerID) throws ClassCastException {
+        CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
+        Session session = DataManager.getSINGLETON().getSession();
+        Player player = new Player(session.getUserID(), game.getGameID(), playerID);
+        DataManager.SINGLETON.setGame(game);
+        DataManager.SINGLETON.setPlayer(player);
+        DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
+        createGameActivity.moveToLobbyCreate(game);
     }
 }

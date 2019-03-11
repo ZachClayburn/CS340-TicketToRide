@@ -3,8 +3,11 @@ package com.tickettoride.facades;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
+import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
+import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,94 +34,32 @@ public class DestinationCardFacade extends BaseFacade {
 
     private DestinationCardFacade() {}
 
-    public void drawDestinationCards(UUID connID, Player player) {
+    public void drawDestinationCards(UUID connID, Player player, Integer cardsToKeep) {
         logger.debug("Player " + player.getUsername() + " is drawing cards");
-        try (var db = new Database()){
-            var game = db.getGameDAO().getGame(player.getGameID());
-            assert game != null;
-
-            Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
-
+        try {
+            Queue<DestinationCard> destinationDeck = DestinationCardFacadeHelper.getSingleton().gameDestinationCards(player.getGameID());
             List<DestinationCard> offeredCards = new ArrayList<>();
-
             offeredCards.add(destinationDeck.poll());
             offeredCards.add(destinationDeck.poll());
             offeredCards.add(destinationDeck.poll());
-
-            db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
-
-            var command = offerDestinationCards(player, offeredCards);
+            DestinationCardFacadeHelper.getSingleton().offerCardsToPlayer(player, offeredCards);
+            Command command = DestinationCardFacadeHelper.getSingleton().offerDestinationCards(player, offeredCards, cardsToKeep);
             sendResponseToRoom(connID, command);
-
-            db.commit();
-
-        } catch (DatabaseException e) {
-            logger.catching(e);//FIXME add proper error handling
+        } catch (Throwable throwable) {
+            logger.error(throwable);//FIXME add proper error handling
         }
     }
 
-    public void acceptDestinationCards(UUID connID, Player player,
-                                       ArrayList<LinkedTreeMap> gsonCards) {
-        List<DestinationCard> acceptedCards = DestinationCard.unGsonCards(gsonCards);
-        try (var db = new Database()) {
-            //FIXME Come up with way to track that everyone has accepted their first cards
-            db.getDestinationCardDAO().acceptCards(player, acceptedCards);
-
-            var cmd = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards",
-                    player, acceptedCards);
-
-            sendResponseToRoom(connID, cmd);
-
-            db.commit();
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();//FIXME Add proper error handling
+    public void acceptDestinationCards(UUID connID, Player player, ArrayList<LinkedTreeMap> gsonCards) {
+        try {
+            List<DestinationCard> acceptedCards = DestinationCard.unGsonCards(gsonCards);
+            Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(player.getGameID());
+            int deckCount = gameDeck.size();
+            DestinationCardFacadeHelper.getSingleton().acceptCardsForPlayer(player, acceptedCards);
+            Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount);
+            sendResponseToRoom(connID, command);
+        } catch (Throwable throwable) {
+            logger.error(throwable);//FIXME add proper error handling
         }
-    }
-
-    void dealCards(UUID conID, UUID gameID) {
-        logger.debug("Dealing to game " + gameID);
-
-        List<Command> commands = new ArrayList<>();
-        try (var db = new Database()) {
-
-            var game = db.getGameDAO().getGame(gameID);
-            assert game != null;
-
-            Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
-
-            for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
-                List<DestinationCard> offeredCards = new ArrayList<>();
-
-                offeredCards.add(destinationDeck.remove());
-                offeredCards.add(destinationDeck.remove());
-                offeredCards.add(destinationDeck.remove());
-
-                db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
-                commands.add(offerDestinationCards(player, offeredCards, 2));
-            }
-
-            commands.add(sendDestinationDeck(destinationDeck));
-
-            db.commit();
-
-        } catch (DatabaseException e) {
-            e.printStackTrace();//FIXME Add proper error handling
-        }
-
-        commands.forEach(command -> sendResponseToRoom(conID, command));
-    }
-
-    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards) {
-        return offerDestinationCards(player,  offeredCards, 1);
-    }
-
-    Command offerDestinationCards(Player player, List<DestinationCard> offeredCards, int requiredToKeep) {
-        return new Command(CONTROLLER_NAME, "offerDestinationCards",
-                player, offeredCards, requiredToKeep);
-    }
-
-    Command sendDestinationDeck(Queue<DestinationCard> deck) {
-        return new Command(CONTROLLER_NAME, "updateDestinationDeck", deck.size());
     }
 }

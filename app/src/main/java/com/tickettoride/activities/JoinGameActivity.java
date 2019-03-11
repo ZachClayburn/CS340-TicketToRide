@@ -70,6 +70,11 @@ public class JoinGameActivity extends MyBaseActivity {
         startActivity(intent);
     }
 
+    public void moveToGame() {
+        Intent intent = new Intent(JoinGameActivity.this, GameRoomActivity.class);
+        startActivity(intent);
+    }
+
     public class Adapter extends RecyclerView.Adapter<Holder> {
         private ArrayList<Game> listOfGames;
         private LayoutInflater inflater;

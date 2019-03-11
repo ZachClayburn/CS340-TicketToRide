@@ -17,11 +17,11 @@ public class DestinationCardFacadeProxy {
     public static final String TAG = "DESTINATION_CARD_FACADE_PROXY";
     private static final String FACADE_NAME = "DestinationCardFacade";
 
-    public static void drawDestinationCards(Player player){
+    public static void drawDestinationCards(Player player, int cardsToKeep){
 
         try {
 
-            Command command = new Command(FACADE_NAME, "drawDestinationCards", player);
+            Command command = new Command(FACADE_NAME, "drawDestinationCards", player, cardsToKeep);
             ClientCommunicator.SINGLETON.send(command);
 
         } catch (Throwable throwable) {

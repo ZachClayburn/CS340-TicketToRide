@@ -84,7 +84,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     }
 
-    public Queue<DestinationCard> getDeckForGame(Game game) throws DatabaseException {
+    public Queue<DestinationCard> getDeckForGame(UUID gameID) throws DatabaseException {
 
         Queue<DestinationCard> deck = new ArrayDeque<>();
         String sql = "SELECT " +
@@ -94,7 +94,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
         try (var statement = connection.prepareStatement(sql)){
 
-            statement.setString(1, game.getGameID().toString());
+            statement.setString(1, gameID.toString());
 
             var results = statement.executeQuery();
 
@@ -158,9 +158,9 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     }
 
-    public Set<DestinationCard> getPlayerHand(Player player) throws DatabaseException {
+    public List<DestinationCard> getPlayerHand(Player player) throws DatabaseException {
 
-        Set<DestinationCard> hand = new TreeSet<>();
+        List<DestinationCard> hand = new ArrayList<>();
         String sql = "SELECT " +
                 "destination1, destination2, pointvalue FROM destinationcards " +
                 "WHERE state='inPlayerHand' AND playerid=?";

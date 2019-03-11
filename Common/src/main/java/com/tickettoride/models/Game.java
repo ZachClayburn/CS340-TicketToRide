@@ -45,6 +45,12 @@ public class Game {
         this.isStarted = (Boolean) gameMap.get(("isStarted"));
     }
 
+    public Game(UUID gameID, String groupName, boolean isStarted) {
+        this.gameID = gameID;
+        this.groupName = groupName;
+        this.isStarted = isStarted;
+    }
+
     public void setGameID(UUID gameID) {
         this.gameID = gameID;
     }

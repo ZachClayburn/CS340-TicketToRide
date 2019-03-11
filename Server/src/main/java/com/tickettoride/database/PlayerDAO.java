@@ -1,6 +1,8 @@
 package com.tickettoride.database;
 
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerColor;
+
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -107,7 +109,7 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
     public void setTurn(UUID playerID, int turn) throws DatabaseException {
-        String sql = "UPDATE Players SET turn = ? WHERE gameID = ?";
+        String sql = "UPDATE Players SET turn = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setInt(1, turn);
             statement.setString(2, playerID.toString());

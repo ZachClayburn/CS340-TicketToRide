@@ -1,7 +1,8 @@
-package com.tickettoride.facades;
+package com.tickettoride.facades.helpers;
 
 import com.tickettoride.database.Database;
 import com.tickettoride.database.PlayerDAO;
+import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
@@ -14,10 +15,10 @@ import java.util.UUID;
 
 import exceptions.DatabaseException;
 
-public class PlayerFacade extends BaseFacade {
+public class PlayerHelper extends BaseFacade {
 
-    private static PlayerFacade SINGLETON = new PlayerFacade();
-    public static PlayerFacade getSingleton() { return SINGLETON; }
+    private static PlayerHelper SINGLETON = new PlayerHelper();
+    public static PlayerHelper getSingleton() { return SINGLETON; }
 
     public Player createPlayer(UUID user, UUID game) throws DatabaseException {
         try (Database database = new Database()) {
@@ -49,7 +50,6 @@ public class PlayerFacade extends BaseFacade {
             database.commit();
         }
     }
-
 
     public Player isAlreadyPlayer(User user, List<Player> players){
         if( players == null || players.size() == 0) { return null; }

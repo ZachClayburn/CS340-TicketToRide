@@ -1,7 +1,6 @@
 package com.tickettoride.activities;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,27 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
-
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Line;
 import com.tickettoride.clientModels.Route;
-import com.tickettoride.models.City;
-import com.tickettoride.models.Color;
-import com.tickettoride.models.Hand;
-import com.tickettoride.models.Player;
+import com.tickettoride.clientModels.helpers.RouteHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ClaimRouteFragment extends Fragment {
     private RecyclerView routeList;
     private RecyclerView.Adapter adapter;
-    private ArrayList<Route> routes;
-    private Player curPlayer;
-    private Hand hand;
     private OnReturnToMapListener returnMap;
     private Button mapReturn;
 
@@ -41,90 +29,7 @@ public class ClaimRouteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.claim_route, container, false);
-        routes = DataManager.getSINGLETON().getRoutes();
-        curPlayer = DataManager.getSINGLETON().getPlayer();
-        hand = DataManager.getSINGLETON().getPlayerHand();
-        //filterRoutes();
-        ArrayList<Route> filteredRoutes = new ArrayList<>();
-        for (int i = 0; i < routes.size(); ++i) {
-            switch(routes.get(i).getColor()){
-                case YELLOW:
-                    if (hand.getYellow() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case RED:
-                    if (hand.getRed() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()){
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case BLUE:
-                    if (hand.getBlue() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case PURPLE:
-                    if (hand.getPurple() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case BLACK:
-                    if (hand.getBlack() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case GREEN:
-                    if (hand.getGreen() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case WHITE:
-                    if (hand.getWhite() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case ORANGE:
-                    if (hand.getOrange() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                    }
-                    break;
-                case GREY:
-                    if (hand.getYellow() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getRed() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getBlue() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getPurple() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getBlack() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getGreen() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getWhite() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    if (hand.getOrange() + hand.getLocomotive() >= routes.get(i).getSpaces() && !routes.get(i).getIsClaimed()) {
-                        filteredRoutes.add(routes.get(i));
-                        break;
-                    }
-                    break;
-            }
-
-        }
+        ArrayList<Route> filteredRoutes = (ArrayList) RouteHelper.getSingleton().playerFilteredRoutes();
         routeList = v.findViewById(R.id.claim_recycler_view);
         routeList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), filteredRoutes);
@@ -190,10 +95,10 @@ public class ClaimRouteFragment extends Fragment {
             secondCity.setText("Second City: " + curRoute.getSecondCity());
         }
     }
-    public void filterRoutes() {
-
-    }
     public void claimRoute(Route curRoute) {
-
+        curRoute.setIsClaimed(true);
+        curRoute.setLineColor(DataManager.getSINGLETON().getPlayer().getColor());
+        returnMap = (OnReturnToMapListener) getActivity();
+        returnMap.onReturnToMap();
     }
 }

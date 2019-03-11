@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.PlayerTurnFaker;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,6 @@ public class GameRoomActivity extends MyBaseActivity implements
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
-        Game game = DataManager.getSINGLETON().getGame();
         DataManager.SINGLETON.initializeDeck();
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }
@@ -67,7 +68,6 @@ public class GameRoomActivity extends MyBaseActivity implements
             playerFragment = null;
         }
         else if (viewHandFragment != null) {
-            //getSupportFragmentManager().beginTransaction().remove(viewHandFragment).commit();
             fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             viewHandFragment = null;
         } else if (destinationCardFragment != null) {
@@ -75,7 +75,7 @@ public class GameRoomActivity extends MyBaseActivity implements
             destinationCardFragment = null;
         }
         else if (claimRouteFragment != null) {
-            fm.beginTransaction().replace(R.id.map_fragment, mapFragment).commit();
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             claimRouteFragment = null;
         }
     }
@@ -136,8 +136,19 @@ public class GameRoomActivity extends MyBaseActivity implements
     public void onAcceptCards(ArrayList<DestinationCard> destinationCards) {
         DestinationCardFacadeProxy.acceptDestinationCards(DataManager.getSINGLETON().getPlayer(), destinationCards);
         onReturnToMap();
-        DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
-        //FIXME This should eventually check if it is the players turn or not and move them to the appropriate state
+    }
 
+    public void incrementTurn() {
+        int currentTurn = DataManager.getSINGLETON().getTurn();
+        currentTurn++;
+        if (currentTurn > DataManager.getSINGLETON().getGamePlayers().size()) { currentTurn = 1; }
+        DataManager.getSINGLETON().setTurn(currentTurn);
+        if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
+            DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
+        } else {
+            DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
+            Player player = DataManager.getSINGLETON().findPlayerByTurn(DataManager.getSINGLETON().getTurn());
+            PlayerTurnFaker.getSINGLETON().fakePlayerturn(player);
+        }
     }
 }

@@ -59,7 +59,7 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
 
         try (var db = new Database()) {
 
-            fromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame);
+            fromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame.getGameID());
 
         }
 
@@ -99,11 +99,11 @@ public class DestinationCardDAOTest extends AbstractDatabaseTest {
         }
 
         Queue<DestinationCard> deckFromDatabase;
-        Set<DestinationCard> playerHandFromDatabase;
+        List<DestinationCard> playerHandFromDatabase;
 
         try (var db = new Database()) {
 
-            deckFromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame);
+            deckFromDatabase = db.getDestinationCardDAO().getDeckForGame(testGame.getGameID());
             playerHandFromDatabase = db.getDestinationCardDAO().getPlayerHand(testPlayer);
             db.commit();
 

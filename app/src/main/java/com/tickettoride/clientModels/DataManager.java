@@ -1,13 +1,8 @@
 package com.tickettoride.clientModels;
 
-import com.tickettoride.BuildConfig;
-import com.tickettoride.activities.MapFragment;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
-
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +22,7 @@ public class DataManager {
     private List<DestinationCard> offeredCards = null;
     private Integer destCardsRequiredToKeep = null;
     private ArrayList<Route> routes;
+    private int turn = 0;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -52,10 +48,6 @@ public class DataManager {
         return session;
     }
 
-    public void setGameIndex(GameIndex gameIndex) {
-        this.gameIndex = gameIndex;
-    }
-
     public void setGame(Game game) {
         this.curGame = game;
     }
@@ -69,7 +61,6 @@ public class DataManager {
     }
 
     public void setGamePlayers(List<Player> players) { this.gamePlayers = players; }
-    public void setPlayerList(Player player) {gamePlayers.add(player);}
     public List<Player> getGamePlayers() { return gamePlayers; }
 
     public void setTrainCardDeck(TrainCardDeck deck) {
@@ -102,7 +93,7 @@ public class DataManager {
     public ArrayList<Route> getRoutes() {
         return routes;
     }
-    public void addToHand(TrainCard card){
+    public void addTrainCardToHand(TrainCard card){
         Color color = card.getColor();
         switch(color) {
             case GREEN:
@@ -168,11 +159,24 @@ public class DataManager {
     }
 
     public Player findPlayerByID(UUID playerID){
-        for (Player player:gamePlayers){
+        for (Player player:gamePlayers) {
             if (player.getPlayerID() == playerID){
                 return player;
             }
         }
         return null;
     }
+
+    public Player findPlayerByTurn(int turn){
+        for (Player player:gamePlayers) {
+            if (player.getTurn() == turn){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public void setTurn(int turn) { this.turn = turn; }
+
+    public int getTurn() { return this.turn; }
 }
