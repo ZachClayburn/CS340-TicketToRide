@@ -1,16 +1,53 @@
 package command;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.tickettoride.models.Message;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class Command {
+    
+    protected static GsonBuilder gsonBuilder = new GsonBuilder();
+    private static JsonSerializer<Message> serializer = new JsonSerializer<Message>() {
+        @Override
+        public JsonElement serialize(Message src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject jsonObject = new JsonObject();
+            
+            jsonObject.addProperty("message",src.getMessage());
+            jsonObject.addProperty("playerId", src.getPlayerID().toString());
+            jsonObject.addProperty("timeString", src.getTime().toString());
+
+            return jsonObject;
+        }
+    };
+
+    private static JsonDeserializer<Message> desserializer = new JsonDeserializer<Message>() {
+        @Override
+        public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            String time = jsonObject.get("timeString").getAsString();
+            UUID playerID= UUID.fromString(jsonObject.get("playerId").getAsString());
+            String message = jsonObject.get("message").getAsString();
+            return new Message(message, playerID, time);
+        }
+    };
+        
     protected static Gson gson = new Gson();
 
     protected String facadeName;
@@ -20,6 +57,8 @@ public class Command {
     protected final String GET_SINGLETON_METHOD_NAME = "getSingleton";
 
     public Command(String facadeName, String methodName, Object... parameters) {
+        gsonBuilder.registerTypeAdapter(Instant.class,serializer);
+        gsonBuilder.registerTypeAdapter(Instant.class,desserializer);
         List<Object> commandParameters = Arrays.asList(parameters);
         List<String> compactedJSONStringParameters = toJSONStringList(commandParameters);
         this.methodName = methodName;
@@ -31,6 +70,8 @@ public class Command {
     //main use is putting the connid in on server side. 
     // DO NOT USE ON CLIENT
     public Command(String jsonMessage, UUID connid){
+        gsonBuilder.registerTypeAdapter(Instant.class,serializer);
+        gsonBuilder.registerTypeAdapter(Instant.class,desserializer);
         Command temp=gson.fromJson(jsonMessage,Command.class);
         this.methodName=temp.methodName;
         this.facadeName=temp.facadeName;

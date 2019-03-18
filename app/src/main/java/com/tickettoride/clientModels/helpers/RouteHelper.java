@@ -102,8 +102,9 @@ public class RouteHelper {
         return filteredRoutes;
     }
 
-    public void buildRoutes() {
+    public void buildRoutes(double scale) {
         if (DataManager.getSINGLETON().getRoutes() == null) {
+            Line.setScale(scale);
             ArrayList<Route> routes = new ArrayList<>();
             routes.add(new Route(Arrays.asList(new Line(150, 130, 150, 180)), Color.GREY, 1, City.VANCOUVER, City.SEATTLE, false, null));
             routes.add(new Route(Arrays.asList(new Line(130, 130, 130, 180)), Color.GREY, 1, City.VANCOUVER, City.SEATTLE, false, null));

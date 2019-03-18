@@ -11,32 +11,21 @@
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp">
-        </LinearLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/player_recycler_view"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/player_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/chat_section"/>
-
-            <EditText
-                android:id="@+id/chat_room"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="10dp"
-                android:hint="@string/chat_hint"/>
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/chat_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent">
+
+        </FrameLayout>
+
 
     </LinearLayout>
 

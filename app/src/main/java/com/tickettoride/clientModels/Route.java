@@ -17,6 +17,10 @@ public class Route {
     private City secondCity;
     private boolean isClaimed;
     private PlayerColor lineColor;
+    private static int xoffset=0;
+    private static int yoffset=0;
+    private static double scale=1.0;//not the same scale as in Line
+    
     public Route(List<Line> lines, Color color, int spaces, City firstCity, City secondCity, boolean isClaimed, PlayerColor lineColor) {
         this.lines = lines;
         this.color = color;
@@ -26,6 +30,19 @@ public class Route {
         this.isClaimed = isClaimed;
         this.lineColor = lineColor;
     }
+    
+    public static void setXoffset(int newXoffset){
+        xoffset=newXoffset;
+    }
+
+    public static void setYoffset(int yoffset) {
+        Route.yoffset = yoffset;
+    }
+    
+    public static void setScale(double scale){
+        Route.scale = 1.0/scale;
+    }
+
     private int convertLineColor(PlayerColor lineColor) {
         if (lineColor == null) { return android.graphics.Color.TRANSPARENT; }
         switch(lineColor) {
@@ -60,8 +77,10 @@ public class Route {
         }
     }
     public boolean contains(int x, int y) {
+        int scaleX = (int)((x-xoffset)*scale);
+        int scaleY = (int)((y-yoffset)*scale);
         for (Line line : lines) {
-            if (line.contains(x, y)) {
+            if (line.contains(scaleX, scaleY)) {
                 return true;
             }
         }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.GameIndex;
+import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.facadeProxies.SessionFacadeProxy;
 import com.tickettoride.models.Game;
@@ -110,7 +111,10 @@ public class JoinGameActivity extends MyBaseActivity {
             gameName.setText(game.getGroupName());
             gameName.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) { GameFacadeProxy.SINGLETON.join(game.getGameID()); }
+                public void onClick(View view) { 
+                    GameFacadeProxy.SINGLETON.join(game.getGameID());
+                    ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
+                }
             });
         }
     }

@@ -127,6 +127,17 @@ public class GameRoomActivity extends MyBaseActivity implements
 
     }
 
+    public Runnable updateChatRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mapFragment.updateChat();
+        }
+    };
+
+    public void updateChat() {
+        runOnUiThread(updateChatRunnable);
+    }
+
     public void toDestinationCardFragment() {
 
         List<DestinationCard> offeredCards = DataManager.getSINGLETON().getOfferedCards();
@@ -162,5 +173,13 @@ public class GameRoomActivity extends MyBaseActivity implements
             Player player = DataManager.getSINGLETON().findPlayerByTurn(DataManager.getSINGLETON().getTurn());
             PlayerTurnFaker.getSINGLETON().fakePlayerturn(player);
         }
+    }
+    
+    public void addMessageError(){
+        //figure out what message to display
+    }
+
+    public void setChatError(){
+        //figure out what message to display
     }
 }

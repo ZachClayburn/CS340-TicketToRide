@@ -6,20 +6,23 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.*;
+import com.tickettoride.clientModels.Route;
 import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.clientModels.helpers.RouteHelper;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
@@ -40,7 +43,6 @@ public class MapFragment extends Fragment {
     private ImageView cardFive;
     private TextView trainDeck;
     private TextView destDeck;
-    private EditText chatWindow;
     private Button drawTrain;
     private Button drawDest;
     private Button viewHand;
@@ -49,6 +51,7 @@ public class MapFragment extends Fragment {
     private Adapter adapter;
     private Context context;
     private PlayerFragmentListener playerListener;
+    private ChatFragment chatFragment;
     private View v;
     private ClaimRouteListener claimListener;
     MapFragment selfMapFragment = this;
@@ -144,8 +147,13 @@ public class MapFragment extends Fragment {
     public Bitmap draw() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
         Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        //System.out.println("get: "+actualMap.getHeight()+", "+actualMap.getWidth());
+        
         Canvas canvas = new Canvas(actualMap);
+        //System.out.println("canvas density: "+canvas.getDensity());
         this.drawView.draw(canvas);
+        //System.out.println("getScaled: "+actualMap.getScaledHeight(canvas)+", "+actualMap.getScaledWidth(canvas));
+        //System.out.println("getview: "+board.getHeight()+", "+board.getWidth());
         return actualMap;
     }
 
@@ -158,20 +166,109 @@ public class MapFragment extends Fragment {
         v.invalidate();
     }
 
+    private View.OnTouchListener handleTouch = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            //System.out.println("getview: "+v.getHeight()+", "+v.getWidth());
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            Log.i("TAG", "touch: (" + x + ", " + y + ")");
+            
+            if(drawView.clickRoute(x,y)){
+                drawExternal();
+                Log.i("TAG","got one!");
+            }
+
+            return false;
+        }
+    };
+
+    public void drawExternal() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
+        Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        //System.out.println("get: "+actualMap.getHeight()+", "+actualMap.getWidth());
+
+        Canvas canvas = new Canvas(actualMap);
+        //System.out.println("canvas density: "+canvas.getDensity());
+        this.drawView.draw(canvas);
+        
+        //System.out.println("getScaled: "+actualMap.getScaledHeight(canvas)+", "+actualMap.getScaledWidth(canvas));
+        //System.out.println("getview: "+board.getHeight()+", "+board.getWidth());
+        board.setImageBitmap(actualMap);
+        this.v.invalidate();
+    }
+    
+    public double calcScale(View v, View b){
+        ViewGroup.LayoutParams params= b.getLayoutParams();
+        System.out.println("layout width: "+params.width);
+
+        int width;
+        int height;
+        
+        v.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        //width = v.getMeasuredWidth();
+        //height = v.getMeasuredHeight();
+        //System.out.println("mainview: "+height+", "+width);
+        
+        //before direct measurement (still with layout params)
+        width = b.getMeasuredWidth();
+        height = b.getMeasuredHeight();
+        //System.out.println("boardview: "+height+", "+width);
+        
+        //after direct measurement (what the image is expecting)
+        b.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int mwidth = b.getMeasuredWidth();
+        int mheight = b.getMeasuredHeight();
+        //System.out.println("boardview: "+mheight+", "+mwidth);
+        
+        
+        float density=getResources().getDisplayMetrics().density;
+        //System.out.println("density: "+density);
+        
+        int xoffset=0;
+        int yoffset=0;
+        
+        //one of them should not be equal, that one is part of the scale we need
+        double scale=1.0;
+        if(mheight!=height){
+            scale=(((double)height)/mheight);
+            xoffset=(int)((((double)width)-width*scale)/2);
+        }else if(mwidth!=width) {
+            scale = (((double) width) / mwidth);
+            yoffset=(int)((((double)height)-height*scale)/2);
+        }
+        //need to set scale used for putting in coordinates for touch
+        System.out.println("y: "+yoffset+", x: "+xoffset);
+        System.out.println("scale: "+scale);
+        Route.setXoffset(xoffset);
+        Route.setYoffset(yoffset);
+        Route.setScale(scale);
+        scale*=density;
+        return scale;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.v = inflater.inflate(R.layout.game, container, false);
+        
+        board = v.findViewById(R.id.game_board);
+        double scale=calcScale(v,board);
+        //System.out.println("calculated scale: " + scale);
+        
         this.drawView = new DrawView(getActivity());
-        RouteHelper.getSingleton().buildRoutes();
+        RouteHelper.getSingleton().buildRoutes(scale);
         drawView.setRoutes(DataManager.getSINGLETON().getRoutes());
         Bitmap actualMap = draw();
+        board.setImageBitmap(actualMap);
+        
         View decorView = getActivity().getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.hide();
-        board = v.findViewById(R.id.game_board);
-        board.setImageBitmap(actualMap);
+        
+        
         cardOne = v.findViewById(R.id.first_card);
         setCardColor(0);
         cardTwo = v.findViewById(R.id.second_card);
@@ -186,7 +283,7 @@ public class MapFragment extends Fragment {
         trainDeck = v.findViewById(R.id.train_deck);
         destDeck = v.findViewById(R.id.dest_deck);
         updateDeckNumbers();
-        chatWindow = v.findViewById(R.id.chat_room);
+        //chatWindow = v.findViewById(R.id.chat_room);
         drawTrain = v.findViewById(R.id.draw_train);
         drawDest = v.findViewById(R.id.draw_dest);
         viewHand = v.findViewById(R.id.view_cards);
@@ -199,9 +296,23 @@ public class MapFragment extends Fragment {
         playerList.setAdapter(adapter);
         PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
         setListeners();
+        board.setOnTouchListener(handleTouch);
         return v;
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        chatFragment=new ChatFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.replace(R.id.chat_fragment_container, chatFragment).commit();
+    }
+
+    public void updateChat(){
+        chatFragment.updateChat();
+    }
+    
+    
+    
     class Adapter extends RecyclerView.Adapter<Holder> {
         private List<Player> players;
         private LayoutInflater inflater;

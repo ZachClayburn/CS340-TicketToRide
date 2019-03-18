@@ -63,11 +63,11 @@ public class DataManager {
     }
 
     public void setGamePlayers(List<Player> players) { this.gamePlayers = players; }
-    public List<Player> getGamePlayers() { return gamePlayers; }
 
     public void setTrainCardDeck(TrainCardDeck deck) {
         trainCardDeck = deck;
     }
+    public List<Player> getGamePlayers() { return this.gamePlayers; }
 
     public void initializeDeck(){
         trainCardDeck = new TrainCardDeck();

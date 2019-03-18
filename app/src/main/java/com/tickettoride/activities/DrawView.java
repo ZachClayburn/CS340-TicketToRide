@@ -5,8 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.Route;
 
 import java.util.ArrayList;
@@ -32,6 +34,31 @@ public class DrawView extends View {
             route.drawRoute(canvas);
         }
     }
+    
+    public boolean clickRoute(int x, int y){//todo: actually make this work with the claimroute funtionallity
+        for(Route route :routes){
+            for(int i=x-1;i<x+2;i++) {
+                for(int j=y;j<y+2;j++) {
+                    if (route.contains(i, j)) {
+                        if (route.getIsClaimed()) {
+                            //it's already been claimed
+                            Log.i("TAG", "got claimed one!");
+
+                            return false;//mainly for testing
+                        } else {
+                            //do whatever is needed to claim it.
+                            //go to the discard whatever
+                            route.setLineColor(DataManager.getSINGLETON().getPlayer().getColor());//purely testing
+                            route.setIsClaimed(true);//purely testing
+                            return true;//mainly for testing
+                        }
+                    }
+                }
+            }
+        }
+        return false;//mainly for testing
+    }
+    
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -41,6 +68,8 @@ public class DrawView extends View {
         super(context, attrs, defStyle);
         init();
     }
+    
+    
     @Override
     public void onDraw(Canvas canvas) {
         //Straight lines

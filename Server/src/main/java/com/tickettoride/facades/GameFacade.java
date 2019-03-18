@@ -1,9 +1,12 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
+import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
 import com.tickettoride.models.*;
 import exceptions.DatabaseException;
+import com.tickettoride.database.GameDAO;
+import com.tickettoride.database.PlayerDAO;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

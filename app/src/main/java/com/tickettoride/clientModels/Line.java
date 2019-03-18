@@ -8,25 +8,31 @@ import android.graphics.RectF;
 import android.graphics.Region;
 
 public class Line {
+    private static double scale=1.0;//set at runtime in mapFragment, passed into the routehelper
+    private static final double imgscale=2.42;//how much bigger the lines were than original 2.42 DO NOT CHANGE! 
     private int startX;
     private int startY;
     private int endX;
     private int endY;
     private Region region;
     private Path path = new Path();
+    
+    public static void setScale(double newscale){
+        scale=newscale;
+    }
 
     public Line(int startX, int startY, int endX, int endY) {
-        this.startX = startX;
-        this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
+        this.startX = (int)((startX/imgscale) * scale);
+        this.startY = (int)((startY/imgscale) * scale);
+        this.endX = (int)((endX/imgscale) * scale);
+        this.endY = (int)((endY/imgscale) * scale);
         setPath();
         setRegion();
     }
     private void setPath() {
         double slope = 0;
         slope = -1 * (((double)(startX - endX)) / (startY - endY));
-        int distance = 7;
+        int distance = 8;
         double x = distance * (1.0/Math.sqrt(1 + (slope * slope)));
         double y = distance * (slope/Math.sqrt(1 + (slope * slope)));
         Point point1 = new Point(startX + (int)x, startY + (int)y);

@@ -101,7 +101,7 @@ public class GameDAO extends Database.DataAccessObject {
               games.add(game);
           }
         } catch (SQLException e) {
-            throw new DatabaseException(("Could Not Retrieve Games"));
+            throw new DatabaseException(("Could Not Retrieve Games"), e);
         }
         return games;
     }

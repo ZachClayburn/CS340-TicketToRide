@@ -71,6 +71,24 @@ public class PlayerDAO extends Database.DataAccessObject {
         }
         return players;
     }
+    
+    //should return 0 or 1 but never more, just set up to handle unexpected cases
+    public List<UUID> getGameForPlayer(UUID playerID) throws DatabaseException{
+        List<UUID> games= new ArrayList<UUID>();
+        String sql = "SELECT * FROM Players WHERE playerID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, playerID.toString());
+            var result = statement.executeQuery();
+            while (result.next()) {
+                UUID tableGameID = UUID.fromString(result.getString("GameID"));
+                games.add(tableGameID);
+            }
+            
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve game id!", e);
+        }
+        return games;
+    }
 
     @NotNull
     private Player buildPlayerFromResult(ResultSet result) throws SQLException {

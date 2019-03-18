@@ -39,6 +39,7 @@ public class Database implements AutoCloseable {
     protected UserDAO userDAO;
     protected GameDAO gameDAO;
     protected PlayerDAO playerDAO;
+    protected ChatDAO chatDAO;
     protected DestinationCardDAO destinationCardDAO;
 
     /**
@@ -112,6 +113,8 @@ public class Database implements AutoCloseable {
         DAOs.add(gameDAO);
         playerDAO = new PlayerDAO(connection);
         DAOs.add(playerDAO);
+        chatDAO=new ChatDAO(connection);
+        DAOs.add(chatDAO);
         destinationCardDAO = new DestinationCardDAO(connection);
         DAOs.add(destinationCardDAO);
     }
@@ -157,6 +160,10 @@ public class Database implements AutoCloseable {
         return playerDAO;
     }
 
+    public ChatDAO getChatDAO() {
+        return chatDAO;
+    }
+
     public DestinationCardDAO getDestinationCardDAO() {
         return destinationCardDAO;
     }
@@ -164,6 +171,8 @@ public class Database implements AutoCloseable {
     public void commit() {
         doCommit = true;
     }
+
+    
 
     static abstract class DataAccessObject {
 
