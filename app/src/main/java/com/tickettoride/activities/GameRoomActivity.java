@@ -30,6 +30,7 @@ public class GameRoomActivity extends MyBaseActivity implements
     private FragmentManager fm;
     private MapFragment mapFragment;
     private ClaimRouteFragment claimRouteFragment;
+    private GameOverFragment gameOverFragment;
     private DiscardFragment discardFragment;
 
     public MapFragment getMapFragment() { return mapFragment; }
@@ -92,6 +93,12 @@ public class GameRoomActivity extends MyBaseActivity implements
             arguments.putString("player", playerID.toString());
             playerFragment.setArguments(arguments);
             fm.beginTransaction().replace(R.id.fragment_holder, playerFragment).commit();
+        }
+    }
+    public void toGameOverFragment() {
+        if (gameOverFragment == null) {
+            gameOverFragment = new GameOverFragment();
+            fm.beginTransaction().replace(R.id.fragment_holder, gameOverFragment).commit();
         }
     }
     public void toViewHandFragment(){

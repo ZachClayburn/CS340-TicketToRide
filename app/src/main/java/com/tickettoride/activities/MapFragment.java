@@ -33,7 +33,7 @@ import java.util.List;
 
 import com.tickettoride.models.Color;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment {//TODO once train cars reach 2 and turn for everyone finishes, go to GameOverFragment
     private DrawView drawView;
     private ImageView board;
     private ImageView cardOne;
