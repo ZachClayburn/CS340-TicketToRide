@@ -46,8 +46,8 @@ public class ChatController extends BaseController {
         }catch(NullPointerException e){
             Log.e("ChatController",e.getMessage());
             Log.i("ChatController", "attempting reupdate");
-            //need to wait for a time
-            //((GameRoomActivity) getCurrentActivity()).updateChat();
+            //if either exception gets thrown it means the gameroomactivity hasn't been set up yet but 
+            //the chat has been successfully loaded into the model, as such no need to call update as it will be loaded correctly
         }
     }
     
