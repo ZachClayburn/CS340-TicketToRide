@@ -113,7 +113,7 @@ public class JoinGameActivity extends MyBaseActivity {
                 @Override
                 public void onClick(View view) { 
                     GameFacadeProxy.SINGLETON.join(game.getGameID());
-                    ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
+                    //ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
                 }
             });
         }

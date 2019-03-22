@@ -4,6 +4,7 @@ import android.util.Log;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
@@ -84,6 +85,7 @@ public class GameController extends BaseController {
             DataManager.SINGLETON.setTurn(1);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToGame();
+            ChatFacadeProxy.SINGLETON.getChat(gameID);
         }
     }
 
@@ -114,6 +116,8 @@ public class GameController extends BaseController {
         GameControllerHelper.getSingleton().setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
+        Game game = DataManager.getSINGLETON().getGame();
+        ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
     }
 
     public void errorSetup() {
