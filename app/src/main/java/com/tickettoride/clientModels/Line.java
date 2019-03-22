@@ -31,10 +31,22 @@ public class Line {
     }
     private void setPath() {
         double slope = 0;
-        slope = -1 * (((double)(startX - endX)) / (startY - endY));
+        int deltaY=startY - endY;
+        int deltaX=startX - endX;
         int distance = 8;
-        double x = distance * (1.0/Math.sqrt(1 + (slope * slope)));
-        double y = distance * (slope/Math.sqrt(1 + (slope * slope)));
+        double x;
+        double y;
+        if(deltaY!=0 && deltaX!=0) {
+            slope = -1 * (((double) (deltaX)) / (deltaY));
+            x = distance * (1.0/Math.sqrt(1 + (slope * slope)));
+            y = distance * (slope/Math.sqrt(1 + (slope * slope)));
+        }else if(deltaX==0) {
+            x=distance-1;
+            y=0;
+        }else{
+            x=0;
+            y=distance-1;
+        }
         Point point1 = new Point(startX + (int)x, startY + (int)y);
         Point point2 = new Point(startX - (int)x, startY - (int)y);
         Point point3 = new Point(endX - (int)x, endY - (int)y);
