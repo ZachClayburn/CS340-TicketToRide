@@ -1,29 +1,32 @@
 package com.tickettoride.models;
 
+import com.tickettoride.models.idtypes.SessionID;
+import com.tickettoride.models.idtypes.UserID;
+
 import java.util.UUID;
 
 public class Session {
 
-    private UUID userID;
-    private UUID sessionID;
+    private UserID userID;
+    private SessionID sessionID;
 
     public Session(User user) {
         this.userID = user.getUserID();
-        this.sessionID = UUID.randomUUID();
+        this.sessionID = SessionID.randomUUID();
     }
 
-    public Session(UUID sessionID, UUID userID) {
+    public Session(SessionID sessionID, UserID userID) {
         this.userID = userID;
         this.sessionID = sessionID;
     }
 
     public Session() {}
 
-    public Session(UUID sessionID) {
+    public Session(SessionID sessionID) {
         this.sessionID = sessionID;
     }
 
-    public UUID getUserID() { return userID; }
+    public UserID getUserID() { return userID; }
 
-    public UUID getSessionID() { return  sessionID; }
+    public SessionID getSessionID() { return  sessionID; }
 }

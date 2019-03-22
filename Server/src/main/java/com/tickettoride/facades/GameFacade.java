@@ -5,6 +5,8 @@ import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
 import com.tickettoride.models.*;
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.SessionID;
 import exceptions.DatabaseException;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.database.PlayerDAO;
@@ -23,7 +25,7 @@ public class GameFacade extends BaseFacade {
     private static Logger logger = LogManager.getLogger(GameFacade.class.getName());
     private GameFacade() {}
 
-    public void create(UUID connID, UUID sessionID, String gameName, Integer maxPlayers) {
+    public void create(UUID connID, SessionID sessionID, String gameName, Integer maxPlayers) {
         try {
             Game game = GameFacadeHelper.getSingleton().createGame(gameName, maxPlayers);
             Session session = new Session(sessionID);
@@ -44,7 +46,7 @@ public class GameFacade extends BaseFacade {
       }
     }
 
-    public void join(UUID connID, UUID sessionID, UUID gameID) {
+    public void join(UUID connID, SessionID sessionID, GameID gameID) {
         try {
             Game game = GameFacadeHelper.getSingleton().findGame(gameID);
             Session session = new Session(sessionID);
@@ -66,7 +68,7 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void leave(UUID connID, UUID sessionID) {
+    public void leave(UUID connID, SessionID sessionID) {
         try {
             Session session = SessionFacade.getSingleton().find_session(sessionID);
             User user = UserFacade.getSingleton().find_user(session);
@@ -83,10 +85,10 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void start(UUID connID, UUID gameID) throws DatabaseException {
+    public void start(UUID connID, GameID gameID) throws DatabaseException {
         logger.info("Attempting to start game " + gameID);
         GameFacadeHelper.getSingleton().startGame(gameID);
-        ArrayList<Player> players = (ArrayList) PlayerHelper.getSingleton().getGamePlayers(gameID);
+        ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
         PlayerHelper.getSingleton().pickTurnOrder(players);
         PlayerHelper.getSingleton().pickColors(players);
         PlayerHelper.getSingleton().setUsernames(players);

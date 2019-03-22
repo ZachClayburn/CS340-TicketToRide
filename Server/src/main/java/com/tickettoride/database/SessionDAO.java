@@ -1,5 +1,7 @@
 package com.tickettoride.database;
 
+import com.tickettoride.models.idtypes.SessionID;
+import com.tickettoride.models.idtypes.UserID;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,22 +41,22 @@ public class SessionDAO extends Database.DataAccessObject {
         }
     }
 
-    public Session findSession(UUID sessionID) throws DatabaseException {
+    public Session findSession(SessionID sessionID) throws DatabaseException {
         String sql = "SELECT * FROM Sessions WHERE sessionID = ?";
         Session session = new Session();
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, sessionID.toString());
             var result = statement.executeQuery();
             while (result.next()) {
-                UUID userID = UUID.fromString(result.getString("userID"));
-                UUID databaseSessionID = UUID.fromString(result.getString("sessionID"));
+                UserID userID = UserID.fromString(result.getString("userID"));
+                SessionID databaseSessionID = SessionID.fromString(result.getString("sessionID"));
                 session = new Session(databaseSessionID, userID);
             }
         } catch (SQLException e) { throw new DatabaseException("Could not add user to database", e); }
         return session;
     }
 
-    public void deleteSession(UUID sessionID) throws SQLException {
+    public void deleteSession(SessionID sessionID) throws SQLException {
         String sql = "DELETE FROM Sessions WHERE sessionID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, sessionID.toString());

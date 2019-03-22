@@ -308,3 +308,4 @@ gradle-app.setting
 ## Database Server Parameters ##
 Server/src/main/resources/databaseParams.json
 Server/src/test/resources/databaseParams.json
+.idea/codeStyles/codeStyleConfig.xml

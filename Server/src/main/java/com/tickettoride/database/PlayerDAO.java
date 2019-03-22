@@ -3,6 +3,9 @@ package com.tickettoride.database;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerColor;
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
+import com.tickettoride.models.idtypes.UserID;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +58,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         }
     }
     
-    public List<Player> getGamePlayers(UUID gameID) throws DatabaseException{
+    public List<Player> getGamePlayers(GameID gameID) throws DatabaseException{
         List<Player> players=new ArrayList<>();
         Player player;
         String sql = "SELECT * FROM Players WHERE gameID = ?";
@@ -73,14 +76,14 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
     
     //should return 0 or 1 but never more, just set up to handle unexpected cases
-    public List<UUID> getGameForPlayer(UUID playerID) throws DatabaseException{
-        List<UUID> games= new ArrayList<UUID>();
+    public List<GameID> getGameForPlayer(PlayerID playerID) throws DatabaseException{
+        List<GameID> games= new ArrayList<>();
         String sql = "SELECT * FROM Players WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, playerID.toString());
             var result = statement.executeQuery();
             while (result.next()) {
-                UUID tableGameID = UUID.fromString(result.getString("GameID"));
+                GameID tableGameID = GameID.fromString(result.getString("GameID"));
                 games.add(tableGameID);
             }
             
@@ -95,9 +98,9 @@ public class PlayerDAO extends Database.DataAccessObject {
 
         Player player;
 
-        UUID tableGameID = UUID.fromString(result.getString("GameID"));
-        UUID tablePlayerID = UUID.fromString(result.getString("PlayerID"));
-        UUID tableUserID = UUID.fromString(result.getString("UserID"));
+        GameID tableGameID = GameID.fromString(result.getString("GameID"));
+        PlayerID tablePlayerID = PlayerID.fromString(result.getString("PlayerID"));
+        UserID tableUserID = UserID.fromString(result.getString("UserID"));
         int turn = result.getInt("turn");
         player = new Player(tableUserID, tableGameID, tablePlayerID);
         player.setTurn(turn);
@@ -106,7 +109,7 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
     @Nullable
-    public Player getPlayerByPlayerID(UUID playerID) throws DatabaseException {
+    public Player getPlayerByPlayerID(PlayerID playerID) throws DatabaseException {
 
         String sql = "SELECT * FROM players WHERE playerid=?";
         Player player = null;
@@ -126,7 +129,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         return player;
     }
 
-    public void setTurn(UUID playerID, int turn) throws DatabaseException {
+    public void setTurn(PlayerID playerID, int turn) throws DatabaseException {
         String sql = "UPDATE Players SET turn = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setInt(1, turn);

@@ -1,9 +1,15 @@
 package com.tickettoride.models;
 
-import java.util.*;
+import com.google.gson.internal.LinkedTreeMap;
+import com.tickettoride.models.idtypes.GameID;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Game {
-    private UUID gameID;
+    private GameID gameID;
     private String groupName;
     private int numPlayer;
     private int maxPlayer;
@@ -14,13 +20,13 @@ public class Game {
     public Game() {}
 
     public Game(String groupName, int maxPlayer) {
-        this.gameID = UUID.randomUUID();
+        this.gameID = GameID.randomUUID();
         this.groupName = groupName;
         this.numPlayer = 1;
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
+    public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
@@ -29,7 +35,7 @@ public class Game {
         this.curTurn = curTurn;
     }
 
-    public Game(UUID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
+    public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
@@ -38,24 +44,24 @@ public class Game {
     }
 
     public Game(Map<String, Object> gameMap) {
-        this.gameID = UUID.fromString((String) gameMap.get("gameID"));
+        this.gameID = GameID.fromString((String) ((Map) gameMap.get("gameID")).get("uuid"));
         this.groupName = (String) gameMap.get("groupName");
         this.numPlayer = ((Double) gameMap.get("numPlayer")).intValue();
         this.maxPlayer = ((Double) gameMap.get("maxPlayer")).intValue();
         this.isStarted = (Boolean) gameMap.get(("isStarted"));
     }
 
-    public Game(UUID gameID, String groupName, boolean isStarted) {
+    public Game(GameID gameID, String groupName, boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.isStarted = isStarted;
     }
 
-    public void setGameID(UUID gameID) {
+    public void setGameID(GameID gameID) {
         this.gameID = gameID;
     }
 
-    public UUID getGameID() {
+    public GameID getGameID() {
         return gameID;
     }
 

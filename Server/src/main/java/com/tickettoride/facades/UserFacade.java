@@ -2,6 +2,7 @@ package com.tickettoride.facades;
 
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import com.tickettoride.models.idtypes.SessionID;
 import exceptions.DatabaseException;
 import com.tickettoride.database.UserDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
@@ -52,11 +53,11 @@ public class UserFacade extends BaseFacade {
     }
 
     public User find_user(Session session) throws DatabaseException {
-        UUID sessionID = session.getSessionID();
+        SessionID sessionID = session.getSessionID();
         return find_user(sessionID);
     }
 
-    public User find_user(UUID sessionID) throws DatabaseException {
+    public User find_user(SessionID sessionID) throws DatabaseException {
         try (Database db = new Database()) {
             return db.getUserDAO().getUserBySessionID(sessionID);
         }

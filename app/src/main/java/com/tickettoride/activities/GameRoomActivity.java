@@ -16,6 +16,7 @@ import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +93,7 @@ public class GameRoomActivity extends MyBaseActivity implements
         }
     }
 
-    public void toPlayerFragment(UUID playerID){
+    public void toPlayerFragment(PlayerID playerID){
         if (playerFragment == null) {
             playerFragment = new PlayerFragment();
             Bundle arguments = new Bundle();

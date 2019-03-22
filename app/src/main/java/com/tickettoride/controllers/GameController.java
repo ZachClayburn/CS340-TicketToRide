@@ -13,6 +13,9 @@ import com.tickettoride.controllers.helpers.GameControllerHelper;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
+import com.tickettoride.models.idtypes.SessionID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,7 @@ public class GameController extends BaseController {
     public static GameController getSingleton() { return SINGLETON; }
     private GameController() {}
 
-    public void create(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
+    public void create(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         try { GameControllerHelper.getSingleton().createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
         try { GameControllerHelper.getSingleton().createGameOnCreateGameActivity(game, playerID); return; } catch (ClassCastException e) {
@@ -32,7 +35,7 @@ public class GameController extends BaseController {
         }
     }
 
-    public void join(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
+    public void join(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
         Session session = DataManager.getSINGLETON().getSession();
         Player player = new Player(session.getUserID(), gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, false);
@@ -53,7 +56,7 @@ public class GameController extends BaseController {
         }
     }
     
-    public void rejoinNotStarted(UUID playerID, UUID sessionID, UUID gameID, String groupName, Integer numPlayer, Integer maxPlayer){
+    public void rejoinNotStarted(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer){
         Session session = DataManager.getSINGLETON().getSession();
         Player player = new Player(session.getUserID(), gameID, playerID);
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, false);
@@ -68,7 +71,7 @@ public class GameController extends BaseController {
         }
     }
 
-    public void rejoinIsStarted(UUID sessionID, UUID gameID,
+    public void rejoinIsStarted(SessionID sessionID, GameID gameID,
                                 String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap,
                                 ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount){
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {

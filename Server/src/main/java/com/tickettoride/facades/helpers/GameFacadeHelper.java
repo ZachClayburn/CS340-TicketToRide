@@ -12,6 +12,8 @@ import com.tickettoride.models.Player;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.SessionID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +34,7 @@ public class GameFacadeHelper extends BaseFacade {
     private static Logger logger = LogManager.getLogger(GameFacade.class.getName());
     private GameFacadeHelper() {}
 
-    public void startGame(UUID gameID) throws DatabaseException {
+    public void startGame(GameID gameID) throws DatabaseException {
         try (var db = new Database()){
             db.getGameDAO().setGameToStarted(gameID);
             db.getDestinationCardDAO().addDeck(gameID, DestinationCard.getShuffledDeck());
@@ -40,7 +42,7 @@ public class GameFacadeHelper extends BaseFacade {
         }
     }
 
-    public Game findGame(UUID gameID) throws DatabaseException {
+    public Game findGame(GameID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             return dao.getGame(gameID);
@@ -50,7 +52,7 @@ public class GameFacadeHelper extends BaseFacade {
     public Game createGame(String gameName, Integer maxPlayers) throws DatabaseException {
         try (Database database = new Database()) {
             Game game = new Game(gameName, maxPlayers);
-            game.setGameID(UUID.randomUUID());
+            game.setGameID(GameID.randomUUID());
             GameDAO dao = database.getGameDAO();
             dao.addGame(game);
             database.commit();
@@ -65,7 +67,7 @@ public class GameFacadeHelper extends BaseFacade {
         }
     }
 
-    public void updateGamePlayerCount(UUID gameID, Integer playerCount) throws DatabaseException {
+    public void updateGamePlayerCount(GameID gameID, Integer playerCount) throws DatabaseException {
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
@@ -101,7 +103,7 @@ public class GameFacadeHelper extends BaseFacade {
 
     }
 
-    public Command joinCommand(Game game, User user, UUID sessionID) throws Exception {
+    public Command joinCommand(Game game, User user, SessionID sessionID) throws Exception {
         if (game.getNumPlayer() >= game.getMaxPlayer()) throw new Exception("Cannot join a full game");
         Player player = PlayerHelper.getSingleton().createPlayer(user.getUserID(), game.getGameID());
         GameFacadeHelper.getSingleton().updateGamePlayerCount(game.getGameID(), game.getNumPlayer() + 1);
@@ -110,7 +112,7 @@ public class GameFacadeHelper extends BaseFacade {
                            game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
     }
 
-    public Command rejoinNotStartedCommand(Game game, Player player, UUID sessionID) {
+    public Command rejoinNotStartedCommand(Game game, Player player, SessionID sessionID) {
         return new Command(CONTROLLER_NAME, "rejoinNotStarted", player.getPlayerID(), sessionID,
                            game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
     }

@@ -8,6 +8,8 @@ import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
+import com.tickettoride.models.idtypes.PlayerID;
+
 import java.util.UUID;
 
 import javax.xml.transform.TransformerConfigurationException;
@@ -17,7 +19,7 @@ public class TrainCardController extends BaseController {
     public static TrainCardController getSingleton() { return SINGLETON; }
     private TrainCardController() {}
 
-    public void drawFaceupCard(UUID playerID, TrainCard card, TrainCardDeck deck){
+    public void drawFaceupCard(PlayerID playerID, TrainCard card, TrainCardDeck deck){
         DataManager.SINGLETON.setTrainCardDeck(deck);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
@@ -36,7 +38,7 @@ public class TrainCardController extends BaseController {
     }
 
 
-    public void drawFaceDownCard(UUID playerID, TrainCard card, TrainCardDeck deck){
+    public void drawFaceDownCard(PlayerID playerID, TrainCard card, TrainCardDeck deck){
         DataManager.SINGLETON.setTrainCardDeck(deck);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();

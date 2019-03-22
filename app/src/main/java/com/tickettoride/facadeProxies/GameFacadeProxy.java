@@ -12,6 +12,7 @@ import com.tickettoride.models.Game;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 
+import com.tickettoride.models.idtypes.GameID;
 import command.Command;
 
 public class GameFacadeProxy {
@@ -31,7 +32,7 @@ public class GameFacadeProxy {
         } catch(Throwable t){}
     }
 
-    public void join(UUID gameID){
+    public void join(GameID gameID){
         Session session = DataManager.getSINGLETON().getSession();
         try {
             Command command = new Command(FACADE_NAME, "join", session.getSessionID(), gameID);

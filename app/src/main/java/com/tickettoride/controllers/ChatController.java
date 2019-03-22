@@ -6,6 +6,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.clientModels.Chat;
 import com.tickettoride.models.Message;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ChatController extends BaseController {
         List<Message> mess=new ArrayList<>();
         for(LinkedTreeMap<String,String> instance:messages){
             String message=instance.get("message");
-            UUID playerID=UUID.fromString(instance.get("playerID"));
+            PlayerID playerID=PlayerID.fromString(instance.get("playerID"));
             String time=instance.get("time");
             mess.add(new Message(message,playerID,time));
         }

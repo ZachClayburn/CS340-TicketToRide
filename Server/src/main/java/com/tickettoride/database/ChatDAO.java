@@ -2,6 +2,8 @@ package com.tickettoride.database;
 
 import com.tickettoride.models.Message;
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,7 +65,7 @@ public class ChatDAO extends Database.DataAccessObject {
      * @param message the message to be stored
      * @throws DatabaseException if the tranaction failed to execute
      */
-    public void addMessage(UUID gameID, Message message) throws DatabaseException {
+    public void addMessage(GameID gameID, Message message) throws DatabaseException {
         final String sql = "INSERT INTO Chats (gameID, playerID, dateTime, message) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, gameID.toString());
@@ -88,13 +90,13 @@ public class ChatDAO extends Database.DataAccessObject {
      * @throws DatabaseException if the sql statement throws an exception
      */
     public List<Message> getChat(UUID gameID) throws DatabaseException{
-        List<Message> messages=new ArrayList<Message>();
+        List<Message> messages=new ArrayList<>();
         String sql = "SELECT * FROM Chats WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, gameID.toString());
             var result = statement.executeQuery();
             while (result.next()) {
-                UUID tablePlayerID = UUID.fromString(result.getString("playerID"));
+                PlayerID tablePlayerID = PlayerID.fromString(result.getString("playerID"));
                 String message=result.getString("message");
                 LocalDateTime ldt=result.getObject("dateTime", LocalDateTime.class);
                 messages.add(new Message(message, tablePlayerID, ldt.toInstant(ZoneOffset.UTC)));

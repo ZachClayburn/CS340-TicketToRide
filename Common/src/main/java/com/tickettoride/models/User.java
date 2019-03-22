@@ -1,5 +1,7 @@
 package com.tickettoride.models;
 
+import com.tickettoride.models.idtypes.UserID;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -7,20 +9,20 @@ public class User {
 
     private final Username username;
     private final Password password;
-    private final UUID userID;
+    private final UserID userID;
 
     public User(Username username, Password password) {
 
         this.username = username;
         this.password = password;
-        userID = UUID.randomUUID();
+        userID = UserID.randomUUID();
     }
 
     public User(Username username, Password password, String userID) {
 
         this.username = username;
         this.password = password;
-        this.userID = UUID.fromString(userID);
+        this.userID = UserID.fromString(userID);
     }
 
     public Username getUsername() {
@@ -31,7 +33,7 @@ public class User {
         return password;
     }
 
-    public UUID getUserID() {
+    public UserID getUserID() {
         return userID;
     }
 

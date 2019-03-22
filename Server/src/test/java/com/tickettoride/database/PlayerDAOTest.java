@@ -4,6 +4,7 @@ import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
+import com.tickettoride.models.idtypes.GameID;
 import exceptions.DatabaseException;
 import com.tickettoride.models.Password;
 import com.tickettoride.models.Username;
@@ -19,10 +20,8 @@ public class PlayerDAOTest extends AbstractDatabaseTest{
     public void setUp() throws Exception {
         super.setUp();
         testGame = new Game("Test Game", 2);
-        testGame.setGameID(UUID.randomUUID());
         testUser = new User(new Username("TestUsername"), new Password("TestPassword"));
         testPlayer = new Player(testUser.getUserID(), testGame.getGameID());
-        testPlayer.setPlayerID(UUID.randomUUID());
 
         try (var db = new Database()){
             db.getUserDAO().addUser(testUser);

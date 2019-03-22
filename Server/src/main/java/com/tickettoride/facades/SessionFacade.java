@@ -1,6 +1,7 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
+import com.tickettoride.models.idtypes.SessionID;
 import exceptions.DatabaseException;
 import com.tickettoride.database.SessionDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
@@ -56,7 +57,7 @@ public class SessionFacade extends BaseFacade {
         }
     }
 
-    public void delete(UUID connID, UUID sessionID) throws DatabaseException, SQLException {
+    public void delete(UUID connID, SessionID sessionID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             ServerCommunicator.getINSTANCE().moveToLogin(connID);
             SessionDAO dao = database.getSessionDAO();
@@ -65,7 +66,7 @@ public class SessionFacade extends BaseFacade {
         }
     }
 
-    public Session find_session(UUID sessionID) throws DatabaseException {
+    public Session find_session(SessionID sessionID) throws DatabaseException {
         try (Database database = new Database()) {
             SessionDAO dao = database.getSessionDAO();
             return dao.findSession(sessionID);

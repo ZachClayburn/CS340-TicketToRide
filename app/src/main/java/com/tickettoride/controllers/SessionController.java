@@ -5,6 +5,8 @@ import com.tickettoride.activities.LoginActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.idtypes.SessionID;
+import com.tickettoride.models.idtypes.UserID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ public class SessionController extends BaseController {
     public static SessionController getSingleton() { return SINGLETON; }
     private SessionController() {}
 
-    public void create(UUID sessionID, UUID userID, ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
+    public void create(SessionID sessionID, UserID userID, ArrayList<LinkedTreeMap> linkedTreeJoinGames, ArrayList<LinkedTreeMap> linkedTreeRejoinGames) {
         Session session = new Session(sessionID, userID);
         DataManager.getSINGLETON().setSession(session);
         ArrayList<Game> joinGames = Game.buildGames((List) linkedTreeJoinGames);

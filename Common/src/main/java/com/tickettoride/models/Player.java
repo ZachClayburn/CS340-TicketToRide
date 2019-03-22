@@ -1,14 +1,18 @@
 package com.tickettoride.models;
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
+import com.tickettoride.models.idtypes.UserID;
+
 import java.util.*;
 
 public class Player {
     private int turn = 0;
     private PlayerColor color = null;
     private String username = "";
-    private UUID userID;
-    private UUID gameID;
-    private UUID playerID;
+    private UserID userID;
+    private GameID gameID;
+    private PlayerID playerID;
     private int trainCarCount = 45;
     private int trainCardCount = 4;
     private int destinationCardCount = 0;
@@ -16,20 +20,20 @@ public class Player {
     //FIXME Add this functionality
     private int points;
 
-    public Player(UUID user, UUID game) {
+    public Player(UserID user, GameID game) {
         this.userID = user;
         this.gameID = game;
-        this.playerID = UUID.randomUUID();
+        this.playerID = PlayerID.randomUUID();
     }
     
-    public Player(UUID user, UUID game, UUID player, int turn){
+    public Player(UserID user, GameID game, PlayerID player, int turn){
         this.userID=user;
         this.gameID=game;
         this.playerID=player;
         this.turn = turn;
     }
 
-    public Player(UUID user, UUID game, UUID player, int turn, PlayerColor color){
+    public Player(UserID user, GameID game, PlayerID player, int turn, PlayerColor color){
         this.userID=user;
         this.gameID=game;
         this.playerID=player;
@@ -38,28 +42,28 @@ public class Player {
     }
 
 
-    public Player(UUID userID, UUID gameID, UUID playerID){
+    public Player(UserID userID, GameID gameID, PlayerID playerID){
         this.userID = userID;
         this.gameID = gameID;
         this.playerID = playerID;
     }
 
     public Player(Map<String, Object> playerMap) {
-        this.gameID = UUID.fromString((String) playerMap.get("gameID"));
-        this.playerID = UUID.fromString((String) playerMap.get("playerID"));
-        this.userID = UUID.fromString((String) playerMap.get("userID"));
+        this.gameID = GameID.fromString((String) ((Map) playerMap.get("gameID")).get("uuid"));
+        this.playerID = PlayerID.fromString((String) ((Map)playerMap.get("playerID")).get("uuid"));
+        this.userID = UserID.fromString((String) ((Map) playerMap.get("userID")).get("uuid"));
         this.turn = ((Double) playerMap.get("turn")).intValue();
         this.color = PlayerColor.valueOf((String) playerMap.get("color"));
         this.username = (String) playerMap.get("username");
     }
 
-    public UUID getUserID() { return userID; }
+    public UserID getUserID() { return userID; }
 
-    public void setUserID(UUID userID) { this.userID = userID; }
+    public void setUserID(UserID userID) { this.userID = userID; }
 
-    public UUID getGameID() { return gameID; }
+    public GameID getGameID() { return gameID; }
 
-    public void setGameID(UUID gameID) { this.gameID = gameID; }
+    public void setGameID(GameID gameID) { this.gameID = gameID; }
 
     public int getTurn() {return turn;}
 
@@ -95,9 +99,9 @@ public class Player {
         }
     }
 
-    public UUID getPlayerID() { return playerID; }
+    public PlayerID getPlayerID() { return playerID; }
 
-    public void setPlayerID(UUID playerID) { this.playerID = playerID; }
+    public void setPlayerID(PlayerID playerID) { this.playerID = playerID; }
 
     @Override
     public boolean equals(Object o) {

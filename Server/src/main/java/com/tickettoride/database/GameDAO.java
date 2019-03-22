@@ -2,6 +2,7 @@ package com.tickettoride.database;
 
 import com.tickettoride.models.Game;
 
+import com.tickettoride.models.idtypes.GameID;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +55,7 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     @Nullable
-    public Game getGame(UUID gameID) throws DatabaseException {
+    public Game getGame(GameID gameID) throws DatabaseException {
         Game game = null;
         String sql = "SELECT * FROM Games WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -69,7 +70,7 @@ public class GameDAO extends Database.DataAccessObject {
         return game;
     }
 
-    public void updatePlayerCount(UUID gameID, int numberPlayers) throws DatabaseException {
+    public void updatePlayerCount(GameID gameID, int numberPlayers) throws DatabaseException {
         String sql = "UPDATE Games SET numPlayer = ? WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setInt(1, numberPlayers);
@@ -108,7 +109,7 @@ public class GameDAO extends Database.DataAccessObject {
 
     private Game buildGameFromQueryResult(ResultSet result) throws SQLException {
 
-        var tableGameID = UUID.fromString(result.getString("GameID"));
+        var tableGameID = GameID.fromString(result.getString("GameID"));
         var tableGroupName = result.getString("groupName");
         var tableNumPlayer = result.getInt("numPlayer");
         var tableMaxPlayer = result.getInt("maxPlayer");
@@ -118,7 +119,7 @@ public class GameDAO extends Database.DataAccessObject {
         return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn);
     }
 
-    public void setGameToStarted(UUID gameID) throws DatabaseException {
+    public void setGameToStarted(GameID gameID) throws DatabaseException {
 
         String sql = "UPDATE games SET istarted=TRUE WHERE gameid= ?";
 

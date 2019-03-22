@@ -9,6 +9,7 @@ import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.Session;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class GameControllerHelper extends BaseController {
 
     // Move this logic to server for Phase 3
     public void setupPlayerHands(){
-        UUID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
+        PlayerID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
         for (Player player: DataManager.SINGLETON.getGamePlayers()){
             Hand hand = DataManager.SINGLETON.getTrainCardDeck().getInitialHand();
             player.setTrainCardCount(hand.getHandSize());
@@ -55,7 +56,7 @@ public class GameControllerHelper extends BaseController {
         joinGameActivity.updateUI();
     }
 
-    public void createGameOnCreateGameActivity(Game game, UUID playerID) throws ClassCastException {
+    public void createGameOnCreateGameActivity(Game game, PlayerID playerID) throws ClassCastException {
         CreateGameActivity createGameActivity = (CreateGameActivity) getCurrentActivity();
         Session session = DataManager.getSINGLETON().getSession();
         Player player = new Player(session.getUserID(), game.getGameID(), playerID);

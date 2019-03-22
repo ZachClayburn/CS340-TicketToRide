@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.tickettoride.models.idtypes.GameID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
@@ -139,7 +140,7 @@ public class ServerCommunicator extends WebSocketServer {
         sendToMany(conns,response);
     }
     
-    public void moveToRoom(UUID connid, UUID roomid){
+    public void moveToRoom(UUID connid, GameID roomid){
         connectionManager.moveConnectionToRoom(connid,roomid);
     }
     
@@ -170,7 +171,7 @@ public class ServerCommunicator extends WebSocketServer {
         setConnectionLostTimeout(100);
     }
 
-    public void addRoom(UUID roomID) { connectionManager.addRoom(roomID); }
+    public void addRoom(GameID roomID) { connectionManager.addRoom(roomID); }
     
 
     private class ConnectionManager{
@@ -183,7 +184,7 @@ public class ServerCommunicator extends WebSocketServer {
             roomManagerInstance=new RoomManager();
         }
 
-        public void addRoom(UUID roomID) { roomManagerInstance.addRoom(roomID); }
+        public void addRoom(GameID roomID) { roomManagerInstance.addRoom(roomID); }
 
         public void addConnection(WebSocket conn){
             UUID connid = UUID.randomUUID();
@@ -251,28 +252,28 @@ public class ServerCommunicator extends WebSocketServer {
             roomManagerInstance.moveConnectionToMainLobby(connid);
         }
         
-        public void moveConnectionToRoom(UUID connid, UUID roomid){
+        public void moveConnectionToRoom(UUID connid, GameID roomid){
             roomManagerInstance.moveConnectionToRoom(connid,roomid);
         }
         
         
         //class specifically for managing which connection is in which room
         private class RoomManager{
-            private Map<UUID,Room> rooms;
-            private Map<UUID,UUID> connectionRoomMap;//stores the roomid the connection is in
-            private UUID entrance;
-            private UUID mainLobby;
+            private Map<GameID,Room> rooms;
+            private Map<UUID,GameID> connectionRoomMap;//stores the roomid the connection is in
+            private GameID entrance;
+            private GameID mainLobby;
             
             public RoomManager(){
                 rooms=new HashMap<>();
                 connectionRoomMap=new HashMap<>();
-                entrance = UUID.randomUUID();
-                mainLobby = UUID.randomUUID();
+                entrance = GameID.randomUUID();
+                mainLobby = GameID.randomUUID();
                 addRoom(entrance);
                 addRoom(mainLobby);
             }
             
-            public void addRoom(UUID roomid){
+            public void addRoom(GameID roomid){
                 rooms.put(roomid,new Room());
             }
             
@@ -285,7 +286,7 @@ public class ServerCommunicator extends WebSocketServer {
                 addToRoom(connid,entrance);
             }
             
-            public boolean moveConnectionToRoom(UUID connid,UUID roomid){
+            public boolean moveConnectionToRoom(UUID connid,GameID roomid){
                 if(connectionRoomMap.get(connid)==null){
                     return false; 
                 }
@@ -307,7 +308,7 @@ public class ServerCommunicator extends WebSocketServer {
             }
             
             public void removeConnection(UUID connid){
-                UUID roomid=findConnectionRoomId(connid);
+                GameID roomid=findConnectionRoomId(connid);
                 if(roomid==null){
                     return;
                 }
@@ -315,7 +316,7 @@ public class ServerCommunicator extends WebSocketServer {
             }
             
             public List<UUID> getConnectionRoomConnectionIds(UUID connid){
-                UUID roomid=findConnectionRoomId(connid);
+                GameID roomid=findConnectionRoomId(connid);
                 if(roomid==null){
                     return null;
                 }
@@ -342,11 +343,11 @@ public class ServerCommunicator extends WebSocketServer {
                 return room.getConnections();
             }
             
-            private UUID findConnectionRoomId(UUID connid){
+            private GameID findConnectionRoomId(UUID connid){
                 return connectionRoomMap.get(connid);
             }
             
-            private void addToRoom(UUID connid,UUID roomid){
+            private void addToRoom(UUID connid,GameID roomid){
                 Room room=rooms.get(roomid);
                 if(room==null){
                     return;
@@ -355,7 +356,7 @@ public class ServerCommunicator extends WebSocketServer {
                 connectionRoomMap.put(connid,roomid);
             }
             
-            private void removeFromRoom(UUID connid,UUID roomid){
+            private void removeFromRoom(UUID connid,GameID roomid){
                 Room room=rooms.get(roomid);
                 if(room==null){
                     return;
@@ -364,8 +365,8 @@ public class ServerCommunicator extends WebSocketServer {
                 connectionRoomMap.remove(connid);
             }
             
-            private boolean moveToRoom(UUID connid,UUID newroomid){
-                UUID oldroomid=findConnectionRoomId(connid);
+            private boolean moveToRoom(UUID connid,GameID newroomid){
+                GameID oldroomid=findConnectionRoomId(connid);
                 if(oldroomid==null || rooms.get(newroomid)==null){
                     return false;
                 }

@@ -2,6 +2,8 @@ package com.tickettoride.clientModels;
 
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.idtypes.PlayerID;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -172,7 +174,7 @@ public class DataManager {
         return destCardsRequiredToKeep;
     }
 
-    public Player findPlayerByID(UUID playerID){
+    public Player findPlayerByID(PlayerID playerID){
         for (Player player:gamePlayers) {
             if (player.getPlayerID() == playerID){
                 return player;

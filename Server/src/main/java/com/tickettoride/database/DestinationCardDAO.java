@@ -4,6 +4,7 @@ import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.idtypes.GameID;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         addDeck(game.getGameID(), deck);
     }
 
-    public void addDeck(UUID gameID, Queue<DestinationCard> deck) throws DatabaseException {
+    public void addDeck(GameID gameID, Queue<DestinationCard> deck) throws DatabaseException {
         deck = new ArrayDeque<>(deck);
 
         String sql = "INSERT INTO destinationcards " +
@@ -88,7 +89,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         return getDeckForGame(game.getGameID());
     }
 
-    public Queue<DestinationCard> getDeckForGame(UUID gameID) throws DatabaseException {
+    public Queue<DestinationCard> getDeckForGame(GameID gameID) throws DatabaseException {
 
         Queue<DestinationCard> deck = new ArrayDeque<>();
         String sql = "SELECT " +

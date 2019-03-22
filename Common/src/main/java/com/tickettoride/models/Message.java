@@ -1,5 +1,7 @@
 package com.tickettoride.models;
 
+import com.tickettoride.models.idtypes.PlayerID;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,7 +11,7 @@ import java.util.UUID;
 public class Message {
     private String time;
     private String message;
-    private UUID playerID;
+    private PlayerID playerID;
 
 
 //    /**Constructor to be used when sending a message to the other players using the current player's playerid and the current time
@@ -25,7 +27,7 @@ public class Message {
      * @param message the message to be sent
      * @param playerID the playerID of the sending player
      */
-    public Message(String message, UUID playerID){
+    public Message(String message, PlayerID playerID){
         this.message=message;
         this.playerID=playerID;
         time=Instant.now().toString();
@@ -37,13 +39,13 @@ public class Message {
      * @param playerID the sender's playerID
      * @param time the time it was sent
      */
-    public Message(String message, UUID playerID, String time){
+    public Message(String message, PlayerID playerID, String time){
         this.message=message;
         this.playerID=playerID;
         this.time=time;
     }
     
-    public Message(String message, UUID playerID, Instant time){
+    public Message(String message, PlayerID playerID, Instant time){
         this.message=message;
         this.playerID=playerID;
         this.time=time.toString();
@@ -59,7 +61,7 @@ public class Message {
         return message;
     }
 
-    public UUID getPlayerID() {
+    public PlayerID getPlayerID() {
         return playerID;
     }
     

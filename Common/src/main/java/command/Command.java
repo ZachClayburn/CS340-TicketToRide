@@ -10,6 +10,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.tickettoride.models.Message;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +43,7 @@ public class Command {
         public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
             String time = jsonObject.get("timeString").getAsString();
-            UUID playerID= UUID.fromString(jsonObject.get("playerId").getAsString());
+            PlayerID playerID= PlayerID.fromString(jsonObject.get("playerId").getAsString());
             String message = jsonObject.get("message").getAsString();
             return new Message(message, playerID, time);
         }

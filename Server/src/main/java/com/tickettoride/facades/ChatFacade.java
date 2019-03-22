@@ -6,6 +6,8 @@ import com.tickettoride.database.PlayerDAO;
 import com.tickettoride.models.Message;
 
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +31,7 @@ public class ChatFacade extends BaseFacade {
     
     public void sendMessage(UUID connID, Message message){
         try{
-            UUID gameID=getGameID(message.getPlayerID());
+            GameID gameID=getGameID(message.getPlayerID());
             try(Database database= new Database()){
                 ChatDAO chatDAO=database.getChatDAO();
                 chatDAO.addMessage(gameID,message);
@@ -43,8 +45,8 @@ public class ChatFacade extends BaseFacade {
     }
     
     //helper
-    public UUID getGameID(UUID playerID) throws DatabaseException, Exception {
-        List<UUID> games=new ArrayList<UUID>();
+    public GameID getGameID(PlayerID playerID) throws DatabaseException, Exception {
+        List<GameID> games;
         try (Database database = new Database()) {
             PlayerDAO playerDAO = database.getPlayerDAO();
             games = playerDAO.getGameForPlayer(playerID);

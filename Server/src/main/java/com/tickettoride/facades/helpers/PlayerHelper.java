@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.UserID;
 import exceptions.DatabaseException;
 
 public class PlayerHelper extends BaseFacade {
@@ -20,7 +22,7 @@ public class PlayerHelper extends BaseFacade {
     private static PlayerHelper SINGLETON = new PlayerHelper();
     public static PlayerHelper getSingleton() { return SINGLETON; }
 
-    public Player createPlayer(UUID user, UUID game) throws DatabaseException {
+    public Player createPlayer(UserID user, GameID game) throws DatabaseException {
         try (Database database = new Database()) {
             Player player = new Player(user, game);
             PlayerDAO dao = database.getPlayerDAO();
@@ -35,7 +37,7 @@ public class PlayerHelper extends BaseFacade {
     }
 
 
-    public List<Player> getGamePlayers(UUID gameID) throws DatabaseException {
+    public List<Player> getGamePlayers(GameID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
             return dao.getGamePlayers(gameID);

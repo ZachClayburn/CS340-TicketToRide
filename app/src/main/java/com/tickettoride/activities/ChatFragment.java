@@ -21,6 +21,7 @@ import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.models.Message;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerColor;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.List;
 import java.util.UUID;
@@ -122,14 +123,14 @@ public class ChatFragment extends Fragment {
         @Override
         public void onBindViewHolder(MessageHolder holder, int position) {
             Message message = mMessageList.get(position);
-            UUID playerID=message.getPlayerID();
+            PlayerID playerID=message.getPlayerID();
             String name = getColor(playerID);
             holder.mName.setText(name);
             holder.mMessage.setText(message.getMessage());
             holder.mTime.setText(message.getTimeString());
         }
         
-        private String getColor(UUID player){
+        private String getColor(PlayerID player){
             List<Player> players=DataManager.getSINGLETON().getGamePlayers();
             while(players==null){
                 try {

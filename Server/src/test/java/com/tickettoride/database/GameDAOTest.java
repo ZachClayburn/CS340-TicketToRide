@@ -14,7 +14,6 @@ public class GameDAOTest extends AbstractDatabaseTest{
     @Test
     public void GameStoredInDatabase_IsTheSameWhenPulledOutOfTheDatabase() throws DatabaseException {
         Game testGame = new Game("Test Group", 4);
-        testGame.setGameID(UUID.randomUUID());
 
         try (var db = new Database()) {
 

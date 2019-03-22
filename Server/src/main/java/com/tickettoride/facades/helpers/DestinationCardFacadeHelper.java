@@ -7,6 +7,7 @@ import com.tickettoride.facades.GameFacade;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 
+import com.tickettoride.models.idtypes.GameID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class DestinationCardFacadeHelper extends BaseFacade {
     private static Logger logger = LogManager.getLogger(GameFacade.class.getName());
     private DestinationCardFacadeHelper() {}
 
-    public Queue<DestinationCard> gameDestinationCards(UUID gameID) throws DatabaseException {
+    public Queue<DestinationCard> gameDestinationCards(GameID gameID) throws DatabaseException {
         try (var db = new Database()) {
             DestinationCardDAO dao = db.getDestinationCardDAO();
             return dao.getDeckForGame(gameID);
@@ -60,14 +61,14 @@ public class DestinationCardFacadeHelper extends BaseFacade {
                 player, offeredCards, requiredToKeep);
     }
 
-    public Queue<DestinationCard> destinationCardsinGameDeck(UUID gameID) throws DatabaseException {
+    public Queue<DestinationCard> destinationCardsinGameDeck(GameID gameID) throws DatabaseException {
         try (var db = new Database()) {
             DestinationCardDAO dao = db.getDestinationCardDAO();
             return dao.getDeckForGame(gameID);
         }
     }
 
-    public static void dealCards(UUID gameID) {
+    public static void dealCards(GameID gameID) {
         logger.debug("Dealing to game " + gameID);
 
         try (var db = new Database()) {

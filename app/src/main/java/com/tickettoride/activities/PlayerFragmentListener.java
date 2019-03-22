@@ -1,7 +1,7 @@
 package com.tickettoride.activities;
 
-import java.util.UUID;
+import com.tickettoride.models.idtypes.PlayerID;
 
 public interface PlayerFragmentListener {
-    public void toPlayerFragment(UUID playerID);
+    public void toPlayerFragment(PlayerID playerID);
 }

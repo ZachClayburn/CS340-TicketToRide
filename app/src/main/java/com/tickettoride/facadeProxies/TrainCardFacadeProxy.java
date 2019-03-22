@@ -4,11 +4,13 @@ import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.controllers.GameController;
 import com.tickettoride.controllers.TrainCardController;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 
 import java.util.UUID;
 
+import com.tickettoride.models.idtypes.PlayerID;
 import command.Command;
 
 public class TrainCardFacadeProxy {
@@ -20,14 +22,14 @@ public class TrainCardFacadeProxy {
 
     private TrainCardFacadeProxy() { }
 
-    public void drawFaceupCard(int index, UUID playerID){
+    public void drawFaceupCard(int index, PlayerID playerID){
         Command command = new Command(FACADE_NAME, "drawFaceupCard", index, playerID);
         // ClientCommunicator.SINGLETON.send(command);
         // Send to server
         tempDrawFaceupCardLogic(index, playerID);
     }
 
-    public void tempDrawFaceupCardLogic(int index, UUID playerID){
+    public void tempDrawFaceupCardLogic(int index, PlayerID playerID){
         // Add card to player hand in database
 
         TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(index);
@@ -40,14 +42,14 @@ public class TrainCardFacadeProxy {
         // Send to controller
     }
 
-    public void drawFacedownCard(UUID playerID){
+    public void drawFacedownCard(PlayerID playerID){
         Command command = new Command(FACADE_NAME, "drawFacedownCard", playerID);
         tempDrawFacedownCardLogic(playerID);
         // ClientCommunicator.SINGLETON.send(command);
         // Send to server
     }
 
-    public void tempDrawFacedownCardLogic(UUID playerID){
+    public void tempDrawFacedownCardLogic(PlayerID playerID){
         // Add card to player hand in database
 
         TrainCard card = DataManager.getSINGLETON().getTrainCardDeck().drawFromFaceDown();

@@ -4,6 +4,7 @@ package com.tickettoride.models;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DestinationCard implements Comparable<DestinationCard> {
 

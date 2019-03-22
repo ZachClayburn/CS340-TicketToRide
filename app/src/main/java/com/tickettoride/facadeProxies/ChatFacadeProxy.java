@@ -8,6 +8,7 @@ import com.tickettoride.models.Message;
 
 import java.util.UUID;
 
+import com.tickettoride.models.idtypes.GameID;
 import command.Command;
 
 public class ChatFacadeProxy {
@@ -21,7 +22,7 @@ public class ChatFacadeProxy {
         ClientCommunicator.SINGLETON.send(command);
     }
     
-    public void getChat(UUID gameid){
+    public void getChat(GameID gameid){
         Command command=new Command(FACADE_NAME,"getChat", gameid);
         ClientCommunicator.SINGLETON.send(command);
     }

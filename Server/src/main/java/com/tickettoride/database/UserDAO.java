@@ -1,6 +1,8 @@
 package com.tickettoride.database;
 
 import com.tickettoride.models.User;
+import com.tickettoride.models.idtypes.SessionID;
+import com.tickettoride.models.idtypes.UserID;
 import exceptions.DatabaseException;
 import com.tickettoride.models.Password;
 import com.tickettoride.models.Username;
@@ -78,7 +80,7 @@ public class UserDAO extends Database.DataAccessObject {
     }
 
     @Nullable
-    public User getUserByID(UUID id) throws DatabaseException {
+    public User getUserByID(UserID id) throws DatabaseException {
         User user = null;
         String sql = "SELECT * FROM Users WHERE userID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -91,16 +93,16 @@ public class UserDAO extends Database.DataAccessObject {
         return user;
     }
 
-    public User getUserBySessionID(UUID sessionID) throws DatabaseException{
+    public User getUserBySessionID(SessionID sessionID) throws DatabaseException{
         User user = null;
-        UUID userID;
+        UserID userID;
         String sql = "SELECT userID FROM Sessions WHERE sessionID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, sessionID.toString());
             var result = statement.executeQuery();
             if (result.next()) {
                 var tableUserID = result.getString("userID");
-                userID = UUID.fromString(tableUserID);
+                userID = UserID.fromString(tableUserID);
                 user = getUserByID(userID);
             }
         } catch (SQLException e) {
