@@ -62,4 +62,19 @@ public class DestinationCardFacade extends BaseFacade {
             logger.error(throwable);//FIXME add proper error handling
         }
     }
+
+    public void getOfferedCards(UUID conID, Player player, Integer requiredToKeep){
+
+        try (var db = new Database()) {
+
+            var offeredCards = db.getDestinationCardDAO().getOfferedCards(player);
+
+            sendResponseToRoom(conID,
+                    new Command(CONTROLLER_NAME, "offerDestinationCards", player, offeredCards, requiredToKeep)
+            );
+
+        } catch (DatabaseException e) {
+            logger.error(e);//FIXME add proper error handling
+        }
+    }
 }

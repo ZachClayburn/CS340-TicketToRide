@@ -24,6 +24,8 @@ public class ClientCommunicator {
 
     public static ClientCommunicator SINGLETON = new ClientCommunicator();
 
+    private static String TAG = "ClientCommunicator";
+
     private ClientCommunicator() {
     }
 
@@ -34,7 +36,7 @@ public class ClientCommunicator {
 
                     @Override
                     public void onMessage(String message) {
-                        Log.i("ClientCommunicator", "Received Message From Server: " + message);
+                        Log.i("ClientCommunicator", "Received Message From Server: " + message.replace("\\", ""));
                         try {
                             Response response = gson.fromJson(message, Response.class);
                             if (response.hasCommand()) {
@@ -50,19 +52,17 @@ public class ClientCommunicator {
 
                     @Override
                     public void onOpen(ServerHandshake handshake) {
-                        Log.i("WebSocket", "Handshake Successful");
+                        Log.i(TAG, "Handshake Successful");
                     }
 
                     @Override
                     public void onClose(int code, String reason, boolean remote) {
-                        Log.i("WebSocket", "Close");
+                        Log.i(TAG, "Close");
                     }
 
                     @Override
                     public void onError(Exception ex) {
-                        Log.e("WebSocket", "Error");
-                        Log.e("WebSocket", ex.getMessage());
-                        Log.e("WebSocket", ex.getStackTrace().toString());
+                        Log.e(TAG, "Error", ex);
                     }
                 };
             }
@@ -71,19 +71,18 @@ public class ClientCommunicator {
                 mWebSocketClient.connect();
             }
         } catch (URISyntaxException e) {
-            Log.e("ClientCommunicator", e.getMessage());
+            Log.e(TAG, "Error in connecting to server", e);
         }
     }
     
     public void send(Command command){
-//        connect();
         try {
             String message=gson.toJson(command);
             mWebSocketClient.send(message);
-            Log.i("ClientCommunicator", "Sent Command to Server");
+            Log.i(TAG, "Sent Command to Server: " + message);
+            //Log.d(TAG, "Sent Command to Server: " + message, new Exception()); This get the stacktrace
         } catch (Exception t) {
-            Log.e("ClientCommunicator", t.getMessage());
-            Log.e("ClientCommunicator", t.getStackTrace().toString());
+            Log.e(TAG, "Error while sending message, rethrowing", t);
             throw t;
         }
 

@@ -1,5 +1,6 @@
 package com.tickettoride.activities;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -307,7 +308,8 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         playerList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), DataManager.getSINGLETON().getGamePlayers());
         playerList.setAdapter(adapter);
-        PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
         setListeners();
         board.setOnTouchListener(handleTouch);
         return v;
@@ -440,7 +442,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 drawTrain.setEnabled(false);
                 destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
                 trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(true);
+                destDeck.setEnabled(false);
+                Player userPlayer = DataManager.getSINGLETON().getPlayer();
+                DestinationCardFacadeProxy.getOfferedCards(userPlayer, 2);
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.tickettoride.facades;
 import com.tickettoride.command.ServerCommunicator;
+import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
 import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
@@ -89,6 +90,7 @@ public class GameFacade extends BaseFacade {
         PlayerHelper.getSingleton().pickTurnOrder(players);
         PlayerHelper.getSingleton().pickColors(players);
         PlayerHelper.getSingleton().setUsernames(players);
+        DestinationCardFacadeHelper.dealCards(gameID);
         var command = new Command(CONTROLLER_NAME, "start", players);
         sendResponseToRoom(connID, command);
     }

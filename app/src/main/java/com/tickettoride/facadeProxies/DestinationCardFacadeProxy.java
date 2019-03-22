@@ -27,7 +27,6 @@ public class DestinationCardFacadeProxy {
         } catch (Throwable throwable) {
 
             Log.e(TAG, "drawDestinationCards: ", throwable);
-
         }
     }
 
@@ -43,4 +42,19 @@ public class DestinationCardFacadeProxy {
             Log.e(TAG, "acceptDestinationCards: ", throwable);
         }
     }
+
+    public static void getOfferedCards(Player player, int requiredToKeep) {
+
+        try {
+
+            ClientCommunicator.SINGLETON.send(
+                    new Command(FACADE_NAME, "getOfferedCards", player, requiredToKeep)
+            );
+
+        } catch (Throwable throwable) {
+
+            Log.e(TAG, "getOfferedCards: Could not get offered cards", throwable);
+        }
+    }
+
 }

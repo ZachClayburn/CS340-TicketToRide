@@ -10,6 +10,7 @@ import com.tickettoride.models.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -63,6 +64,34 @@ public class DestinationCardFacadeHelper extends BaseFacade {
         try (var db = new Database()) {
             DestinationCardDAO dao = db.getDestinationCardDAO();
             return dao.getDeckForGame(gameID);
+        }
+    }
+
+    public static void dealCards(UUID gameID) {
+        logger.debug("Dealing to game " + gameID);
+
+        try (var db = new Database()) {
+
+            var game = db.getGameDAO().getGame(gameID);
+            assert game != null;
+
+            Queue<DestinationCard> destinationDeck = db.getDestinationCardDAO().getDeckForGame(game);
+
+            for (var player: db.getPlayerDAO().getGamePlayers(gameID)){
+                List<DestinationCard> offeredCards = new ArrayList<>();
+
+                offeredCards.add(destinationDeck.remove());
+                offeredCards.add(destinationDeck.remove());
+                offeredCards.add(destinationDeck.remove());
+
+                db.getDestinationCardDAO().offerCardsToPlayer(player, offeredCards);
+            }
+
+
+            db.commit();
+
+        } catch (DatabaseException e) {
+            e.printStackTrace();//FIXME Add proper error handling
         }
     }
 }

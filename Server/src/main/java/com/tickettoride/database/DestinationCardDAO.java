@@ -84,6 +84,10 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     }
 
+    public Queue<DestinationCard> getDeckForGame(Game game) throws DatabaseException {
+        return getDeckForGame(game.getGameID());
+    }
+
     public Queue<DestinationCard> getDeckForGame(UUID gameID) throws DatabaseException {
 
         Queue<DestinationCard> deck = new ArrayDeque<>();
