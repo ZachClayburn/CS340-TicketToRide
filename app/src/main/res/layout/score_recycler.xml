@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="50dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/score_username"
+            android:gravity="center_vertical"
+            android:layout_width="175dp"
+            android:layout_height="50dp"
+            android:text="@string/player_score"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/score_points"
+            android:gravity="center_vertical"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:text="@string/score_points"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/score_lost"
+            android:gravity="center_vertical"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="@string/lost_points"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/score_gained"
+            android:gravity="center_vertical"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:text="@string/gained_points"
+            android:textSize="20dp"/>
+    </LinearLayout>
+</LinearLayout>
+

@@ -33,7 +33,7 @@ import java.util.List;
 
 import com.tickettoride.models.Color;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment {//TODO once train cars reach 2 and turn for everyone finishes, go to GameOverFragment
     private DrawView drawView;
     private ImageView board;
     private ImageView cardOne;
@@ -47,6 +47,7 @@ public class MapFragment extends Fragment {
     private Button drawDest;
     private Button viewHand;
     private Button claimRoute;
+    private Button history;
     private RecyclerView playerList;
     private Adapter adapter;
     private Context context;
@@ -54,6 +55,8 @@ public class MapFragment extends Fragment {
     private ChatFragment chatFragment;
     private View v;
     private ClaimRouteListener claimListener;
+    private GameOverFragmentListener gameOverListener;
+    private HistoryFragmentListener historyListener;
     MapFragment selfMapFragment = this;
 
     private View.OnClickListener destDeckViewListener = new View.OnClickListener() {
@@ -138,6 +141,15 @@ public class MapFragment extends Fragment {
             DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment);
             claimListener = (ClaimRouteListener) getActivity();
             claimListener.moveToClaimRoute();
+        }
+    };
+    private View.OnClickListener historyViewListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            historyListener = (HistoryFragmentListener) getActivity();
+            historyListener.moveToHistory();
+            /*gameOverListener = (GameOverFragmentListener) getActivity();//TODO use when game is over
+            gameOverListener.moveToGameOver();*/
         }
     };
     public ViewHandListener viewListener;
@@ -288,6 +300,7 @@ public class MapFragment extends Fragment {
         drawDest = v.findViewById(R.id.draw_dest);
         viewHand = v.findViewById(R.id.view_cards);
         claimRoute = v.findViewById(R.id.claim_route);
+        history = v.findViewById(R.id.history_button);
         playerList = v.findViewById(R.id.player_recycler_view);
         context = getActivity();
         getContext();
@@ -591,5 +604,6 @@ public class MapFragment extends Fragment {
                 viewListener.toViewHandFragment();
             }
         });
+        history.setOnClickListener(historyViewListener);
     }
 }
