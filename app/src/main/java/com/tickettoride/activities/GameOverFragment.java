@@ -17,6 +17,7 @@ import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameOverFragment extends Fragment {
@@ -24,6 +25,7 @@ public class GameOverFragment extends Fragment {
     private RecyclerView playerList;
     private TextView winner;
     private TextView longestRoute;
+    private List<Player> finalPlayers;
     private Button lobbyButton;
     private Adapter adapter;
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,8 @@ public class GameOverFragment extends Fragment {
         View v = inflater.inflate(R.layout.game_complete, container, false);
         playerList = v.findViewById(R.id.score_recycler_view);
         playerList.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new Adapter(getContext(), DataManager.getSINGLETON().getGamePlayers());
+        finalPlayers = DataManager.getSINGLETON().getGamePlayers();
+        adapter = new Adapter(getContext(), finalPlayers);
         playerList.setAdapter(adapter);
         winner = v.findViewById(R.id.winner);
         longestRoute = v.findViewById(R.id.longest_route);
@@ -44,8 +47,8 @@ public class GameOverFragment extends Fragment {
         lobbyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LobbyActivity.class);
-                startActivity(intent);
+                //TODO remove game from database
+                getActivity().finish();
             }
         });
         return v;

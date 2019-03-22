@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
-        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener, ClaimRouteListener, DiscardFragmentListener{
+        OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener,
+        ClaimRouteListener, DiscardFragmentListener, GameOverFragmentListener, HistoryFragmentListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
@@ -32,6 +33,7 @@ public class GameRoomActivity extends MyBaseActivity implements
     private ClaimRouteFragment claimRouteFragment;
     private GameOverFragment gameOverFragment;
     private DiscardFragment discardFragment;
+    private HistoryFragment historyFragment;
 
     public MapFragment getMapFragment() { return mapFragment; }
 
@@ -84,6 +86,10 @@ public class GameRoomActivity extends MyBaseActivity implements
             fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
             discardFragment = null;
         }
+        else if (historyFragment != null) {
+            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
+            historyFragment = null;
+        }
     }
 
     public void toPlayerFragment(UUID playerID){
@@ -109,6 +115,12 @@ public class GameRoomActivity extends MyBaseActivity implements
             fm.beginTransaction().replace(R.id.fragment_holder, viewHandFragment).commit();
         }
     }
+    public void moveToHistory() {
+        if (historyFragment == null) {
+            historyFragment = new HistoryFragment();
+            fm.beginTransaction().replace(R.id.fragment_holder, historyFragment).commit();
+        }
+    }
     public void moveToClaimRoute() {
         if (claimRouteFragment == null) {
             claimRouteFragment = new ClaimRouteFragment();
@@ -120,6 +132,12 @@ public class GameRoomActivity extends MyBaseActivity implements
             claimRouteFragment = null;
             discardFragment = new DiscardFragment();
             fm.beginTransaction().replace(R.id.fragment_holder, discardFragment).commit();
+        }
+    }
+    public void moveToGameOver() {
+        if (gameOverFragment == null) {
+            gameOverFragment = new GameOverFragment();
+            fm.beginTransaction().replace(R.id.fragment_holder, gameOverFragment).commit();
         }
     }
     @Override

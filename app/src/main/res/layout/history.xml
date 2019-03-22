@@ -6,27 +6,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/winner"
-        android:id="@+id/winner"
-        android:gravity="center"
-        android:textSize="30dp"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="@string/longest_route"
-        android:id="@+id/longest_route"
-        android:gravity="center"
-        android:textSize="30dp"/>
-
+        android:text="@string/history"
+        android:gravity="center"/>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:id="@+id/score_recycler_view">
+        android:id="@+id/history_view">
     </android.support.v7.widget.RecyclerView>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back_to_lobby"
-        android:id="@+id/return_lobby"
+        android:text="@string/return_map"
+        android:id="@+id/return_map"
         android:layout_gravity="center"/>
 </LinearLayout>

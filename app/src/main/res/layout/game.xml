@@ -128,7 +128,13 @@
             android:background="@drawable/deck"
             android:textColor="#000"
             android:text="@string/dest_deck"/>
-
+        <Button
+            android:layout_width="60dp"
+            android:layout_gravity="bottom"
+            android:layout_height="wrap_content"
+            android:id="@+id/history_button"
+            android:text="@string/history"
+            android:textSize="12dp"/>
 
 
 
