@@ -435,9 +435,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             @Override
             public void run() {
                 disableDrawTrainCards();
-                drawDest.setEnabled(true);
-                claimRoute.setEnabled(true);
-                drawTrain.setEnabled(true);
+                drawDest.setEnabled(false);
+                claimRoute.setEnabled(false);
+                drawTrain.setEnabled(false);
                 destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
                 trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
                 destDeck.setEnabled(true);
@@ -452,8 +452,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             public void run() {
                 disableDrawTrainCards();
                 drawDest.setEnabled(false);
-                drawTrain.setEnabled(true);
-                claimRoute.setEnabled(true);
+                drawTrain.setEnabled(false);
                 destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
                 destDeck.setEnabled(false);
             }
