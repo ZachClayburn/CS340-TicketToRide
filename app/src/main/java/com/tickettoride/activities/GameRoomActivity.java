@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -200,7 +201,10 @@ public class GameRoomActivity extends MyBaseActivity implements
             PlayerTurnFaker.getSINGLETON().fakePlayerturn(player);
         }
     }
-    
+    @Override
+    public void onBackPressed() {
+        NavUtils.navigateUpFromSameTask(this);
+    }
     public void addMessageError(){
         //figure out what message to display
     }
