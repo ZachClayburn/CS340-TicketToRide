@@ -52,10 +52,10 @@ public class PlayerHelper extends BaseFacade {
     }
 
 
-    public void deletePlayer(UUID sessionID) throws DatabaseException, SQLException {
+    public void deletePlayer(UUID playerID) throws DatabaseException, SQLException {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
-            dao.deletePlayer(sessionID);
+            dao.deletePlayer(playerID);
             database.commit();
         }
     }

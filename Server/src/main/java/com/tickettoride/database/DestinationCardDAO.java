@@ -21,7 +21,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
     private static final String tableCreateString =
             // language=PostgreSQL
             "DROP TYPE IF EXISTS cardstate; " +
-            "CREATE TYPE cardState AS ENUM ( 'inDeck', 'inPlayerHand', 'offeredToPlayer', 'inDiscard' );" +
+            "CREATE TYPE cardState AS ENUM ( 'inDeck', 'inPlayerHand', 'offeredToPlayer', 'inDiscard', 'faceUp' );" +
             "CREATE TABLE destinationCards" +
                     "(" +
                     "gameID TEXT," +
