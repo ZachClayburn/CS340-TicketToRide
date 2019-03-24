@@ -6,6 +6,7 @@ import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.TrainCardDeck;
+import com.tickettoride.models.idtypes.GameID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +25,7 @@ public class TrainCardFacade extends BaseFacade {
     private static Logger logger = LogManager.getLogger(TrainCardFacade.class.getName());
     private TrainCardFacade() {}
 
-    public void initialize(UUID connID, UUID gameID) throws DatabaseException {
+    public void initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
 
         for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){

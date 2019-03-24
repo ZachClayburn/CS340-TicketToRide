@@ -6,6 +6,7 @@ import java.util.List;
 
 public class TrainCardDeck {
 
+    // TODO: Change so 0 is bottom of deck
     // Index 0 is top of deck, last index is bottom of deck
     private List<TrainCard> faceDownDeck;
     private List<TrainCard> faceUpDeck;
