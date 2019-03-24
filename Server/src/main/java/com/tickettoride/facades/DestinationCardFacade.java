@@ -9,6 +9,7 @@ import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.idtypes.GameID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,13 +51,15 @@ public class DestinationCardFacade extends BaseFacade {
         }
     }
 
-    public void acceptDestinationCards(UUID connID, Player player, ArrayList<LinkedTreeMap> gsonCards) {
+    public void acceptDestinationCards(UUID connID, Player player, ArrayList<LinkedTreeMap> gsonCards, Boolean incrementTurn) {
         try {
+            Game game = GameFacadeHelper.getSingleton().findGame(player.getGameID());
             List<DestinationCard> acceptedCards = DestinationCard.unGsonCards(gsonCards);
-            Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(player.getGameID());
+            Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(game.getGameID());
             int deckCount = gameDeck.size();
             DestinationCardFacadeHelper.getSingleton().acceptCardsForPlayer(player, acceptedCards);
-            Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount);
+            if (incrementTurn) { game = GameFacadeHelper.getSingleton().updateGameTurn(game); }
+            Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount, game.getCurTurn());
             sendResponseToRoom(connID, command);
         } catch (Throwable throwable) {
             logger.error(throwable);//FIXME add proper error handling

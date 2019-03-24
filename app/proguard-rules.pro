@@ -12,11 +12,11 @@
 #   public *;
 #}
 
-# Uncomment this to preserve the line number information for
+# Uncomment this to preserve the clientLine number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable
 
-# If you keep the line number information, uncomment this to
+# If you keep the clientLine number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 ##---------------Begin: proguard configuration for Gson  ----------

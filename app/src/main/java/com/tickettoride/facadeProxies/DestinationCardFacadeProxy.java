@@ -2,6 +2,7 @@ package com.tickettoride.facadeProxies;
 
 import android.util.Log;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.InitializeGameState;
 import com.tickettoride.command.ClientCommunicator;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
@@ -31,16 +32,12 @@ public class DestinationCardFacadeProxy {
     }
 
     public static void acceptDestinationCards(Player player, ArrayList<DestinationCard> acceptedCards) {
-
         try {
-
-            Command command = new Command(FACADE_NAME, "acceptDestinationCards", player, acceptedCards);
+            Boolean incrementTurn = true;
+            if (DataManager.SINGLETON.getPlayerState().getClass() == InitializeGameState.class) { incrementTurn = false; }
+            Command command = new Command(FACADE_NAME, "acceptDestinationCards", player, acceptedCards, incrementTurn);
             ClientCommunicator.SINGLETON.send(command);
-
-        } catch (Throwable throwable) {
-
-            Log.e(TAG, "acceptDestinationCards: ", throwable);
-        }
+        } catch (Throwable throwable) { Log.e(TAG, "acceptDestinationCards: ", throwable); }
     }
 
     public static void getOfferedCards(Player player, int requiredToKeep) {

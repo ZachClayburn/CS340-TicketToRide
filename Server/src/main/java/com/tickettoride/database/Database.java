@@ -41,6 +41,8 @@ public class Database implements AutoCloseable {
     protected PlayerDAO playerDAO;
     protected ChatDAO chatDAO;
     protected DestinationCardDAO destinationCardDAO;
+    protected RouteDAO routeDAO;
+    protected LineDAO lineDAO;
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
@@ -117,6 +119,10 @@ public class Database implements AutoCloseable {
         DAOs.add(chatDAO);
         destinationCardDAO = new DestinationCardDAO(connection);
         DAOs.add(destinationCardDAO);
+        routeDAO = new RouteDAO(connection);
+        DAOs.add(routeDAO);
+        lineDAO = new LineDAO(connection);
+        DAOs.add(lineDAO);
     }
 
     /**
@@ -167,6 +173,10 @@ public class Database implements AutoCloseable {
     public DestinationCardDAO getDestinationCardDAO() {
         return destinationCardDAO;
     }
+
+    public RouteDAO getRouteDAO() { return routeDAO; }
+
+    public LineDAO getLineDAO() { return  lineDAO; }
 
     public void commit() {
         doCommit = true;

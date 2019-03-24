@@ -4,6 +4,7 @@ import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
 import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
+import com.tickettoride.facades.helpers.RouteHelper;
 import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.SessionID;
@@ -43,7 +44,7 @@ public class GameFacade extends BaseFacade {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorCreate", throwable.getMessage());
             sendResponseToOne(connID, command);
-      }
+        }
     }
 
     public void join(UUID connID, SessionID sessionID, GameID gameID) {
@@ -85,15 +86,17 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void start(UUID connID, GameID gameID) throws DatabaseException {
+    public void start(UUID connID, GameID gameID) throws DatabaseException, CloneNotSupportedException {
         logger.info("Attempting to start game " + gameID);
         GameFacadeHelper.getSingleton().startGame(gameID);
+        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
         ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
         PlayerHelper.getSingleton().pickTurnOrder(players);
         PlayerHelper.getSingleton().pickColors(players);
         PlayerHelper.getSingleton().setUsernames(players);
+        List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
         DestinationCardFacadeHelper.dealCards(gameID);
-        var command = new Command(CONTROLLER_NAME, "start", players);
+        var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
         sendResponseToRoom(connID, command);
     }
 

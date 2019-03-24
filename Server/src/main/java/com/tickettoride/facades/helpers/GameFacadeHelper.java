@@ -2,13 +2,12 @@ package com.tickettoride.facades.helpers;
 
 import com.tickettoride.database.Database;
 import com.tickettoride.database.GameDAO;
-import com.tickettoride.database.PlayerDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.facades.GameFacade;
-import com.tickettoride.facades.UserFacade;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.Route;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.User;
 
@@ -20,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.UUID;
 
 import command.Command;
@@ -97,9 +95,10 @@ public class GameFacadeHelper extends BaseFacade {
         Player player = PlayerHelper.getSingleton().isAlreadyPlayer(user, players);
         List<DestinationCard> playerDestinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
         Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(game.getGameID());
+        List<Route> routes = RouteHelper.getSingleton().getGameRoutes(game.getGameID());
         int deckCount = gameDeck.size();
         return new Command(CONTROLLER_NAME, "rejoinIsStarted",
-                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount);
+                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn());
 
     }
 
@@ -115,5 +114,17 @@ public class GameFacadeHelper extends BaseFacade {
     public Command rejoinNotStartedCommand(Game game, Player player, SessionID sessionID) {
         return new Command(CONTROLLER_NAME, "rejoinNotStarted", player.getPlayerID(), sessionID,
                            game.getGameID(), game.getGroupName(), game.getNumPlayer(), game.getMaxPlayer());
+    }
+
+    public Game updateGameTurn(Game game) throws DatabaseException {
+        Integer currentTurn = game.getCurTurn();
+        currentTurn++;
+        if (currentTurn > game.getNumPlayer()) { currentTurn = 1; }
+        try (Database database = new Database()) {
+            GameDAO dao = database.getGameDAO();
+            dao.updateTurn(game);
+            database.commit();
+            return game;
+        }
     }
 }

@@ -1,115 +1,44 @@
 package com.tickettoride.clientModels.helpers;
 
-import android.widget.Toast;
-
+import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Route;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Hand;
-
-import static com.tickettoride.models.Color.BLACK;
-import static com.tickettoride.models.Color.BLUE;
-import static com.tickettoride.models.Color.GREEN;
-import static com.tickettoride.models.Color.GREY;
-import static com.tickettoride.models.Color.ORANGE;
-import static com.tickettoride.models.Color.PURPLE;
-import static com.tickettoride.models.Color.RED;
-import static com.tickettoride.models.Color.WHITE;
 import static com.tickettoride.models.Color.WILD;
-import static com.tickettoride.models.Color.YELLOW;
 
 public class DiscardHelper {
     private Hand currentHand = DataManager.getSINGLETON().getPlayerHand();
-    private Route currentRoute = DataManager.getSINGLETON().getCurrentRoute();
+    private ClientRoute currentRoute = DataManager.getSINGLETON().getCurrentClientRoute();
     private Color currentColor = null;
     private int discardedColor = 0;
     private int discardedWild = 0;
-    private int discardedCards = 0;
 
     public boolean discardCard (Color color) {
         switch (currentRoute.getColor()) {
             case GREY:
-                if (currentColor == null) { //&& (currentHand.getBlue() + currentHand.getLocomotive() + discardedWild) >= currentRoute.getSpaces() && (currentHand.getBlue() > 0)) {
+                if (currentColor == null) {
                     setColor(color);
-                    if (!checkHand(color)) {
-                        return false;
-                    }
-                    //++discardedColor;
-                    //++discardedCards;
-                    //currentHand.setBlue(-1);
+                    if (!checkHand(color)) { return false; }
                     break;
                 }
-                else if (currentColor == color) {
-                    if (!checkHand(color)) {
-                        return false;
-                    }
-                    break;
-                }
-                else if (color == WILD) {
-                    if (!checkHand(color)) {
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                    //Toast.makeText(getContext(), "Can't discard this color", Toast.LENGTH_SHORT).show();
-                    //break;
-                }
+                else if (currentColor == color) { if (!checkHand(color)) { return false; } break; }
+                else if (color == WILD) { if (!checkHand(color)) { return false; } }
+                else { return false; }
             default:
                 currentColor = currentRoute.getColor();
-                if (color == currentRoute.getColor()) {//(discardedCards != currentRoute.getSpaces() && (currentRoute.getColor() == Color.BLUE) && currentHand.getBlue() > 0) {
-                    if (!checkHand(color)) {
-                        return false;
-                    }
-                }
-                else if (color == WILD) {
-                    if (!checkHand(color)) {
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                    //Toast.makeText(getContext(), "You don't have anymore blue cards", Toast.LENGTH_SHORT).show();
-                    //break;
-                }
+                if (color == currentRoute.getColor()) { if (!checkHand(color)) { return false; } }
+                else if (color == WILD) { if (!checkHand(color)) { return false; } }
+                else { return false; }
         }
         return true;
     }
-    public void setColor(Color color) {
-        switch(color) {
-            case BLUE:
-                currentColor = BLUE;
-                break;
-            case GREEN:
-                currentColor = GREEN;
-            case RED:
-                currentColor = RED;
-                break;
-            case ORANGE:
-                currentColor = ORANGE;
-                break;
-            case YELLOW:
-                currentColor = YELLOW;
-                break;
-            case BLACK:
-                currentColor = BLACK;
-                break;
-            case WHITE:
-                currentColor = WHITE;
-                break;
-            case PURPLE:
-                currentColor = PURPLE;
-                break;
-            case WILD:
-                break;
-        }
-    }
+    public void setColor(Color color) { if (color != WILD) { currentColor = color;} }
+
     private boolean checkHand(Color color) {
         switch(color) {
             case BLUE:
                 if (currentHand.getBlue() > 0) {
                     currentHand.discardBlue(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -117,7 +46,6 @@ public class DiscardHelper {
             case GREEN:
                 if (currentHand.getGreen() > 0) {
                     currentHand.discardGreen(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -125,7 +53,6 @@ public class DiscardHelper {
             case RED:
                 if (currentHand.getRed() > 0) {
                     currentHand.discardRed(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -133,7 +60,6 @@ public class DiscardHelper {
             case ORANGE:
                 if (currentHand.getOrange() > 0) {
                     currentHand.discardOrange(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -141,7 +67,6 @@ public class DiscardHelper {
             case YELLOW:
                 if (currentHand.getYellow() > 0) {
                     currentHand.discardYellow(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -149,7 +74,6 @@ public class DiscardHelper {
             case BLACK:
                 if (currentHand.getBlack() > 0) {
                     currentHand.discardBlack(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -157,7 +81,6 @@ public class DiscardHelper {
             case WHITE:
                 if (currentHand.getWhite() > 0) {
                     currentHand.discardWhite(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 }
@@ -165,7 +88,6 @@ public class DiscardHelper {
             case PURPLE:
                 if (currentHand.getPurple() > 0) {
                     currentHand.discardPurple(1);
-                    ++discardedCards;
                     ++discardedColor;
                     return true;
                 };
@@ -173,7 +95,6 @@ public class DiscardHelper {
             case WILD:
                 if (currentHand.getLocomotive() > 0) {
                     currentHand.discardLocomotive(1);
-                    ++discardedCards;
                     ++discardedWild;
                     return true;
                 }
@@ -229,15 +150,11 @@ public class DiscardHelper {
         currentColor = null;
     }
     public boolean wildCheck() {
-        if (discardedWild == currentRoute.getSpaces()) {
-            return false;
-        }
+        if (discardedWild == currentRoute.getSpaces()) { return false; }
         return true;
     }
     public boolean finalDiscard() {
-        if (discardedColor + discardedWild == currentRoute.getSpaces()) {
-            return true;
-        }
+        if (discardedColor + discardedWild == currentRoute.getSpaces()) { return true; }
         return false;
     }
 }

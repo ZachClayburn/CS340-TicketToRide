@@ -21,6 +21,7 @@ public class PlayerHelper extends BaseFacade {
 
     private static PlayerHelper SINGLETON = new PlayerHelper();
     public static PlayerHelper getSingleton() { return SINGLETON; }
+    private PlayerHelper() {}
 
     public Player createPlayer(UserID user, GameID game) throws DatabaseException {
         try (Database database = new Database()) {
@@ -83,9 +84,5 @@ public class PlayerHelper extends BaseFacade {
         }
     }
 
-    public void pickColors(List<Player> players) {
-        for (Player player:players){
-            player.setColor();
-        }
-    }
+    public void pickColors(List<Player> players) { for (Player player:players){ player.setColor(); } }
 }

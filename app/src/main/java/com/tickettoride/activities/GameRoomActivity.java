@@ -3,36 +3,29 @@ package com.tickettoride.activities;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.PlayerTurnFaker;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
-import com.tickettoride.models.Game;
-import com.tickettoride.models.Player;
 import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class GameRoomActivity extends MyBaseActivity implements
         OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener,
-        ClaimRouteListener, DiscardFragmentListener, GameOverFragmentListener, HistoryFragmentListener{
+        DiscardFragmentListener, GameOverFragmentListener, HistoryFragmentListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
     private DestinationCardFragment destinationCardFragment;
     private FragmentManager fm;
     private MapFragment mapFragment;
-    private ClaimRouteFragment claimRouteFragment;
     private GameOverFragment gameOverFragment;
     private DiscardFragment discardFragment;
     private HistoryFragment historyFragment;
@@ -68,30 +61,12 @@ public class GameRoomActivity extends MyBaseActivity implements
 
     @Override
     public void onReturnToMap() {
-        // The login fragment is removed if it exists (if we log in from the login fragment)
-        if(playerFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            playerFragment = null;
-        }
-        else if (viewHandFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            viewHandFragment = null;
-        } else if (destinationCardFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            destinationCardFragment = null;
-        }
-        else if (claimRouteFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            claimRouteFragment = null;
-        }
-        else if (discardFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            discardFragment = null;
-        }
-        else if (historyFragment != null) {
-            fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
-            historyFragment = null;
-        }
+        fm.beginTransaction().replace(R.id.fragment_holder, mapFragment).commit();
+        playerFragment = null;
+        viewHandFragment = null;
+        destinationCardFragment = null;
+        discardFragment = null;
+        historyFragment = null;
     }
 
     public void toPlayerFragment(PlayerID playerID){
@@ -123,15 +98,8 @@ public class GameRoomActivity extends MyBaseActivity implements
             fm.beginTransaction().replace(R.id.fragment_holder, historyFragment).commit();
         }
     }
-    public void moveToClaimRoute() {
-        if (claimRouteFragment == null) {
-            claimRouteFragment = new ClaimRouteFragment();
-            fm.beginTransaction().replace(R.id.fragment_holder, claimRouteFragment).commit();
-        }
-    }
     public void moveToDiscard() {
-        if (claimRouteFragment != null) {
-            claimRouteFragment = null;
+        if (mapFragment != null) {
             discardFragment = new DiscardFragment();
             fm.beginTransaction().replace(R.id.fragment_holder, discardFragment).commit();
         }
@@ -188,18 +156,11 @@ public class GameRoomActivity extends MyBaseActivity implements
         onReturnToMap();
     }
 
-    public void incrementTurn() {
+    public void setTurn() {
         int currentTurn = DataManager.getSINGLETON().getTurn();
-        currentTurn++;
-        if (currentTurn > DataManager.getSINGLETON().getGamePlayers().size()) { currentTurn = 1; }
-        DataManager.getSINGLETON().setTurn(currentTurn);
         if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
             DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
-        } else {
-            DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
-            Player player = DataManager.getSINGLETON().findPlayerByTurn(DataManager.getSINGLETON().getTurn());
-            PlayerTurnFaker.getSINGLETON().fakePlayerturn(player);
-        }
+        } else { DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment); }
     }
     @Override
     public void onBackPressed() {

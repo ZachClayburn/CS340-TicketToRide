@@ -20,7 +20,7 @@ public class DestinationCardController extends BaseController {
         return SINGLETON;
     }
 
-    public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards, Integer destinationDeckCount) {
+    public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards, Integer destinationDeckCount, Integer turn) {
         if (isUserPlayer(player)){
             List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
@@ -34,7 +34,8 @@ public class DestinationCardController extends BaseController {
         }
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        activity.incrementTurn();
+        DataManager.SINGLETON.setTurn(turn);
+        activity.setTurn();
     }
 
     public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {

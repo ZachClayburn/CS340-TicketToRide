@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +22,7 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.*;
-import com.tickettoride.clientModels.Route;
+import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.clientModels.helpers.RouteHelper;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
@@ -55,7 +54,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private PlayerFragmentListener playerListener;
     private ChatFragment chatFragment;
     private View v;
-    private ClaimRouteListener claimListener;
+    private DiscardFragmentListener discardFragmentListener;
     private GameOverFragmentListener gameOverListener;
     private HistoryFragmentListener historyListener;
     MapFragment selfMapFragment = this;
@@ -65,19 +64,23 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         public void onClick(View view) {
             destDeck.setEnabled(false);
             int requiredKeep = 1;
-            if (DataManager.SINGLETON.getPlayerState().getClass() == InitializeGameState.class) { requiredKeep = 2; }
+            if (DataManager.SINGLETON.getPlayerState().getClass() == InitializeGameState.class) {
+                requiredKeep = 2;
+            }
             DestinationCardFacadeProxy.drawDestinationCards(DataManager.getSINGLETON().getPlayer(), requiredKeep);
         }
     };
 
     private View.OnClickListener drawTrainViewListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawTrainCardsState(selfMapFragment); }
+        public void onClick(View view) {
+            DataManager.SINGLETON.getPlayerState().moveToDrawTrainCardsState(selfMapFragment);
+        }
     };
     private View.OnClickListener card1ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(0) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(0) && DataManager.SINGLETON.getTrainCardsDrawn() == 1) {
                 makeWildCardToast();
                 return;
             }
@@ -87,7 +90,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private View.OnClickListener card2ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(1) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(1) && DataManager.SINGLETON.getTrainCardsDrawn() == 1) {
                 makeWildCardToast();
                 return;
             }
@@ -97,7 +100,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private View.OnClickListener card3ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(2) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(2) && DataManager.SINGLETON.getTrainCardsDrawn() == 1) {
                 makeWildCardToast();
                 return;
             }
@@ -107,7 +110,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private View.OnClickListener card4ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(3) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(3) && DataManager.SINGLETON.getTrainCardsDrawn() == 1) {
                 makeWildCardToast();
                 return;
             }
@@ -117,7 +120,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private View.OnClickListener card5ViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(4) && DataManager.SINGLETON.getTrainCardsDrawn() == 1){
+            if (DataManager.SINGLETON.getTrainCardDeck().isFaceupWild(4) && DataManager.SINGLETON.getTrainCardsDrawn() == 1) {
                 makeWildCardToast();
                 return;
             }
@@ -133,16 +136,14 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
 
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment); }
+        public void onClick(View view) {
+            DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
+        }
     };
 
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) {
-            DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment);
-            claimListener = (ClaimRouteListener) getActivity();
-            claimListener.moveToClaimRoute();
-        }
+        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment); }
     };
     private View.OnClickListener historyViewListener = new View.OnClickListener() {
         @Override
@@ -157,146 +158,107 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
 
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
-    public Bitmap draw() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
-        Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        //System.out.println("get: "+actualMap.getHeight()+", "+actualMap.getWidth());
-        
-        Canvas canvas = new Canvas(actualMap);
-        //System.out.println("canvas density: "+canvas.getDensity());
-        this.drawView.draw(canvas);
-        //System.out.println("getScaled: "+actualMap.getScaledHeight(canvas)+", "+actualMap.getScaledWidth(canvas));
-        //System.out.println("getview: "+board.getHeight()+", "+board.getWidth());
-        return actualMap;
-    }
-
-    public void externalDraw() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
-        Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        Canvas canvas = new Canvas(actualMap);
-        this.drawView.draw(canvas);
-        board.setImageBitmap(actualMap);
-        v.invalidate();
-    }
-
     private View.OnTouchListener handleTouch = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            //System.out.println("getview: "+v.getHeight()+", "+v.getWidth());
+            if (DataManager.getSINGLETON().getPlayerState().getClass() != ClaimRouteState.class) { return false; }
             int x = (int) event.getX();
             int y = (int) event.getY();
             Log.i("TAG", "touch: (" + x + ", " + y + ")");
-            
-            if(drawView.clickRoute(x,y)){
-                drawExternal();
-                Log.i("TAG","got one!");
+            ClientRoute clientRoute = drawView.clickRoute(x, y);
+            if (clientRoute != null) {
+                DataManager.getSINGLETON().setCurrentClientRoute(clientRoute);
+                discardFragmentListener = (DiscardFragmentListener) getActivity();
+                discardFragmentListener.moveToDiscard();
             }
-
             return false;
         }
     };
 
+    public Bitmap draw() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
+        Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Canvas canvas = new Canvas(actualMap);
+        this.drawView.draw(canvas);
+        return actualMap;
+    }
+
     public void drawExternal() {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.tickettoride);
         Bitmap actualMap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        //System.out.println("get: "+actualMap.getHeight()+", "+actualMap.getWidth());
-
         Canvas canvas = new Canvas(actualMap);
-        //System.out.println("canvas density: "+canvas.getDensity());
         this.drawView.draw(canvas);
-        
-        //System.out.println("getScaled: "+actualMap.getScaledHeight(canvas)+", "+actualMap.getScaledWidth(canvas));
-        //System.out.println("getview: "+board.getHeight()+", "+board.getWidth());
         board.setImageBitmap(actualMap);
         this.v.invalidate();
     }
-    
-    public double calcScale(View v, View b){
-        ViewGroup.LayoutParams params= b.getLayoutParams();
-        System.out.println("layout width: "+params.width);
+
+    public double calcScale(View v, View b) {
+        ViewGroup.LayoutParams params = b.getLayoutParams();
+        System.out.println("layout width: " + params.width);
 
         int width;
         int height;
-        
+
         v.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        //width = v.getMeasuredWidth();
-        //height = v.getMeasuredHeight();
-        //System.out.println("mainview: "+height+", "+width);
-        
+
         //before direct measurement (still with layout params)
         width = b.getMeasuredWidth();
         height = b.getMeasuredHeight();
-        //System.out.println("boardview: "+height+", "+width);
-        
+
         //after direct measurement (what the image is expecting)
         b.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int mwidth = b.getMeasuredWidth();
         int mheight = b.getMeasuredHeight();
-        //System.out.println("boardview: "+mheight+", "+mwidth);
-        
-        
-        float density=getResources().getDisplayMetrics().density;
-        //System.out.println("density: "+density);
-        
-        int xoffset=0;
-        int yoffset=0;
-        
+        float density = getResources().getDisplayMetrics().density;
+        int xoffset = 0;
+        int yoffset = 0;
+
         //one of them should not be equal, that one is part of the scale we need
-        double scale=1.0;
-        if(mheight!=height){
-            scale=(((double)height)/mheight);
-            xoffset=(int)((((double)width)-width*scale)/2);
-        }else if(mwidth!=width) {
+        double scale = 1.0;
+        if (mheight != height) {
+            scale = (((double) height) / mheight);
+            xoffset = (int) ((((double) width) - width * scale) / 2);
+        } else if (mwidth != width) {
             scale = (((double) width) / mwidth);
-            yoffset=(int)((((double)height)-height*scale)/2);
+            yoffset = (int) ((((double) height) - height * scale) / 2);
         }
+
         //need to set scale used for putting in coordinates for touch
-        System.out.println("y: "+yoffset+", x: "+xoffset);
-        System.out.println("scale: "+scale);
-        Route.setXoffset(xoffset);
-        Route.setYoffset(yoffset);
-        Route.setScale(scale);
-        scale*=density;
+        System.out.println("y: " + yoffset + ", x: " + xoffset);
+        System.out.println("scale: " + scale);
+        ClientRoute.setXoffset(xoffset);
+        ClientRoute.setYoffset(yoffset);
+        ClientRoute.setScale(scale);
+        scale *= density;
         return scale;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         this.v = inflater.inflate(R.layout.game, container, false);
-        
         board = v.findViewById(R.id.game_board);
-        double scale=calcScale(v,board);
-        //System.out.println("calculated scale: " + scale);
-        
+        double scale = calcScale(v, board);
         this.drawView = new DrawView(getActivity());
-        RouteHelper.getSingleton().buildRoutes(scale);
-        drawView.setRoutes(DataManager.getSINGLETON().getRoutes());
+        RouteHelper.getSingleton().scaleRouteLines(scale);
         Bitmap actualMap = draw();
         board.setImageBitmap(actualMap);
-        
+
         View decorView = getActivity().getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.hide();
-        
-        
         cardOne = v.findViewById(R.id.first_card);
-        setCardColor(0);
         cardTwo = v.findViewById(R.id.second_card);
-        setCardColor(1);
         cardThree = v.findViewById(R.id.third_card);
-        setCardColor(2);
         cardFour = v.findViewById(R.id.fourth_card);
-        setCardColor(3);
         cardFive = v.findViewById(R.id.fifth_card);
-        setCardColor(4);
+        setAllColors();
         playerListener = (PlayerFragmentListener) getActivity();
         trainDeck = v.findViewById(R.id.train_deck);
         destDeck = v.findViewById(R.id.dest_deck);
         updateDeckNumbers();
-        //chatWindow = v.findViewById(R.id.chat_room);
         drawTrain = v.findViewById(R.id.draw_train);
         drawDest = v.findViewById(R.id.draw_dest);
         viewHand = v.findViewById(R.id.view_cards);
@@ -308,26 +270,27 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         playerList.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new Adapter(getContext(), DataManager.getSINGLETON().getGamePlayers());
         playerList.setAdapter(adapter);
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
         setListeners();
-        board.setOnTouchListener(handleTouch);
         return v;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
+        drawExternal();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        chatFragment=new ChatFragment();
+        chatFragment = new ChatFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(R.id.chat_fragment_container, chatFragment).commit();
     }
 
-    public void updateChat(){
-        chatFragment.updateChat();
-    }
-    
-    
-    
+    public void updateChat() { chatFragment.updateChat(); }
+
     class Adapter extends RecyclerView.Adapter<Holder> {
         private List<Player> players;
         private LayoutInflater inflater;
@@ -384,12 +347,12 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         }
 
         @Override
-        public void onClick(View view) {}
+        public void onClick(View view) { }
 
     }
 
     public void finishDrawFaceUpTrainCard(TrainCard card) {
-        if (DataManager.SINGLETON.getTrainCardDeck().checkForWild()){
+        if (DataManager.SINGLETON.getTrainCardDeck().checkForWild()) {
             setCardColor(0);
             setCardColor(1);
             setCardColor(2);
@@ -401,19 +364,19 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
             GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.incrementTurn();
+            activity.setTurn();
+        } else {
+            DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
-        else { DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn); }
     }
 
-    public void finishDrawFacedownCard(){
+    public void finishDrawFacedownCard() {
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if (trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
             GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.incrementTurn();
-        }
-        else {
+            activity.setTurn();
+        } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
     }
@@ -448,7 +411,10 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             }
         });
     }
-    public void makeWildCardToast() { Toast.makeText(this.context, R.string.wild_card_error, Toast.LENGTH_SHORT).show(); }
+
+    public void makeWildCardToast() {
+        Toast.makeText(this.context, R.string.wild_card_error, Toast.LENGTH_SHORT).show();
+    }
 
     public void onNotTurnStart() {
         getActivity().runOnUiThread(new Runnable() {
@@ -459,6 +425,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 drawTrain.setEnabled(false);
                 destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
                 destDeck.setEnabled(false);
+                claimRoute.setEnabled(false);
             }
         });
     }
@@ -523,7 +490,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         trainDeck.setEnabled(true);
     }
 
-    public void setAllColors(){ for (int i = 0; i < 5; i++){ setCardColor(i); } }
+    public void setAllColors() { for (int i = 0; i < 5; i++) { setCardColor(i); } }
 
     public void disableDrawTrainCards() {
         cardOne.setEnabled(false);
@@ -540,13 +507,13 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         trainDeck.setEnabled(false);
     }
 
-    public void updateDeckNumbers(){
+    public void updateDeckNumbers() {
         trainDeck.setText(getResources().getString(R.string.train_deck, DataManager.SINGLETON.getTrainCardDeckSize()));
         destDeck.setText(getResources().getString(R.string.dest_deck, DataManager.SINGLETON.getDestinationCardDeckSize()));
     }
 
-    public void setCardColor(int i){
-        switch(i){
+    public void setCardColor(int i) {
+        switch (i) {
             case 0:
                 cardOne.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));
                 return;
@@ -565,8 +532,8 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         }
     }
 
-    public int findCardColor(Color color){
-        switch(color) {
+    public int findCardColor(Color color) {
+        switch (color) {
             case GREEN:
                 return R.drawable.green_card;
             case RED:
@@ -591,6 +558,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     private void setListeners() {
+        board.setOnTouchListener(handleTouch);
         cardOne.setOnClickListener(card1ViewListener);
         cardTwo.setOnClickListener(card2ViewListener);
         cardThree.setOnClickListener(card3ViewListener);

@@ -71,7 +71,7 @@
     <string name="destination_card_to">to</string>
     <string name="first_city">First City: </string>
     <string name="second_city">Second City: </string>
-    <string name="claim_hint">Click a route you want to claim</string>
+    <string name="claim_hint">Click a clientRoute you want to claim</string>
     <string name="vancouver_name">Vancouver</string>
     <string name="calgary_name">Calgary</string>
     <string name="winnipeg_name">Winnipeg</string>

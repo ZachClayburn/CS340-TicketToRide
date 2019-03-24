@@ -2,7 +2,6 @@ package com.tickettoride.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tickettoride.R;
+import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.Route;
 import com.tickettoride.clientModels.helpers.DiscardHelper;
-import com.tickettoride.clientModels.helpers.RouteHelper;
-import com.tickettoride.facadeProxies.RoutesFacadeProxy;
+import com.tickettoride.facadeProxies.RouteFacadeProxy;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Hand;
-
-import java.util.ArrayList;
-
 import static com.tickettoride.models.Color.BLACK;
 import static com.tickettoride.models.Color.BLUE;
 import static com.tickettoride.models.Color.GREEN;
@@ -55,7 +50,7 @@ public class DiscardFragment extends Fragment {
     private Button cancel;
     private Button discard;
     private Hand currentHand;
-    private Route currentRoute;
+    private ClientRoute currentClientRoute;
     private Color currentColor;
     private int discardedColor = 0;
     private int discardedWild = 0;
@@ -68,7 +63,7 @@ public class DiscardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.discard_fragment, container, false);
         currentHand = DataManager.getSINGLETON().getPlayerHand();
-        currentRoute = DataManager.getSINGLETON().getCurrentRoute();
+        currentClientRoute = DataManager.getSINGLETON().getCurrentClientRoute();
         blueCards = v.findViewById(R.id.blue_card);
         greenCards = v.findViewById(R.id.green_card);
         purpleCards = v.findViewById(R.id.purple_card);
@@ -237,15 +232,9 @@ public class DiscardFragment extends Fragment {
         discard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!discardHelper.wildCheck()) {
-                    Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show();
-                }
-                else if (discardHelper.finalDiscard()) {
-                    RoutesFacadeProxy.SINGLETON.claimRoute(currentRoute);
-                }
-                else {
-                    Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show();
-                }
+                if (!discardHelper.wildCheck()) { Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show(); }
+                else if (discardHelper.finalDiscard()) { RouteFacadeProxy.SINGLETON.claimRoute(currentClientRoute); }
+                else { Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show(); }
             }
         });
         return v;

@@ -3,6 +3,7 @@ import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.*;
+import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.models.DestinationCard;
@@ -73,7 +74,8 @@ public class GameController extends BaseController {
 
     public void rejoinIsStarted(SessionID sessionID, GameID gameID,
                                 String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap,
-                                ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount){
+                                ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount,
+                                ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
             List<DestinationCard> playerHand = DestinationCard.unGsonCards(playerHandMap);
@@ -85,7 +87,8 @@ public class GameController extends BaseController {
             GameControllerHelper.getSingleton().setupPlayerHands();
             DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
-            DataManager.SINGLETON.setTurn(1);
+            DataManager.SINGLETON.setTurn(turn);
+            DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToGame();
             ChatFacadeProxy.SINGLETON.getChat(gameID);
@@ -109,13 +112,15 @@ public class GameController extends BaseController {
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
     }
 
-    public void start(ArrayList<LinkedTreeMap<String, Object>> players) {
+    public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
         GameControllerHelper.getSingleton().setPlayerInfo(playerList);
         DataManager.SINGLETON.initializeDeck();
         DataManager.SINGLETON.setDestinationCardDeckSize(30);
+        DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
+        DataManager.SINGLETON.setTurn(turn);
         GameControllerHelper.getSingleton().setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();

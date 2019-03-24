@@ -1,46 +1,54 @@
 package com.tickettoride.models;
 
+import com.google.gson.internal.LinkedTreeMap;
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
+import com.tickettoride.models.idtypes.RouteID;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-import javax.sound.sampled.Line;
+public class Route implements Cloneable {
+    protected Color color;
+    protected int spaces;
+    protected List<City> cities;
+    protected PlayerID claimedByPlayerID;
+    protected GameID gameID;
+    protected RouteID routeID;
+    protected List<Line> lines;
 
-public class Route {
-    private List<Line> lines;
-    private Color color;
-    private int spaces;
-    private City firstCity;
-    private City secondCity;
-    private boolean isClaimed;
-    private Color lineColor;
-    public Route(List<Line> lines, Color color, int spaces, City firstCity, City secondCity, boolean isClaimed, Color lineColor) {
-        this.lines = lines;
+    public Route( List<Line> lines, Color color, int spaces, List<City> cities) {
         this.color = color;
         this.spaces = spaces;
-        this.firstCity = firstCity;
-        this.secondCity = secondCity;
-        this.isClaimed = isClaimed;
-        this.lineColor = lineColor;
+        this.cities = cities;
+        this.routeID = RouteID.randomUUID();
+        this.lines = lines;
     }
-    public List<Line> getLines() {
-        return lines;
+
+    public Route(RouteID routeID, GameID gameID, PlayerID claimedByPlayerID, List<City> cities, Color color, int spaces) {
+        this.routeID = routeID;
+        this.gameID = gameID;
+        this.claimedByPlayerID = claimedByPlayerID;
+        this.cities = cities;
+        this.color = color;
+        this.spaces = spaces;
     }
-    public void setIsClaimed(boolean isClaimed) {
-        this.isClaimed = isClaimed;
+
+    public Route() {}
+
+    public Route cloning() throws CloneNotSupportedException {
+        Route clonedRoute = (Route) this.clone();
+        clonedRoute.setRouteID(RouteID.randomUUID());
+        List<Line> newLines = new ArrayList<>();
+        for (Line line : lines) { newLines.add(line.cloning()); }
+        lines = newLines;
+        return clonedRoute;
     }
-    public boolean getIsClaimed() {
-        return isClaimed;
-    }
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
-    }
-    public Color getPlayer() {
-        return lineColor;
-    }
-    public City getFirstCity() {
-        return firstCity;
-    }
-    public City getSecondCity() {
-        return secondCity;
+
+    public void claimedByPlayerID(PlayerID claimedByPlayerID) { this.claimedByPlayerID = claimedByPlayerID; }
+    public PlayerID getClaimedByPlayerID() {
+        return claimedByPlayerID;
     }
     public Color getColor() {
         return color;
@@ -48,4 +56,13 @@ public class Route {
     public int getSpaces() {
         return spaces;
     }
+    public void setGameID(GameID gameID) { this.gameID = gameID; }
+    public GameID getGameID() { return this.gameID; }
+    public RouteID getRouteID() { return this.routeID; }
+    public void setRouteID(RouteID routeID) { this.routeID = routeID; }
+    public List<City> getCities() { return this.cities; }
+    public List<Line> getLines() { return this.lines; }
+    public void setLines(List<Line> lines) { this.lines = lines; }
+    public Boolean getIsClaimed() { return claimedByPlayerID != null; }
+    public void setClaimedByPlayerID(PlayerID playerID) { this.claimedByPlayerID = playerID; }
 }

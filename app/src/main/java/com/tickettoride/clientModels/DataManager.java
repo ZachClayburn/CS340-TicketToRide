@@ -24,9 +24,9 @@ public class DataManager {
     private int trainCardsDrawn;
     private List<DestinationCard> offeredCards = null;
     private Integer destCardsRequiredToKeep = null;
-    private ArrayList<Route> routes;
+    private ArrayList<ClientRoute> clientRoutes;
     private int turn = 0;
-    private Route currentRoute;
+    private ClientRoute currentClientRoute;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -92,18 +92,18 @@ public class DataManager {
 
     public int getTrainCardsDrawn() { return this.trainCardsDrawn; }
 
-    public void setRoutes(ArrayList<Route> routes) {
-        this.routes = routes;
+    public void setClientRoutes(ArrayList<ClientRoute> clientRoutes) {
+        this.clientRoutes = clientRoutes;
     }
-    public ArrayList<Route> getRoutes() {
-        return routes;
+    public ArrayList<ClientRoute> getClientRoutes() {
+        return clientRoutes;
     }
-    public void setCurrentRoute(Route currentRoute) {
-        this.currentRoute = currentRoute;
+    public void setCurrentClientRoute(ClientRoute currentClientRoute) {
+        this.currentClientRoute = currentClientRoute;
     }
 
-    public Route getCurrentRoute() {
-        return currentRoute;
+    public ClientRoute getCurrentClientRoute() {
+        return currentClientRoute;
     }
     public void addTrainCardToHand(TrainCard card){
         Color color = card.getColor();
@@ -175,8 +175,8 @@ public class DataManager {
     }
 
     public Player findPlayerByID(PlayerID playerID){
-        for (Player player:gamePlayers) {
-            if (player.getPlayerID() == playerID){
+        for (Player player: gamePlayers) {
+            if (player.getPlayerID().equals(playerID)){
                 return player;
             }
         }
@@ -195,4 +195,12 @@ public class DataManager {
     public void setTurn(int turn) { this.turn = turn; }
 
     public int getTurn() { return this.turn; }
+
+    public void setRouteClaimed(Route route) {
+        for (ClientRoute clientRoute : clientRoutes) {
+            if (clientRoute.getRouteID().equals(route.getRouteID())) {
+                clientRoute.setClaimedByPlayerID(route.getClaimedByPlayerID());
+            }
+        }
+    }
 }
