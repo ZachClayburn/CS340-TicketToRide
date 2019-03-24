@@ -2,6 +2,7 @@ package com.tickettoride.database;
 
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Game;
+import com.tickettoride.models.Hand;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 import com.tickettoride.models.idtypes.GameID;
@@ -57,9 +58,10 @@ public class TrainCardDAO extends Database.DataAccessObject {
         super(connection);
     }
 
-    public void addDeck(Game game, TrainCardDeck deck) throws DatabaseException {
-        addFaceDown(game.getGameID(), deck.getFaceDownDeck());
-        addFaceUp(game.getGameID(), deck.getFaceUpDeck());
+    public void addDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
+        addFaceDown(gameID, deck.getFaceDownDeck());
+        addFaceUp(gameID, deck.getFaceUpDeck());
+        // TODO: Add Discard? Just in case deck is initialized with 3 wild cards
     }
 
     public void addFaceUp(GameID gameID, List<TrainCard> faceUpDeck) throws DatabaseException {
@@ -86,6 +88,16 @@ public class TrainCardDAO extends Database.DataAccessObject {
             logger.catching(e);
             throw new DatabaseException("Could not add the deck!", e);
         }
+    }
+
+    public Hand makeHand(GameID gameID, PlayerID playerID) throws DatabaseException {
+        Hand hand = new Hand();
+
+        for (int i = 0; i < 4; i++){
+            hand.addCard(drawFromFaceDown(gameID, playerID));
+        }
+
+        return hand;
     }
 
     public void addFaceDown(GameID gameID, List<TrainCard> faceDownDeck) throws DatabaseException {

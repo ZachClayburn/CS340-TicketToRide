@@ -6,8 +6,7 @@ import java.util.List;
 
 public class TrainCardDeck {
 
-    // TODO: Change so 0 is bottom of deck
-    // Index 0 is top of deck, last index is bottom of deck
+    // Last index is top of deck, index 0 is bottom of deck
     private List<TrainCard> faceDownDeck;
     private List<TrainCard> faceUpDeck;
     private List<TrainCard> discardPile;
@@ -65,15 +64,15 @@ public class TrainCardDeck {
 
     public TrainCard drawFromFaceUp(int i){
         TrainCard card = faceUpDeck.get(i);
-        faceUpDeck.set(i, faceDownDeck.get(0));
-        faceDownDeck.remove(0);
+        faceUpDeck.set(i, faceDownDeck.get(faceDownDeck.size() - 1));
+        faceDownDeck.remove(faceDownDeck.size() - 1);
         checkForEmptyDeck();
         return card;
     }
 
     public TrainCard drawFromFaceDown(){
-        TrainCard card = faceDownDeck.get(0);
-        faceDownDeck.remove(0);
+        TrainCard card = faceDownDeck.get(faceDownDeck.size() - 1);
+        faceDownDeck.remove(faceDownDeck.size() - 1);
         checkForEmptyDeck();
         return card;
     }

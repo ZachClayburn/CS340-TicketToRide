@@ -100,4 +100,11 @@ public class GameFacade extends BaseFacade {
         var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
         sendResponseToRoom(connID, command);
     }
+
+    public void incrementTurn(UUID connID, GameID gameID) throws DatabaseException {
+        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
+        game = GameFacadeHelper.getSingleton().updateGameTurn(game);
+        Command command = new Command(CONTROLLER_NAME, "nextTurn", game.getCurTurn());
+        sendResponseToRoom(connID, command);
+    }
 }
