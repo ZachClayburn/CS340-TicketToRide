@@ -15,6 +15,7 @@ import com.tickettoride.models.idtypes.PlayerID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.xml.crypto.Data;
@@ -53,9 +54,9 @@ public class TrainCardFacade extends BaseFacade {
 
             TrainCard card = dao.drawFromFaceUp(gameID, playerID, pos);
 
-            // TODO: Get replacement cards in faceup
+            List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
 
-            Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, pos);
+            Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, faceUp);
             sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
