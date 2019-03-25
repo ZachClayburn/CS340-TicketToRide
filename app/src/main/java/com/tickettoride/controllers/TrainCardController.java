@@ -32,12 +32,14 @@ public class TrainCardController extends BaseController {
         }
     }
 
-    public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards){
+    public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, int deckSize){
         List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
         DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
         fragment.setAllColors();
+        DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
+        fragment.updateDeckNumbers();
     }
 
     public void drawFromFaceUp(PlayerID playerID, TrainCard card, ArrayList<LinkedTreeMap> gsonCards, int deckSize){

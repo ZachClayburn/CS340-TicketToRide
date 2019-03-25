@@ -258,7 +258,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
                 statement.setString(3, gameID.toString());
                 statement.executeUpdate();
 
-                if (deckIsEmpty(gameID)){
+                if (getFaceDownDeckSize(gameID) == 0){
                     replaceFaceDown(gameID);
                 }
             }
@@ -338,7 +338,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
 
         replaceOneFaceUpCard(pos, gameID);
 
-        if (deckIsEmpty(gameID)){
+        if (getFaceDownDeckSize(gameID) == 0){
             replaceFaceDown(gameID);
         }
 
@@ -361,7 +361,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
 
         movefaceDownToHand(gameID, playerID, card);
 
-        if (deckIsEmpty(gameID)){
+        if (getFaceDownDeckSize(gameID) == 0){
             replaceFaceDown(gameID);
         }
 
@@ -375,6 +375,8 @@ public class TrainCardDAO extends Database.DataAccessObject {
                 "SELECT MAX(sequenceposition) FROM TrainCards WHERE state='inPlayerHand' AND color=?" +
                 ") + 1 " +
                 "WHERE state='faceUp' AND gameID=? AND sequenceposition=?";
+
+        // FIXME: Will this break if select max() returns null?
 
         try (var statement = connection.prepareStatement(sql)) {
 
@@ -442,7 +444,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return new TrainCard(getColorFromString(color));
     }
 
-    private boolean deckIsEmpty(GameID gameID) throws DatabaseException {
+    public int getFaceDownDeckSize(GameID gameID) throws DatabaseException {
         int deckSize = 0;
 
         String sql = "SELECT * FROM TrainCards " +
@@ -461,7 +463,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
             throw new DatabaseException("Could not get the facedown deck!", e);
         }
 
-        return deckSize == 0;
+        return deckSize;
     }
 
     private boolean tooManyWilds(GameID gameID) throws DatabaseException {

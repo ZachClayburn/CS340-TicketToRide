@@ -45,7 +45,7 @@ public class GameRoomActivity extends MyBaseActivity implements
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
-        DataManager.SINGLETON.initializeDeck();
+
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }
 

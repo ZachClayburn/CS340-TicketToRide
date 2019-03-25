@@ -43,22 +43,22 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck());
+            int deckSize = getDeckSize(gameID);
+
+            Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
             sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
-
-    // TODO: get deck size from server
 
     public void drawFromFaceUp(UUID connID, GameID gameID, PlayerID playerID, int pos){
         try (Database database = new Database()){
             TrainCardDAO dao = database.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceUp(gameID, playerID, pos);
-
+            int deckSize = getDeckSize(gameID);
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
 
-            Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, faceUp);
+            Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, faceUp, deckSize);
             sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
@@ -68,8 +68,9 @@ public class TrainCardFacade extends BaseFacade {
             TrainCardDAO dao = database.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceDown(gameID, playerID);
+            int deckSize = getDeckSize(gameID);
 
-            Command command = new Command(CONTROLLER_NAME, "drawFromFaceDown", playerID, card);
+            Command command = new Command(CONTROLLER_NAME, "drawFromFaceDown", playerID, card, deckSize);
             sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
@@ -85,6 +86,13 @@ public class TrainCardFacade extends BaseFacade {
         try (Database database = new Database()) {
             TrainCardDAO dao = database.getTrainCardDAO();
             return dao.makeHand(gameID, playerID);
+        }
+    }
+
+    public int getDeckSize(GameID gameID) throws DatabaseException{
+        try (Database database = new Database()) {
+            TrainCardDAO dao = database.getTrainCardDAO();
+            return dao.getFaceDownDeckSize(gameID);
         }
     }
 }
