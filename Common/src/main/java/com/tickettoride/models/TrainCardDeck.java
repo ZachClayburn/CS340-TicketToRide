@@ -21,10 +21,8 @@ public class TrainCardDeck {
         discardPile = discard;
     }
 
-    public TrainCardDeck(List<TrainCard> faceup, List<TrainCard> facedown){
+    public TrainCardDeck(List<TrainCard> faceup){
         faceUpDeck = faceup;
-        faceDownDeck = facedown;
-        discardPile = new ArrayList<>();
     }
 
     private void initializeDecks(){
@@ -61,6 +59,8 @@ public class TrainCardDeck {
     public List<TrainCard> getFaceUpDeck(){return faceUpDeck;}
 
     public List<TrainCard> getDiscardPile() {return discardPile;}
+
+    public void setFaceUpDeck(List<TrainCard> faceUpDeck){this.faceUpDeck = faceUpDeck;}
 
     public TrainCard drawFromFaceUp(int i){
         TrainCard card = faceUpDeck.get(i);

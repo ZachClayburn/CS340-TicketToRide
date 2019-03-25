@@ -48,6 +48,8 @@ public class TrainCardFacade extends BaseFacade {
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
 
+    // TODO: get deck size from server
+
     public void drawFromFaceUp(UUID connID, GameID gameID, PlayerID playerID, int pos){
         try (Database database = new Database()){
             TrainCardDAO dao = database.getTrainCardDAO();
