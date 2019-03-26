@@ -17,8 +17,8 @@ public class DataManager {
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
-    private int trainCardDeckSize;
-    private Integer destinationCardDeckSize;
+    private int trainCardDeckSize = 0;
+    private Integer destinationCardDeckSize = 0;
     private Hand playerHand = new Hand();
     private PlayerState playerState;
     private int trainCardsDrawn;

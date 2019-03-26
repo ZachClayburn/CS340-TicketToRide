@@ -56,6 +56,8 @@ public class Database implements AutoCloseable {
         try (var statement = connection.createStatement()) {
 
             //Language=PostgreSQL
+            //String typeSql = "DROP TYPE IF EXISTS cardstate CASCADE";
+
             String sql = "DO $$ DECLARE" +
                     "    r RECORD;" +
                     "BEGIN" +
@@ -65,6 +67,7 @@ public class Database implements AutoCloseable {
                     "END $$;";
             sql += DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
+            //statement.executeUpdate(typeSql);
             statement.executeUpdate(sql);
 
             commit();

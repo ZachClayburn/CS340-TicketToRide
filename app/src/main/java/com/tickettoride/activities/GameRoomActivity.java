@@ -134,6 +134,18 @@ public class GameRoomActivity extends MyBaseActivity implements
         runOnUiThread(updateChatRunnable);
     }
 
+    public void updateCards(){
+        runOnUiThread(updateCardsRunnable);
+    }
+
+    public Runnable updateCardsRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mapFragment.setAllColors();
+            mapFragment.updateDeckNumbers();
+        }
+    };
+
     public void toDestinationCardFragment() {
 
         List<DestinationCard> offeredCards = DataManager.getSINGLETON().getOfferedCards();

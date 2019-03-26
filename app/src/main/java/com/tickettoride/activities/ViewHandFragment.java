@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,7 @@ public class ViewHandFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d("View Hand", "hand size: " + Integer.toString(DataManager.SINGLETON.getPlayerHand().getHandSize()));
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.view_hand, container, false);
         Hand playerHand = DataManager.getSINGLETON().getPlayerHand();

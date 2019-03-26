@@ -1,5 +1,6 @@
 package com.tickettoride.controllers;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -25,24 +26,31 @@ public class TrainCardController extends BaseController {
     private TrainCardController() {}
 
     public void initializeHand(PlayerID playerID, Hand hand){
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){ DataManager.SINGLETON.setPlayerHand(hand); }
+        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
+            DataManager.SINGLETON.setPlayerHand(hand);
+        }
         else{
             Player player = DataManager.SINGLETON.findPlayerByID(playerID);
             player.setTrainCardCount(hand.getHandSize());
         }
     }
 
-    public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, int deckSize){
+    public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
         List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
         DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        MapFragment fragment = activity.getMapFragment();
-        fragment.setAllColors();
         DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
-        fragment.updateDeckNumbers();
+        //if (activity != null) {
+        //    MapFragment fragment = activity.getMapFragment();
+        //    fragment.setAllColors();
+        //    fragment.updateDeckNumbers();
+        //}
+        if (activity != null) {
+            activity.updateCards();
+        }
     }
 
-    public void drawFromFaceUp(PlayerID playerID, TrainCard card, ArrayList<LinkedTreeMap> gsonCards, int deckSize){
+    public void drawFromFaceUp(PlayerID playerID, TrainCard card, ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
         if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){ DataManager.SINGLETON.addTrainCardToHand(card); }
@@ -59,12 +67,13 @@ public class TrainCardController extends BaseController {
         List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
         DataManager.SINGLETON.updateFaceUpDeck(faceUp);
         DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
-        fragment.setAllColors();
-        fragment.updateDeckNumbers();
+        //fragment.setAllColors();
+        //fragment.updateDeckNumbers();
         fragment.finishDrawFaceUpTrainCard(card);
+        activity.updateCards();
     }
 
-    public void drawFromFaceDown(PlayerID playerID, TrainCard card, int deckSize){
+    public void drawFromFaceDown(PlayerID playerID, TrainCard card, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
         if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){ DataManager.SINGLETON.addTrainCardToHand(card); }
@@ -78,8 +87,15 @@ public class TrainCardController extends BaseController {
             player.setTrainCardCount(player.getTrainCardCount() + 1);
         }
         DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
-        fragment.updateDeckNumbers();
+        //fragment.updateDeckNumbers();
         fragment.finishDrawFacedownCard();
+        activity.updateCards();
+    }
+
+    public void finish(Integer turn){
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        DataManager.SINGLETON.setTurn(turn);
+        activity.setTurn();
     }
 
 }

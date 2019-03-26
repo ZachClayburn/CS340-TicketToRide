@@ -84,9 +84,7 @@ public class GameController extends BaseController {
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
             DataManager.SINGLETON.setGamePlayers(players);
-            // DataManager.SINGLETON.initializeDeck();
-            // TODO: Get deck from rejoined game
-            GameControllerHelper.getSingleton().setupPlayerHands();
+            TrainCardFacadeProxy.SINGLETON.rejoin(game.getGameID());
             DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(turn);
@@ -122,7 +120,6 @@ public class GameController extends BaseController {
         DataManager.SINGLETON.setDestinationCardDeckSize(30);
         DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
         DataManager.SINGLETON.setTurn(turn);
-        GameControllerHelper.getSingleton().setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
         Game game = DataManager.getSINGLETON().getGame();

@@ -29,8 +29,6 @@ import exceptions.DatabaseException;
 public class TrainCardDAO extends Database.DataAccessObject {
     private static final String tableCreateString =
             // language=PostgreSQL
-            "DROP TYPE IF EXISTS cardstate; " +
-            "CREATE TYPE cardState AS ENUM ( 'inDeck', 'inPlayerHand', 'offeredToPlayer', 'inDiscard', 'faceUp' );" +
             "CREATE TABLE TrainCards" +
                     "(" +
                     "gameID TEXT," +
@@ -211,6 +209,31 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return discardDeck;
     }
 
+    public Hand getPlayerHand(PlayerID playerID) throws DatabaseException {
+        Hand hand = new Hand();
+
+        String sql = "SELECT " +
+                "color FROM TrainCards " +
+                "WHERE playerid=? " +
+                "ORDER BY sequenceposition";
+
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, playerID.toString());
+
+            var results = statement.executeQuery();
+
+            while (results.next())
+                hand.addCard(buildTrainCardFromResult(results));
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not get player hand!", e);
+        }
+
+        return hand;
+    }
+
     public void discardCards(List<TrainCard> cards, PlayerID playerID) throws DatabaseException {
 
         String sql = "UPDATE TrainCards " +
@@ -370,18 +393,13 @@ public class TrainCardDAO extends Database.DataAccessObject {
 
     private void moveFaceUpToHand(GameID gameID, PlayerID playerID, TrainCard card, int pos) throws DatabaseException {
         String sql = "UPDATE TrainCards " +
-                "SET state='inPlayerHand', playerid=?, " +
-                "sequenceposition=(" +
-                "SELECT MAX(sequenceposition) FROM TrainCards WHERE state='inPlayerHand' AND color=?" +
-                ") + 1 " +
+                "SET state='inPlayerHand', playerid=?, sequenceposition=? " +
                 "WHERE state='faceUp' AND gameID=? AND sequenceposition=?";
-
-        // FIXME: Will this break if select max() returns null?
 
         try (var statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, playerID.toString());
-            statement.setString(2, getColorAsString(card.getColor()));
+            statement.setInt(2, getCardHandPosition(playerID, card));
             statement.setString(3, gameID.toString());
             statement.setInt(4, pos);
 
@@ -393,12 +411,32 @@ public class TrainCardDAO extends Database.DataAccessObject {
         }
     }
 
+    private int getCardHandPosition(PlayerID playerID, TrainCard card) throws DatabaseException {
+        int pos = 0;
+
+        String sql = "SELECT * FROM TrainCards " +
+                "WHERE playerid=? AND color=?";
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, playerID.toString());
+            statement.setString(2, getColorAsString(card.getColor()));
+
+            var results = statement.executeQuery();
+
+            while (results.next())
+                pos += 1;
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not get the facedown deck!", e);
+        }
+
+        return pos;
+    }
+
     private void movefaceDownToHand(GameID gameID, PlayerID playerID, TrainCard card) throws DatabaseException {
         String sql = "UPDATE TrainCards " +
-                "SET state='inPlayerHand', playerid=?, " +
-                "sequenceposition=(" +
-                "SELECT MAX(sequenceposition) FROM TrainCards WHERE state='inPlayerHand' AND color=?" +
-                ") + 1 " +
+                "SET state='inPlayerHand', playerid=?, sequenceposition=? " +
                 "WHERE state='inDeck' AND gameID=? AND " +
                 "sequenceposition=(" +
                 "SELECT MAX(sequenceposition) FROM TrainCards WHERE state='inDeck' AND gameID=?" +
@@ -407,7 +445,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         try (var statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, playerID.toString());
-            statement.setString(2, getColorAsString(card.getColor()));
+            statement.setInt(2, getCardHandPosition(playerID, card));
             statement.setString(3, gameID.toString());
             statement.setString(4, gameID.toString());
 
@@ -425,6 +463,9 @@ public class TrainCardDAO extends Database.DataAccessObject {
             statement.setString(1, gameID.toString());
             if (pos >= 0) {
                 statement.setInt(2, pos);
+            }
+            else {
+                statement.setString(2, gameID.toString());
             }
 
             var results = statement.executeQuery();

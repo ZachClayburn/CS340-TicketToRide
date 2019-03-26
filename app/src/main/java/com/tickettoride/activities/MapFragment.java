@@ -379,8 +379,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
-            GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.setTurn();
+            TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
+            //GameRoomActivity activity = (GameRoomActivity) getActivity();
+            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
@@ -390,8 +391,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if (trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
-            GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.setTurn();
+            TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
+            //GameRoomActivity activity = (GameRoomActivity) getActivity();
+            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
@@ -529,6 +531,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void setCardColor(int i) {
+        if (DataManager.SINGLETON.getTrainCardDeck() == null){
+            return;
+        }
         switch (i) {
             case 0:
                 cardOne.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));
