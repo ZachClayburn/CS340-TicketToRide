@@ -1,6 +1,7 @@
 package com.tickettoride.facades;
 
 import com.tickettoride.facades.helpers.GameFacadeHelper;
+import com.tickettoride.facades.helpers.PlayerHelper;
 import com.tickettoride.facades.helpers.RouteHelper;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
@@ -15,7 +16,7 @@ import command.Command;
 
 public class RouteFacade extends BaseFacade {
 
-    public static final String CONTROLLER_NAME = "RoutesController";
+    public static final String CONTROLLER_NAME = "RouteController";
     private static RouteFacade SINGLETON = new RouteFacade();
 
     public static RouteFacade getSingleton() {
@@ -27,6 +28,9 @@ public class RouteFacade extends BaseFacade {
         try {
             route.setClaimedByPlayerID(player.getPlayerID());
             RouteHelper.getSingleton().updateRoute(route);
+            player.setTrainCarCount(player.getTrainCarCount() - route.getSpaces());
+            PlayerHelper.getSingleton().updateTrainCount(player);
+            player.setPoints(player.getPoints() + route.getSpaces());
             Game game = GameFacadeHelper.getSingleton().findGame(route.getGameID());
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
             Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn());

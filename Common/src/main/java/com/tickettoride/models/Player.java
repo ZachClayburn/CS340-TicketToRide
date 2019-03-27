@@ -20,17 +20,19 @@ public class Player {
     //FIXME Add this functionality
     private int points;
 
-    public Player(UserID user, GameID game) {
-        this.userID = user;
-        this.gameID = game;
+    public Player(UserID userID, GameID gameID) {
+        this.userID = userID;
+        this.gameID = gameID;
         this.playerID = PlayerID.randomUUID();
     }
     
-    public Player(UserID user, GameID game, PlayerID player, int turn){
+    public Player(UserID user, GameID game, PlayerID player, int turn, int trainCarCount, int points){
         this.userID=user;
         this.gameID=game;
         this.playerID=player;
         this.turn = turn;
+        this.trainCarCount = trainCarCount;
+        this.points = points;
     }
 
     public Player(UserID user, GameID game, PlayerID player, int turn, PlayerColor color){
@@ -55,6 +57,7 @@ public class Player {
         this.turn = ((Double) playerMap.get("turn")).intValue();
         this.color = PlayerColor.valueOf((String) playerMap.get("color"));
         this.username = (String) playerMap.get("username");
+        this.trainCarCount = ((Double) playerMap.get("trainCarCount")).intValue();
     }
 
     public UserID getUserID() { return userID; }
