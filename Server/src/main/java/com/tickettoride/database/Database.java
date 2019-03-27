@@ -43,6 +43,7 @@ public class Database implements AutoCloseable {
     protected DestinationCardDAO destinationCardDAO;
     protected RouteDAO routeDAO;
     protected LineDAO lineDAO;
+    protected TrainCardDAO trainCardDAO;
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
@@ -55,6 +56,8 @@ public class Database implements AutoCloseable {
         try (var statement = connection.createStatement()) {
 
             //Language=PostgreSQL
+            //String typeSql = "DROP TYPE IF EXISTS cardstate CASCADE";
+
             String sql = "DO $$ DECLARE" +
                     "    r RECORD;" +
                     "BEGIN" +
@@ -64,6 +67,7 @@ public class Database implements AutoCloseable {
                     "END $$;";
             sql += DAOs.stream().map(DataAccessObject::getTableCreateString).collect(Collectors.joining());
 
+            //statement.executeUpdate(typeSql);
             statement.executeUpdate(sql);
 
             commit();
@@ -123,6 +127,8 @@ public class Database implements AutoCloseable {
         DAOs.add(routeDAO);
         lineDAO = new LineDAO(connection);
         DAOs.add(lineDAO);
+        trainCardDAO = new TrainCardDAO(connection);
+        DAOs.add(trainCardDAO);
     }
 
     /**
@@ -177,6 +183,8 @@ public class Database implements AutoCloseable {
     public RouteDAO getRouteDAO() { return routeDAO; }
 
     public LineDAO getLineDAO() { return  lineDAO; }
+
+    public TrainCardDAO getTrainCardDAO() {return trainCardDAO;}
 
     public void commit() {
         doCommit = true;

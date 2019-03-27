@@ -17,8 +17,8 @@ public class DataManager {
     private GameIndex gameIndex;
     private List<Player> gamePlayers;
     private TrainCardDeck trainCardDeck;
-    private int trainCardDeckSize;
-    private Integer destinationCardDeckSize;
+    private int trainCardDeckSize = 0;
+    private Integer destinationCardDeckSize = 0;
     private Hand playerHand = new Hand();
     private PlayerState playerState;
     private int trainCardsDrawn;
@@ -27,6 +27,7 @@ public class DataManager {
     private ArrayList<ClientRoute> clientRoutes;
     private int turn = 0;
     private ClientRoute currentClientRoute;
+    private List<TrainCard> faceUpDeck;
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -71,10 +72,10 @@ public class DataManager {
     }
     public List<Player> getGamePlayers() { return this.gamePlayers; }
 
-    public void initializeDeck(){
-        trainCardDeck = new TrainCardDeck();
-        updateTrainCardDeckSize();
-    }
+//    public void initializeDeck(int size){
+//        trainCardDeck = new TrainCardDeck();
+//        updateTrainCardDeckSize();
+//    }
 
     public TrainCardDeck getTrainCardDeck() { return trainCardDeck; }
 
@@ -93,6 +94,8 @@ public class DataManager {
     public void setTrainCardsDrawn(int trainCardsDrawn) { this.trainCardsDrawn = trainCardsDrawn; }
 
     public int getTrainCardsDrawn() { return this.trainCardsDrawn; }
+
+    public void updateFaceUpDeck(List<TrainCard> faceUpDeck){trainCardDeck.setFaceUpDeck(faceUpDeck);}
 
     public void setClientRoutes(ArrayList<ClientRoute> clientRoutes) {
         this.clientRoutes = clientRoutes;
@@ -150,7 +153,7 @@ public class DataManager {
 
     public int getTrainCardDeckSize(){return trainCardDeckSize;}
 
-    public void updateTrainCardDeckSize(){trainCardDeckSize = trainCardDeck.getFaceDownDeck().size();}
+    public void updateTrainCardDeckSize(int size){trainCardDeckSize = size;}
 
     public boolean hasOfferedCards() {
         return offeredCards != null;

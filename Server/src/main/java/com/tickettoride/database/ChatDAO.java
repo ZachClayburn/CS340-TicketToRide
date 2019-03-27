@@ -89,7 +89,7 @@ public class ChatDAO extends Database.DataAccessObject {
      * @return a list of the messages associated with the given game. Returns an empty list if no messages
      * @throws DatabaseException if the sql statement throws an exception
      */
-    public List<Message> getChat(UUID gameID) throws DatabaseException{
+    public List<Message> getChat(GameID gameID) throws DatabaseException{
         List<Message> messages=new ArrayList<>();
         String sql = "SELECT * FROM Chats WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {

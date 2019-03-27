@@ -85,7 +85,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 makeWildCardToast();
                 return;
             }
-            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(0, DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID(), 0);
         }
     };
     private View.OnClickListener card2ViewListener = new View.OnClickListener() {
@@ -95,7 +97,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 makeWildCardToast();
                 return;
             }
-            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(1, DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID(), 1);
         }
     };
     private View.OnClickListener card3ViewListener = new View.OnClickListener() {
@@ -105,7 +109,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 makeWildCardToast();
                 return;
             }
-            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(2, DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID(), 2);
         }
     };
     private View.OnClickListener card4ViewListener = new View.OnClickListener() {
@@ -115,7 +121,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 makeWildCardToast();
                 return;
             }
-            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(3, DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID(), 3);
         }
     };
     private View.OnClickListener card5ViewListener = new View.OnClickListener() {
@@ -125,13 +133,17 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                 makeWildCardToast();
                 return;
             }
-            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(4, DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFaceupCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID(), 4);
         }
     };
     private View.OnClickListener faceDownCardViewListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            TrainCardFacadeProxy.SINGLETON.drawFacedownCard(DataManager.getSINGLETON().getPlayer().getPlayerID());
+            TrainCardFacadeProxy.SINGLETON.drawFacedownCard(
+                    DataManager.SINGLETON.getGame().getGameID(),
+                    DataManager.SINGLETON.getPlayer().getPlayerID());
         }
     };
 
@@ -356,19 +368,20 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void finishDrawFaceUpTrainCard(TrainCard card) {
-        if (DataManager.SINGLETON.getTrainCardDeck().checkForWild()) {
-            setCardColor(0);
-            setCardColor(1);
-            setCardColor(2);
-            setCardColor(3);
-            setCardColor(4);
-        }
+//        if (DataManager.SINGLETON.getTrainCardDeck().checkForWild()) {
+//            setCardColor(0);
+//            setCardColor(1);
+//            setCardColor(2);
+//            setCardColor(3);
+//            setCardColor(4);
+//        }
 
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
-            GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.setTurn();
+            TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
+            //GameRoomActivity activity = (GameRoomActivity) getActivity();
+            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
@@ -378,8 +391,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         int trainCardsDrawn = DataManager.SINGLETON.getTrainCardsDrawn();
         if (trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
-            GameRoomActivity activity = (GameRoomActivity) getActivity();
-            activity.setTurn();
+            TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
+            //GameRoomActivity activity = (GameRoomActivity) getActivity();
+            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
@@ -517,6 +531,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void setCardColor(int i) {
+        if (DataManager.SINGLETON.getTrainCardDeck() == null){
+            return;
+        }
         switch (i) {
             case 0:
                 cardOne.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));

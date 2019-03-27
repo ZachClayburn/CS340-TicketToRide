@@ -6,6 +6,7 @@ import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.facadeProxies.ChatFacadeProxy;
+import com.tickettoride.facadeProxies.TrainCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
@@ -83,8 +84,7 @@ public class GameController extends BaseController {
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
             DataManager.SINGLETON.setGamePlayers(players);
-            DataManager.SINGLETON.initializeDeck();
-            GameControllerHelper.getSingleton().setupPlayerHands();
+            TrainCardFacadeProxy.SINGLETON.rejoin(game.getGameID());
             DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(turn);
@@ -117,14 +117,13 @@ public class GameController extends BaseController {
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
         GameControllerHelper.getSingleton().setPlayerInfo(playerList);
-        DataManager.SINGLETON.initializeDeck();
         DataManager.SINGLETON.setDestinationCardDeckSize(30);
         DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
         DataManager.SINGLETON.setTurn(turn);
-        GameControllerHelper.getSingleton().setupPlayerHands();
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
         Game game = DataManager.getSINGLETON().getGame();
+        TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
         ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
     }
 

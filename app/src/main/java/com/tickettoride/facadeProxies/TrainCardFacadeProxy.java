@@ -1,6 +1,7 @@
 package com.tickettoride.facadeProxies;
 
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.command.ClientCommunicator;
 import com.tickettoride.controllers.GameController;
 import com.tickettoride.controllers.TrainCardController;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
@@ -10,6 +11,7 @@ import com.tickettoride.models.TrainCardDeck;
 
 import java.util.UUID;
 
+import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
 import command.Command;
 
@@ -22,42 +24,46 @@ public class TrainCardFacadeProxy {
 
     private TrainCardFacadeProxy() { }
 
-    public void drawFaceupCard(int index, PlayerID playerID){
-        Command command = new Command(FACADE_NAME, "drawFaceupCard", index, playerID);
-        // ClientCommunicator.SINGLETON.send(command);
-        // Send to server
-        tempDrawFaceupCardLogic(index, playerID);
+    public void drawFaceupCard(GameID gameID, PlayerID playerID, int pos){
+        try{
+            Command command = new Command(FACADE_NAME, "drawFromFaceUp", gameID, playerID, pos);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
     }
 
-    public void tempDrawFaceupCardLogic(int index, PlayerID playerID){
-        // Add card to player hand in database
-
-        TrainCard card = DataManager.SINGLETON.getTrainCardDeck().drawFromFaceUp(index);
-        TrainCardDeck deck = DataManager.SINGLETON.getTrainCardDeck();
-
-        TrainCardController.getSingleton().drawFaceupCard(playerID, card, deck);
-
-        //Command command = new Command(CONTROLLER_NAME, "drawFaceupCard", playerID, card, deck);
-        //sendResponseToRoom(command);
-        // Send to controller
+    public void drawFacedownCard(GameID gameID, PlayerID playerID){
+        try{
+            Command command = new Command(FACADE_NAME, "drawFromFaceDown", gameID, playerID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
     }
 
-    public void drawFacedownCard(PlayerID playerID){
-        Command command = new Command(FACADE_NAME, "drawFacedownCard", playerID);
-        tempDrawFacedownCardLogic(playerID);
-        // ClientCommunicator.SINGLETON.send(command);
-        // Send to server
+    public void initialize(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "initialize", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
     }
 
-    public void tempDrawFacedownCardLogic(PlayerID playerID){
-        // Add card to player hand in database
-
-        TrainCard card = DataManager.getSINGLETON().getTrainCardDeck().drawFromFaceDown();
-        TrainCardDeck deck = DataManager.SINGLETON.getTrainCardDeck();
-
-        TrainCardController.getSingleton().drawFaceDownCard(playerID, card, deck);
-
-        // Command command = new Command(CONTROLLER_NAME, "drawFacedownCard", playerID, card, deck);
-        // Send to controller
+    public void initializeHands(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "initializeHands", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
     }
+
+    public void rejoin(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "rejoin", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
+    }
+
+    public void finish(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "finish", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
+    }
+
 }

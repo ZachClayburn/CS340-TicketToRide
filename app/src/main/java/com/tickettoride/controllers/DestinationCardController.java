@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
+import com.tickettoride.activities.MapFragment;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;

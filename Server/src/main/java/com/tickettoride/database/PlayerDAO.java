@@ -17,9 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+/** This class represents the DAO for Players and accesses the Players table */
 public class PlayerDAO extends Database.DataAccessObject {
+    /** Language - PostgreSQL: SQL string that generates the Players table */
     private final String tableCreateString =
-            // language=PostgreSQL
             "CREATE TABLE Players" +
                     "(" +
                     "playerID TEXT PRIMARY KEY NOT NULL," +
@@ -32,17 +34,43 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
 
+    /**
+     * Constructor for an empty PlayerDAO object
+     *
+     * @param connection Connection to the Postgres server
+     *
+     * @pre Connection is valid
+     * @post None
+     */
     public PlayerDAO(Connection connection) {
         super(connection);
     }
 
+    /** Logger that allows for displaying messages in the terminal */
     private static Logger logger = LogManager.getLogger(PlayerDAO.class.getName());
 
+    /**
+     * Method that receives tableCreateString
+     *
+     * @return String of SQL command that creates the Player table
+     *
+     * @pre None
+     * @post None
+     */
     @Override
     String getTableCreateString() {
         return tableCreateString;
     }
 
+    /**
+     * Adds a new player to the database
+     *
+     * @param player The new player to be added
+     * @throws DatabaseException
+     *
+     * @pre Players table exists, Player variables (playerID, userID, gameID, turn) are not null
+     * @post Row with player information is in the table
+     */
     public void addPlayer(Player player) throws DatabaseException {
         final String sql = "INSERT INTO Players (playerID, userID, gameID, turn, trainCarCount) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
@@ -97,6 +125,16 @@ public class PlayerDAO extends Database.DataAccessObject {
         return games;
     }
 
+    /**
+     * Takes the result from a database query and extracts the necessary values to build a Player object
+     *
+     * @param result The result from the database query
+     * @return A Player with the GameID, PlayerID, UserID, and turn found in the result
+     * @throws SQLException
+     *
+     * @pre result != null, result has columns "GameID", "PlayerID", "UserID", "turn"
+     * @post player != null
+     */
     @NotNull
     private Player buildPlayerFromResult(ResultSet result) throws SQLException {
         Player player;
@@ -110,6 +148,16 @@ public class PlayerDAO extends Database.DataAccessObject {
         return player;
     }
 
+    /**
+     * Finds a specific player from the database whose playerID matches the parameter playerID
+     *
+     * @param playerID The unique ID associated with the player
+     * @return The player object corresponding to the playerID
+     * @throws DatabaseException
+     *
+     * @pre Players table exists, playerID is UUID
+     * @post None
+     */
     @Nullable
     public Player getPlayerByPlayerID(PlayerID playerID) throws DatabaseException {
         String sql = "SELECT * FROM players WHERE playerid=?";

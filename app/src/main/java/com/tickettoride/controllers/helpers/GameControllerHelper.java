@@ -37,19 +37,6 @@ public class GameControllerHelper extends BaseController {
         }
     }
 
-    // Move this logic to server for Phase 3
-    public void setupPlayerHands(){
-        PlayerID playerID = DataManager.SINGLETON.getPlayer().getPlayerID();
-        for (Player player: DataManager.SINGLETON.getGamePlayers()){
-            Hand hand = DataManager.SINGLETON.getTrainCardDeck().getInitialHand();
-            player.setTrainCardCount(hand.getHandSize());
-
-            if (player.getPlayerID() == playerID){
-                DataManager.SINGLETON.setPlayerHand(hand);
-            }
-        }
-    }
-
     public void createGameOnJoinActivity(Game game) throws ClassCastException {
         JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
         DataManager.getSINGLETON().getGameIndex().addJoinGame(game);

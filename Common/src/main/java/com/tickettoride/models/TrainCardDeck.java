@@ -6,13 +6,23 @@ import java.util.List;
 
 public class TrainCardDeck {
 
-    // Index 0 is top of deck, last index is bottom of deck
+    // Last index is top of deck, index 0 is bottom of deck
     private List<TrainCard> faceDownDeck;
     private List<TrainCard> faceUpDeck;
     private List<TrainCard> discardPile;
 
     public TrainCardDeck(){
         initializeDecks();
+    }
+
+    public TrainCardDeck(List<TrainCard> faceup, List<TrainCard> facedown, List<TrainCard> discard){
+        faceUpDeck = faceup;
+        faceDownDeck = facedown;
+        discardPile = discard;
+    }
+
+    public TrainCardDeck(List<TrainCard> faceup){
+        faceUpDeck = faceup;
     }
 
     private void initializeDecks(){
@@ -50,17 +60,19 @@ public class TrainCardDeck {
 
     public List<TrainCard> getDiscardPile() {return discardPile;}
 
+    public void setFaceUpDeck(List<TrainCard> faceUpDeck){this.faceUpDeck = faceUpDeck;}
+
     public TrainCard drawFromFaceUp(int i){
         TrainCard card = faceUpDeck.get(i);
-        faceUpDeck.set(i, faceDownDeck.get(0));
-        faceDownDeck.remove(0);
+        faceUpDeck.set(i, faceDownDeck.get(faceDownDeck.size() - 1));
+        faceDownDeck.remove(faceDownDeck.size() - 1);
         checkForEmptyDeck();
         return card;
     }
 
     public TrainCard drawFromFaceDown(){
-        TrainCard card = faceDownDeck.get(0);
-        faceDownDeck.remove(0);
+        TrainCard card = faceDownDeck.get(faceDownDeck.size() - 1);
+        faceDownDeck.remove(faceDownDeck.size() - 1);
         checkForEmptyDeck();
         return card;
     }

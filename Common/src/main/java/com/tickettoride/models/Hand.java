@@ -90,4 +90,36 @@ public class Hand {
     public List<DestinationCard> getDestinationCards() {
         return destinationCards;
     }
+
+    public void addCard(TrainCard card){
+        switch(card.getColor()){
+            case RED:
+                setRed(1);
+                return;
+            case BLUE:
+                setBlue(1);
+                return;
+            case YELLOW:
+                setYellow(1);
+                return;
+            case PURPLE:
+                setPurple(1);
+                return;
+            case GREEN:
+                setGreen(1);
+                return;
+            case ORANGE:
+                setOrange(1);
+                return;
+            case BLACK:
+                setBlack(1);
+                return;
+            case WHITE:
+                setWhite(1);
+                return;
+            case WILD:
+                setLocomotive(1);
+                return;
+        }
+    }
 }

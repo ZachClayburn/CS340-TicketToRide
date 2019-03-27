@@ -60,7 +60,7 @@ public class ChatFacade extends BaseFacade {
     }
     
     
-    public void getChat(UUID connID, UUID gameID){
+    public void getChat(UUID connID, GameID gameID){
         List<Message> chat=new ArrayList<>();
         try(Database database=new Database()){
             ChatDAO chatDAO=database.getChatDAO();
