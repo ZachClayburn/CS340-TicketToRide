@@ -101,6 +101,10 @@ public class Game {
 
     public int getCurTurn() {return curTurn;}
 
+    public void setCurTurn(int curTurn) {
+        this.curTurn = curTurn;
+    }
+
     public void setNextTurn() {
         if (curTurn == numPlayer) {
             curTurn = 1;
