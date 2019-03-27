@@ -12,10 +12,8 @@ public class PlayerStateHelper {
     private PlayerStateHelper() {}
 
     public void determinePlayerState(MapFragment mapFragment) {
-        if (DataManager.SINGLETON.getPlayerState() == null) {
-            if (DataManager.SINGLETON.getPlayerHand().getDestinationCards().size() == 0) { DataManager.SINGLETON.setPlayerState(new InitializeGameState(mapFragment)); }
-            else if (DataManager.getSINGLETON().getPlayer().getTurn() == DataManager.getSINGLETON().getTurn()) { DataManager.SINGLETON.setPlayerState(new PlayerTurnState(mapFragment)); }
-            else { DataManager.SINGLETON.setPlayerState(new NotTurnState(mapFragment)); }
-        } else { DataManager.SINGLETON.getPlayerState().applyState(mapFragment); }
+        if (DataManager.SINGLETON.getPlayerHand().getDestinationCards().size() == 0) { DataManager.SINGLETON.setPlayerState(new InitializeGameState(mapFragment)); }
+        else if (DataManager.getSINGLETON().getPlayer().getTurn() == DataManager.getSINGLETON().getTurn()) { DataManager.SINGLETON.setPlayerState(new PlayerTurnState(mapFragment)); }
+        else { DataManager.SINGLETON.setPlayerState(new NotTurnState(mapFragment)); }
     }
 }

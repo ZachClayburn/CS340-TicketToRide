@@ -380,8 +380,6 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         if ((card.getColor() == Color.WILD) || trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
             TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
-            //GameRoomActivity activity = (GameRoomActivity) getActivity();
-            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }
@@ -392,8 +390,6 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         if (trainCardsDrawn == 1) {
             DataManager.getSINGLETON().setTrainCardsDrawn(0);
             TrainCardFacadeProxy.SINGLETON.finish(DataManager.SINGLETON.getGame().getGameID());
-            //GameRoomActivity activity = (GameRoomActivity) getActivity();
-            //activity.setTurn();
         } else {
             DataManager.SINGLETON.setTrainCardsDrawn(++trainCardsDrawn);
         }

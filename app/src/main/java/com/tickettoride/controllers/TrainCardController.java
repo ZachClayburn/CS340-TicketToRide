@@ -1,8 +1,5 @@
 package com.tickettoride.controllers;
 
-import android.util.Log;
-import android.widget.Toast;
-
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.activities.MapFragment;
@@ -16,9 +13,6 @@ import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.xml.transform.TransformerConfigurationException;
 
 public class TrainCardController extends BaseController {
     private static TrainCardController SINGLETON = new TrainCardController();
@@ -95,7 +89,7 @@ public class TrainCardController extends BaseController {
     public void finish(Integer turn){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
-        activity.setTurn();
+        activity.activateTurn();
     }
 
 }

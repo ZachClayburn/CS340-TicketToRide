@@ -72,7 +72,7 @@ public class PlayerDAO extends Database.DataAccessObject {
      * @post Row with player information is in the table
      */
     public void addPlayer(Player player) throws DatabaseException {
-        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn, trainCarCount) VALUES (?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn, trainCarCount, points) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
             statement.setString(1, player.getPlayerID().toString());

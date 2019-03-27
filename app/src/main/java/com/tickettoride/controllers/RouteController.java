@@ -21,6 +21,6 @@ public class RouteController extends BaseController {
         dataManagerPlayer.setTrainCarCount(player.getTrainCarCount());
         if (isUserPlayer(player) ) { activity.onReturnToMap(); } else { activity.getMapFragment().drawExternal(); }
         DataManager.SINGLETON.setTurn(turn);
-        activity.setTurn();
+        activity.activateTurn();
     }
 }

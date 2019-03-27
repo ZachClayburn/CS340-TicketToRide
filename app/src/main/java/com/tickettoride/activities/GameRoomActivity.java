@@ -45,7 +45,6 @@ public class GameRoomActivity extends MyBaseActivity implements
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
-
         Toast.makeText(this, R.string.game_welcome, Toast.LENGTH_SHORT).show();
     }
 
@@ -169,20 +168,11 @@ public class GameRoomActivity extends MyBaseActivity implements
         onReturnToMap();
     }
 
-    public void setTurn() {
+    public void activateTurn() {
         int currentTurn = DataManager.getSINGLETON().getTurn();
-        /*if (currentTurn > DataManager.getSINGLETON().getGamePlayers().size()) {
-            DataManager.getSINGLETON().setTurn(1);
-            currentTurn = 1;
-        }*/
-        int currentCards = DataManager.getSINGLETON().getPlayer().getDestinationCardCount();
-        if (DataManager.getSINGLETON().getPlayerHand().getDestinationCards().size() != 0) {
-            if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
-                DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
-            } else {
-                DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
-            }
-        }
+        if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
+            DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
+        } else { DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment); }
     }
     @Override
     public void onBackPressed() {

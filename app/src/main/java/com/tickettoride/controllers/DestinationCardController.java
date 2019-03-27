@@ -4,7 +4,6 @@ import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
-import com.tickettoride.activities.MapFragment;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
@@ -36,7 +35,7 @@ public class DestinationCardController extends BaseController {
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
-        activity.setTurn();
+        activity.activateTurn();
     }
 
     public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
