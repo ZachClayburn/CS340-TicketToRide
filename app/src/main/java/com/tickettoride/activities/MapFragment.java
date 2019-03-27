@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -138,6 +139,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         @Override
         public void onClick(View view) {
             DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
+            //List<Player> players = DataManager.getSINGLETON().getGamePlayers();
         }
     };
 
@@ -249,6 +251,8 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.hide();
+        PlayerState state = DataManager.getSINGLETON().getPlayerState();
+        int turn = DataManager.getSINGLETON().getTurn();
         cardOne = v.findViewById(R.id.first_card);
         cardTwo = v.findViewById(R.id.second_card);
         cardThree = v.findViewById(R.id.third_card);

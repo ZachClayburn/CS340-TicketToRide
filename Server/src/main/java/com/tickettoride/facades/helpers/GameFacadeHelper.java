@@ -120,6 +120,7 @@ public class GameFacadeHelper extends BaseFacade {
         Integer currentTurn = game.getCurTurn();
         currentTurn++;
         if (currentTurn > game.getNumPlayer()) { currentTurn = 1; }
+        game.setCurTurn(currentTurn);
         try (Database database = new Database()) {
             GameDAO dao = database.getGameDAO();
             dao.updateTurn(game);

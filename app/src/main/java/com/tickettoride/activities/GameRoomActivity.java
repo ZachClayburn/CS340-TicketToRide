@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.InitializeGameState;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.idtypes.PlayerID;
@@ -158,9 +159,18 @@ public class GameRoomActivity extends MyBaseActivity implements
 
     public void setTurn() {
         int currentTurn = DataManager.getSINGLETON().getTurn();
-        if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
-            DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
-        } else { DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment); }
+        /*if (currentTurn > DataManager.getSINGLETON().getGamePlayers().size()) {
+            DataManager.getSINGLETON().setTurn(1);
+            currentTurn = 1;
+        }*/
+        int currentCards = DataManager.getSINGLETON().getPlayer().getDestinationCardCount();
+        if (DataManager.getSINGLETON().getPlayerHand().getDestinationCards().size() != 0) {
+            if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
+                DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
+            } else {
+                DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment);
+            }
+        }
     }
     @Override
     public void onBackPressed() {

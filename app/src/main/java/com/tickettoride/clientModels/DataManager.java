@@ -84,7 +84,9 @@ public class DataManager {
 
     public void setPlayerHand(Hand hand) {this.playerHand = hand;}
 
-    public void setPlayerState(PlayerState playerState) { this.playerState = playerState; }
+    public void setPlayerState(PlayerState playerState) {
+        this.playerState = playerState;
+    }
 
     public PlayerState getPlayerState() { return this.playerState; }
 
