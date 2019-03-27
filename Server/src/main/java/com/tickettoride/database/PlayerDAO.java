@@ -25,7 +25,9 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "playerID TEXT PRIMARY KEY NOT NULL," +
                     "userID TEXT NOT NULL," +
                     "gameID TEXT NOT NULL," +
-                    "turn NUMERIC NOT NULL ," +
+                    "turn NUMERIC NOT NULL," +
+                    "points NUMERIC NOT NULL," +
+                    "trainCarCount NUMERIC NOT NULL " +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
@@ -42,13 +44,15 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
     public void addPlayer(Player player) throws DatabaseException {
-        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn) VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO Players (playerID, userID, gameID, turn, trainCarCount) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
             statement.setString(1, player.getPlayerID().toString());
             statement.setString(2, player.getUserID().toString());
             statement.setString(3, player.getGameID().toString());
             statement.setInt(4, player.getTurn());
+            statement.setInt(5, player.getTrainCarCount());
+            statement.setInt(6, player.getPoints());
 
             statement.executeUpdate();
 
@@ -95,33 +99,25 @@ public class PlayerDAO extends Database.DataAccessObject {
 
     @NotNull
     private Player buildPlayerFromResult(ResultSet result) throws SQLException {
-
         Player player;
-
         GameID tableGameID = GameID.fromString(result.getString("GameID"));
         PlayerID tablePlayerID = PlayerID.fromString(result.getString("PlayerID"));
         UserID tableUserID = UserID.fromString(result.getString("UserID"));
         int turn = result.getInt("turn");
-        player = new Player(tableUserID, tableGameID, tablePlayerID);
-        player.setTurn(turn);
-
+        int trainCarCount = result.getInt("trainCarCount");
+        int points = result.getInt("points");
+        player = new Player(tableUserID, tableGameID, tablePlayerID, turn, trainCarCount, points);
         return player;
     }
 
     @Nullable
     public Player getPlayerByPlayerID(PlayerID playerID) throws DatabaseException {
-
         String sql = "SELECT * FROM players WHERE playerid=?";
         Player player = null;
-
         try (var statement = connection.prepareStatement(sql)){
-
             statement.setString(1, playerID.toString());
             var result = statement.executeQuery();
-
-            if (result.next())
-                player = buildPlayerFromResult(result);
-
+            if (result.next()) player = buildPlayerFromResult(result);
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not get the player from the database!", e);
@@ -135,8 +131,40 @@ public class PlayerDAO extends Database.DataAccessObject {
             statement.setInt(1, turn);
             statement.setString(2, playerID.toString());
             statement.executeUpdate();
+        } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
+    }
+
+    public void setPointes(PlayerID playerID, int points) throws DatabaseException {
+        String sql = "UPDATE Players SET points = ? WHERE playerID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, points);
+            statement.setString(2, playerID.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
+    }
+
+    public void setTrainCarCount(PlayerID playerID, int trainCarCount) throws DatabaseException {
+        String sql = "UPDATE Players SET trainCarCount = ? WHERE playerID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, trainCarCount);
+            statement.setString(2, playerID.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
+    }
+
+
+    public void setPlayersUserName(List<Player> players) throws DatabaseException {
+        String sql = "SELECT username FROM users WHERE userid=?";
+        try (var statement = connection.prepareStatement(sql)) {
+            for (var player : players) {
+                statement.setString(1, player.getUserID().toString());
+                var result = statement.executeQuery();
+                result.next();
+                player.setUsername(result.getString("username"));
+            }
         } catch (SQLException e) {
-            throw new DatabaseException("Could not set turn!", e);
+            logger.catching(e);
+            throw new DatabaseException("Could not set the name of Player!", e);
         }
     }
 
@@ -144,33 +172,8 @@ public class PlayerDAO extends Database.DataAccessObject {
         String sql = "DELETE FROM Players WHERE sessionID = ?";
         //FIXME This is broken, no such field sessionID, remove or fix
         try (var statement = connection.prepareStatement(sql)) {
-
             statement.setString(1, sessionID.toString());
             statement.executeUpdate();
-
         }
-    }
-
-    public void setPlayersUserName(List<Player> players) throws DatabaseException {
-
-        String sql = "SELECT username FROM users WHERE userid=?";
-
-        try (var statement = connection.prepareStatement(sql)) {
-
-            for (var player : players) {
-
-                statement.setString(1, player.getUserID().toString());
-                var result = statement.executeQuery();
-
-                result.next();
-
-                player.setUsername(result.getString("username"));
-            }
-
-        } catch (SQLException e) {
-            logger.catching(e);
-            throw new DatabaseException("Could not set the name of Player!", e);
-        }
-
     }
 }

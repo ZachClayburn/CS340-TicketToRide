@@ -23,9 +23,9 @@ public class PlayerHelper extends BaseFacade {
     public static PlayerHelper getSingleton() { return SINGLETON; }
     private PlayerHelper() {}
 
-    public Player createPlayer(UserID user, GameID game) throws DatabaseException {
+    public Player createPlayer(UserID userID, GameID gameID) throws DatabaseException {
         try (Database database = new Database()) {
-            Player player = new Player(user, game);
+            Player player = new Player(userID, gameID);
             PlayerDAO dao = database.getPlayerDAO();
             dao.addPlayer(player);
             database.commit();
@@ -85,4 +85,20 @@ public class PlayerHelper extends BaseFacade {
     }
 
     public void pickColors(List<Player> players) { for (Player player:players){ player.setColor(); } }
+
+    public void setTrainCounts(List<Player> players) throws DatabaseException {
+            for (Player player: players) {
+                player.setTrainCarCount(45);
+                updateTrainCount(player);
+            }
+    }
+
+    public void updateTrainCount(Player player) throws DatabaseException {
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            dao.setTrainCarCount(player.getPlayerID(), player.getTrainCarCount());
+            database.commit();
+        }
+    }
+
 }

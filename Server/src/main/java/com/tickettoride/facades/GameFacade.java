@@ -94,11 +94,10 @@ public class GameFacade extends BaseFacade {
         PlayerHelper.getSingleton().pickTurnOrder(players);
         PlayerHelper.getSingleton().pickColors(players);
         PlayerHelper.getSingleton().setUsernames(players);
+        PlayerHelper.getSingleton().setTrainCounts(players);
         List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
         DestinationCardFacadeHelper.dealCards(gameID);
         var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
         sendResponseToRoom(connID, command);
     }
-
-
 }
