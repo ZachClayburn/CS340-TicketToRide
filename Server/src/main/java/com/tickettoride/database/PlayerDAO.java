@@ -29,7 +29,7 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "gameID TEXT NOT NULL," +
                     "turn NUMERIC NOT NULL," +
                     "points NUMERIC NOT NULL," +
-                    "trainCarCount NUMERIC NOT NULL " +
+                    "trainCarCount NUMERIC NOT NULL," +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
