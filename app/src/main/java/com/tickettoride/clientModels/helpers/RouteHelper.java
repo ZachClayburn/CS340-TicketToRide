@@ -237,7 +237,7 @@ public class RouteHelper {
 //        curClientRoute.setIsClaimed(true);
 //        curClientRoute.setLineColor(player.getColor());
         int spaces = curClientRoute.getSpaces();
-        player.setPoints(player.getPoints() + spaces);
+        player.givePoints(spaces);
     }
 
 }

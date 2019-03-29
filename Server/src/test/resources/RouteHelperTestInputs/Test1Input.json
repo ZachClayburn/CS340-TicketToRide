@@ -1,0 +1,36 @@
+[
+  {
+    "name":   "testPlayer1",
+    "routes": [
+      {
+        "city1": "VANCOUVER",
+        "city2": "CALGARY",
+        "color": null
+      },
+      {
+        "city1": "VANCOUVER",
+        "city2": "SEATTLE"
+      },
+      {
+        "city1": "SEATTLE",
+        "city2": "CALGARY"
+      },
+      {
+        "city1": "CALGARY",
+        "city2": "WINNIPEG"
+      },
+      {
+        "city1": "WINNIPEG",
+        "city2": "SAUL_ST_MARIE"
+      },
+      {
+        "city1": "WINNIPEG",
+        "city2": "DULUTH"
+      },
+      {
+        "city1": "WINNIPEG",
+        "city2": "HELENA"
+      }
+    ]
+  }
+]

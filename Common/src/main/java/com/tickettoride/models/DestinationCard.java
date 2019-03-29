@@ -5,6 +5,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DestinationCard implements Comparable<DestinationCard> {
 
@@ -71,9 +72,10 @@ public class DestinationCard implements Comparable<DestinationCard> {
 
         public static Value fromInt(int intValue) {
             return Arrays.stream(Value.values())
+                    .parallel()
                     .filter(value -> intValue == value.asInt())
-                    .findFirst()
-                    .get();
+                    .findAny()
+                    .orElseThrow(() -> new IllegalArgumentException("Cannot create Value from  integer: " + intValue));
         }
     }
 

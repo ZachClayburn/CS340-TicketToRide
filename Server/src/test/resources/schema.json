@@ -1,0 +1,162 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/root.json",
+  "type": "array",
+  "title": "The Root Schema",
+  "items": {
+    "$id": "#/items",
+    "type": "object",
+    "title": "The Items Schema",
+    "required": [
+      "name",
+      "routes"
+    ],
+    "properties": {
+      "name": {
+        "$id": "#/items/properties/name",
+        "type": "string",
+        "title": "The Name Schema",
+        "default": "",
+        "examples": [
+          "testPlayer1"
+        ],
+        "pattern": "^(.*)$"
+      },
+      "routes": {
+        "$id": "#/items/properties/routes",
+        "type": "array",
+        "title": "The Routes Schema",
+        "items": {
+          "$id": "#/items/properties/routes/items",
+          "type": "object",
+          "title": "The Items Schema",
+          "required": [
+            "city1",
+            "city2"
+          ],
+          "properties": {
+            "city1": {
+              "$id": "#/items/properties/routes/items/properties/city1",
+              "type": "string",
+              "enum": [
+                "VANCOUVER",
+                "CALGARY",
+                "WINNIPEG",
+                "SAUL_ST_MARIE",
+                "MONTREAL",
+                "SEATTLE",
+                "HELENA",
+                "DULUTH",
+                "TORONTO",
+                "BOSTON",
+                "PORTLAND",
+                "SALT_LAKE_CITY",
+                "SAN_FRANCISCO",
+                "LOS_ANGELES",
+                "PHOENIX",
+                "LAS_VEGAS",
+                "SANTA_FE",
+                "EL_PASO",
+                "DALLAS",
+                "HOUSTON",
+                "NEW_ORLEANS",
+                "MIAMI",
+                "CHARLESTON",
+                "ATLANTA",
+                "LITTLE_ROCK",
+                "OKLAHOMA_CITY",
+                "DENVER",
+                "OMAHA",
+                "CHICAGO",
+                "PITTSBURGH",
+                "SAINT_LOUIS",
+                "KANSAS_CITY",
+                "NASHVILLE",
+                "RALEIGH",
+                "WASHINGTON",
+                "NEW_YORK"
+              ],
+              "title": "The City1 Schema",
+              "default": "",
+              "examples": [
+                "VANCOUVER"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "city2": {
+              "$id": "#/items/properties/routes/items/properties/city2",
+              "type": "string",
+              "enum": [
+                "VANCOUVER",
+                "CALGARY",
+                "WINNIPEG",
+                "SAUL_ST_MARIE",
+                "MONTREAL",
+                "SEATTLE",
+                "HELENA",
+                "DULUTH",
+                "TORONTO",
+                "BOSTON",
+                "PORTLAND",
+                "SALT_LAKE_CITY",
+                "SAN_FRANCISCO",
+                "LOS_ANGELES",
+                "PHOENIX",
+                "LAS_VEGAS",
+                "SANTA_FE",
+                "EL_PASO",
+                "DALLAS",
+                "HOUSTON",
+                "NEW_ORLEANS",
+                "MIAMI",
+                "CHARLESTON",
+                "ATLANTA",
+                "LITTLE_ROCK",
+                "OKLAHOMA_CITY",
+                "DENVER",
+                "OMAHA",
+                "CHICAGO",
+                "PITTSBURGH",
+                "SAINT_LOUIS",
+                "KANSAS_CITY",
+                "NASHVILLE",
+                "RALEIGH",
+                "WASHINGTON",
+                "NEW_YORK"
+              ],
+              "title": "The City2 Schema",
+              "default": "",
+              "examples": [
+                "CALGARY"
+              ],
+              "pattern": "^(.*)$"
+            },
+            "color": {
+              "$id": "#/items/properties/routes/items/properties/color",
+              "type": ["string", "null"],
+              "enum": [
+                "RED",
+                "ORANGE",
+                "YELLOW",
+                "GREEN",
+                "BLUE",
+                "PURPLE",
+                "BLACK",
+                "WHITE",
+                "GREY",
+                "WILD",
+                null
+              ],
+              "title": "The Color Schema",
+              "default": null,
+              "examples": [
+                null
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -97,6 +97,26 @@ public class RouteDAO extends Database.DataAccessObject {
         return routes;
     }
 
+    public List<Route> getPlayerRoutes(PlayerID playerID) throws DatabaseException {
+
+        List<Route> routes = new ArrayList<>();
+        String sql = "select * from routes where claimedbyplayerid=?";
+
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, playerID.toString());
+            var results = statement.executeQuery();
+
+            while (results.next()) {
+                routes.add(buildRouteFromQueryResult(results));
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not retrieve routes for player: " + playerID, e);
+        }
+        return routes;
+    }
+
     public Route buildRouteFromQueryResult(ResultSet result) throws SQLException {
         RouteID routeID = RouteID.fromString(result.getString("routeID"));
         GameID gameID = GameID.fromString(result.getString("gameID"));

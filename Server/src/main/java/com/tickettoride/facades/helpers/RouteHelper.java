@@ -4,24 +4,29 @@ import com.tickettoride.database.Database;
 import com.tickettoride.database.LineDAO;
 import com.tickettoride.database.RouteDAO;
 import com.tickettoride.facades.BaseFacade;
-import com.tickettoride.models.City;
-import com.tickettoride.models.Color;
-import com.tickettoride.models.Line;
-import com.tickettoride.models.Route;
+import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.RouteID;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 import exceptions.DatabaseException;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
 public class RouteHelper extends BaseFacade {
     private static RouteHelper SINGLETON = new RouteHelper();
     public static RouteHelper getSingleton() { return SINGLETON; }
     private RouteHelper() {}
 
-    private static Route[] staticRoutes = {
+    private static final int LONGEST_ROUTE_POINT_BONUS = 10;
+
+    private static final Route[] staticRoutes = {
         new Route(List.of(new Line(150, 130, 150, 180)), Color.GREY, 1, List.of(City.VANCOUVER, City.SEATTLE)),
         new Route(List.of(new Line(130, 130, 130, 180)), Color.GREY, 1, List.of(City.VANCOUVER, City.SEATTLE)),
         new Route(List.of(new Line(160, 108, 330, 88)), Color.GREY, 3, List.of(City.VANCOUVER, City.CALGARY)),
@@ -214,6 +219,12 @@ public class RouteHelper extends BaseFacade {
         }
     }
 
+    public List<Route> getPlayerRoutes(PlayerID playerID) throws DatabaseException {
+        try (var db = new Database()){
+            return db.getRouteDAO().getPlayerRoutes(playerID);
+        }
+    }
+
     public Line createLine(Line line) throws DatabaseException {
         try (Database database = new Database()) {
             LineDAO dao = database.getLineDAO();
@@ -228,6 +239,130 @@ public class RouteHelper extends BaseFacade {
             LineDAO dao = database.getLineDAO();
             List<Line> lines = dao.getLines(routeID);
             return lines;
+        }
+    }
+
+    public void awardEndOfGamePoints(Game game) throws DatabaseException {
+
+        List<Player> players = PlayerHelper.getSingleton().getGamePlayers(game);
+        List<Player> winners = new ArrayList<>();
+
+        double longestPath = -1;
+        for (var player : players) {
+
+            var routes = getPlayerRoutes(player.getPlayerID());
+            var routeGraph = getPlayerRouteGraph(routes);
+            double playersLongestPath = getLongestRouteInRouteGraph(routeGraph);
+
+            awardDestinationCardPoints(player, routeGraph);
+
+            if (playersLongestPath == longestPath)
+                winners.add(player);
+            if (playersLongestPath > longestPath) {
+                longestPath = playersLongestPath;
+                winners.clear();
+                winners.add(player);
+            }
+        }
+
+        winners.forEach((player -> player.givePoints(LONGEST_ROUTE_POINT_BONUS)));
+
+        //FIXME Add the call to persist the players points here
+
+    }
+
+    public void awardDestinationCardPoints(Player player, Graph<City, WeightedEdge> graph)
+            throws DatabaseException {
+
+        var destinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
+
+        ConnectivityInspector<City, WeightedEdge> inspector = new ConnectivityInspector<>(graph);
+
+        for (var card : destinationCards) {
+            if (inspector.pathExists(card.getDestination1(), card.getDestination2()))
+                player.givePoints(card.getPointValue().asInt());
+            else
+                player.takePoints(card.getPointValue().asInt());
+        }
+
+    }
+
+    protected int getLongestRouteInRouteGraph(Graph<City, WeightedEdge> graph) {
+
+        Set<WeightedEdge> visited = new HashSet<>();
+        int maxLength = 0;
+
+        for (var vertex : graph.vertexSet()) {
+
+            int length = recursivePathLengthCalculate(graph, vertex, visited);
+            maxLength = (length > maxLength)? length : maxLength;
+
+        }
+
+        return maxLength;
+    }
+
+    private int recursivePathLengthCalculate(Graph<City, WeightedEdge> graph, City currentVertex, Set<WeightedEdge> visited) {
+
+        int pathLength = 0;
+
+        for (var edge : graph.edgesOf(currentVertex)) {
+
+            if (visited.contains(edge))
+                continue;
+
+            var currentLenght = (int) edge.weight();
+            var nextVertex = (graph.getEdgeSource(edge) != currentVertex) ?
+                    graph.getEdgeSource(edge) : graph.getEdgeTarget(edge);
+
+            visited.add(edge);
+            currentLenght += recursivePathLengthCalculate(graph, nextVertex, visited);
+            visited.remove(edge);
+
+            if (currentLenght > pathLength) pathLength = currentLenght;
+        }
+
+        return pathLength;
+    }
+
+    protected Graph<City, WeightedEdge> getPlayerRouteGraph(List<Route> routes) {
+        Graph<City, WeightedEdge> graph = new SimpleWeightedGraph<>(WeightedEdge.class);
+
+        routes.stream().collect(Collector.of(
+                (Supplier<TreeSet<City>>) TreeSet::new,
+                (result, route) -> result.addAll(route.getCities()),
+                (result1, result2) -> {
+                    result1.addAll(result2);
+                    return result1;
+                },
+                ArrayList::new
+        )).forEach(graph::addVertex);
+
+        routes.forEach(route -> graph.setEdgeWeight(
+                graph.addEdge(route.getCities().get(0), route.getCities().get(1)),
+                route.getSpaces()
+        ));
+        return graph;
+    }
+
+    public static class WeightedEdge extends DefaultWeightedEdge {
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null || obj.getClass() != this.getClass())
+                return false;
+            WeightedEdge edge = (WeightedEdge) obj;
+            if (getSource().equals(edge.getSource()) && getTarget().equals(edge.getTarget()))
+                return true;
+            else return getSource().equals(edge.getTarget()) && getTarget().equals(edge.getSource());
+        }
+
+        @Override
+        public int hashCode() {
+            return getSource().hashCode() + getTarget().hashCode();
+        }
+
+        public double weight() {
+            return getWeight();
         }
     }
 }

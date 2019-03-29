@@ -1,0 +1,109 @@
+[
+  {
+    "name": "testPlayer1",
+    "routes": [
+      {
+        "city1": "VANCOUVER",
+        "city2": "SEATTLE"
+      },
+      {
+        "city1": "SEATTLE",
+        "city2": "PORTLAND"
+      },
+      {
+        "city1": "PORTLAND",
+        "city2": "SAN_FRANCISCO",
+        "color": "PURPLE"
+      },
+      {
+        "city1": "SAN_FRANCISCO",
+        "city2": "LOS_ANGELES",
+        "color": "YELLOW"
+      },
+      {
+        "city1": "LOS_ANGELES",
+        "city2": "LAS_VEGAS"
+      },
+      {
+        "city1": "LAS_VEGAS",
+        "city2": "SALT_LAKE_CITY"
+      },
+      {
+        "city1": "SALT_LAKE_CITY",
+        "city2": "HELENA"
+      }
+    ]
+  },
+  {
+    "name": "testPlayer2",
+    "routes": [
+      {
+        "city1": "SEATTLE",
+        "city2": "VANCOUVER"
+      },
+      {
+        "city1": "VANCOUVER",
+        "city2": "CALGARY"
+      },
+      {
+        "city1": "CALGARY",
+        "city2": "SEATTLE"
+      },
+      {
+        "city1": "SEATTLE",
+        "city2": "HELENA"
+      },
+      {
+        "city1": "HELENA",
+        "city2": "WINNIPEG"
+      },
+      {
+        "city1": "WINNIPEG",
+        "city2": "DULUTH"
+      },
+      {
+        "city1": "DULUTH",
+        "city2": "HELENA"
+      }
+    ]
+  },
+  {
+    "name": "testPlayer3",
+    "routes": [
+      {
+        "city1": "NEW_YORK",
+        "city2": "WASHINGTON",
+        "color": "ORANGE"
+      },
+      {
+        "city1": "NEW_YORK",
+        "city2": "BOSTON",
+        "color": "RED"
+      },
+      {
+        "city1": "DULUTH",
+        "city2": "OMAHA"
+      },
+      {
+        "city1": "OMAHA",
+        "city2": "KANSAS_CITY"
+      },
+      {
+        "city1": "KANSAS_CITY",
+        "city2": "OKLAHOMA_CITY"
+      }
+    ]
+  },
+  {
+    "name": "testPlayer4",
+    "routes": [
+
+    ]
+  },
+  {
+    "name": "testPlayer5",
+    "routes": [
+
+    ]
+  }
+]

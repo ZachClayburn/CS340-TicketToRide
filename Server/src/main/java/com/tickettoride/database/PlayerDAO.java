@@ -9,6 +9,7 @@ import com.tickettoride.models.idtypes.UserID;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class PlayerDAO extends Database.DataAccessObject {
     /** Language - PostgreSQL: SQL string that generates the Players table */
     private final String tableCreateString =
+            // language=PostgreSQL
             "CREATE TABLE Players" +
                     "(" +
                     "playerID TEXT PRIMARY KEY NOT NULL," +
@@ -29,7 +31,8 @@ public class PlayerDAO extends Database.DataAccessObject {
                     "gameID TEXT NOT NULL," +
                     "turn NUMERIC NOT NULL," +
                     "points NUMERIC NOT NULL," +
-                    "trainCarCount NUMERIC NOT NULL," +
+                    "trainCarCount NUMERIC NOT NULL, " +
+                    " " +
                     "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
                     "FOREIGN KEY (userID) REFERENCES users(userid) " +
                     ");";
