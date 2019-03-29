@@ -35,9 +35,8 @@ public class TrainCardFacade extends BaseFacade {
     public void initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
 
-        try {
+        try (Database database = new Database()){
             initializeDeck(gameID, deck);
-            int deckSize = getDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = getInitialHand(gameID, player.getPlayerID());
@@ -45,6 +44,8 @@ public class TrainCardFacade extends BaseFacade {
                 Command command = new Command(CONTROLLER_NAME, "initializeHand", player.getPlayerID(), hand);
                 sendResponseToRoom(connID, command);
             }
+
+            int deckSize = database.getTrainCardDAO().getFaceDownDeckSize(gameID);
 
             Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
             sendResponseToRoom(connID, command);
@@ -56,7 +57,6 @@ public class TrainCardFacade extends BaseFacade {
             TrainCardDAO dao = database.getTrainCardDAO();
 
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
-            int deckSize = getDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = dao.getPlayerHand(player.getPlayerID());
@@ -64,6 +64,8 @@ public class TrainCardFacade extends BaseFacade {
                 Command command = new Command(CONTROLLER_NAME, "initializeHand", player.getPlayerID(), hand);
                 sendResponseToRoom(connID, command);
             }
+
+            int deckSize = dao.getFaceDownDeckSize(gameID);
 
             Command command = new Command(CONTROLLER_NAME, "initializeDecks", faceUp, deckSize);
             sendResponseToRoom(connID, command);
@@ -75,9 +77,10 @@ public class TrainCardFacade extends BaseFacade {
             TrainCardDAO dao = database.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceUp(gameID, playerID, pos);
-            int deckSize = getDeckSize(gameID);
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
             database.commit();
+
+            int deckSize = dao.getFaceDownDeckSize(gameID);
 
             Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, faceUp, deckSize);
             sendResponseToRoom(connID, command);
@@ -89,8 +92,10 @@ public class TrainCardFacade extends BaseFacade {
             TrainCardDAO dao = database.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceDown(gameID, playerID);
-            int deckSize = getDeckSize(gameID);
+
             database.commit();
+
+            int deckSize = dao.getFaceDownDeckSize(gameID);
 
             Command command = new Command(CONTROLLER_NAME, "drawFromFaceDown", playerID, card, deckSize);
             sendResponseToRoom(connID, command);
