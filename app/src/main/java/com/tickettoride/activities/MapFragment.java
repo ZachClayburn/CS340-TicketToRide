@@ -399,6 +399,23 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                switch(DataManager.getSINGLETON().getPlayer().getColor()){
+                    case BLACK:
+                        v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
+                        break;
+                    case RED:
+                        v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
+                        break;
+                    case BLUE:
+                        v.setBackgroundColor(getResources().getColor(R.color.bluePlayer, getActivity().getTheme()));
+                        break;
+                    case GREEN:
+                        v.setBackgroundColor(getResources().getColor(R.color.greenPlayer, getActivity().getTheme()));
+                        break;
+                    case YELLOW:
+                        v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
+                        break;
+                }
                 disableDrawTrainCards();
                 drawTrain.setEnabled(true);
                 drawDest.setEnabled(true);
@@ -434,6 +451,27 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                for (Player player : DataManager.getSINGLETON().getGamePlayers()) {
+                    if (player.getTurn() == DataManager.getSINGLETON().getTurn()) {
+                        switch(player.getColor()){
+                            case BLACK:
+                                v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
+                                break;
+                            case RED:
+                                v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
+                                break;
+                            case BLUE:
+                                v.setBackgroundColor(getResources().getColor(R.color.bluePlayer, getActivity().getTheme()));
+                                break;
+                            case GREEN:
+                                v.setBackgroundColor(getResources().getColor(R.color.greenPlayer, getActivity().getTheme()));
+                                break;
+                            case YELLOW:
+                                v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
+                                break;
+                        }
+                    }
+                }
                 disableDrawTrainCards();
                 drawDest.setEnabled(false);
                 drawTrain.setEnabled(false);
