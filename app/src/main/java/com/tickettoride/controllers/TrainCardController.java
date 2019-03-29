@@ -22,12 +22,13 @@ public class TrainCardController extends BaseController {
 
     public void initializeHand(PlayerID playerID, Hand hand){
         if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
-            DataManager.SINGLETON.getPlayerHand().combineHands(hand);
+            DataManager.SINGLETON.getPlayerHand().replace(hand);
         }
-        else{
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setTrainCardCount(hand.getHandSize());
-        }
+        DataManager.SINGLETON.findPlayerByID(playerID).setTrainCardCount(hand.getHandSize());
+        //else{
+        //    Player player = DataManager.SINGLETON.findPlayerByID(playerID).setTrainCardCount(hand.getHandSize());
+        //    player;
+        //}
     }
 
     public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
@@ -48,18 +49,9 @@ public class TrainCardController extends BaseController {
         MapFragment fragment = activity.getMapFragment();
         if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
             DataManager.SINGLETON.addTrainCardToHand(card);
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setTrainCardCount(player.getTrainCardCount() + 1);
         }
-        else{
-            /*
-            try {
-                Toast.makeText(getCurrentActivity(), "DRAW FACE UP TRAIN CARD", Toast.LENGTH_LONG).show();
-            } catch (Throwable t) {}
-            */
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setTrainCardCount(player.getTrainCardCount() + 1);
-        }
+        Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+        player.setTrainCardCount(player.getTrainCardCount() + 1);
 
         List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
         DataManager.SINGLETON.updateFaceUpDeck(faceUp);
@@ -75,19 +67,10 @@ public class TrainCardController extends BaseController {
         MapFragment fragment = activity.getMapFragment();
         if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
             DataManager.SINGLETON.addTrainCardToHand(card);
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setTrainCardCount(player.getTrainCardCount() + 1);
+        }
+        Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+        player.setTrainCardCount(player.getTrainCardCount() + 1);
 
-        }
-        else{
-            /*
-            try {
-                Toast.makeText(getCurrentActivity(), "DRAW FACE DOWN TRAIN CARD", Toast.LENGTH_LONG).show();
-            } catch (Throwable t) {}
-            */
-            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
-            player.setTrainCardCount(player.getTrainCardCount() + 1);
-        }
         DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
         //fragment.updateDeckNumbers();
         fragment.finishDrawFacedownCard();

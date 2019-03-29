@@ -105,6 +105,16 @@ public class Hand {
     public void discardWhite(int amount) { white = white - amount; }
     public void discardLocomotive(int amount) { locomotive = locomotive - amount; }
 
+    public void replaceBlue(int amount) { blue = amount; }
+    public void replaceGreen(int amount) {green = amount; }
+    public void replacePurple(int amount) { purple = amount; }
+    public void replaceRed(int amount) { red = amount; }
+    public void replaceOrange(int amount) { orange = amount; }
+    public void replaceYellow(int amount) { yellow = amount; }
+    public void replaceBlack(int amount) { black = amount; }
+    public void replaceWhite(int amount) { white = amount; }
+    public void replaceLocomotive(int amount) { locomotive =amount; }
+
 
     public int getHandSize(){
         return blue + green + purple + red + orange + yellow + black + white + locomotive;
@@ -128,15 +138,15 @@ public class Hand {
         }
     }
 
-    public void combineHands(Hand tempHand){
-        setBlue(tempHand.getBlue());
-        setGreen(tempHand.getGreen());
-        setPurple(tempHand.getPurple());
-        setRed(tempHand.getRed());
-        setOrange(tempHand.getOrange());
-        setYellow(tempHand.getYellow());
-        setBlack(tempHand.getBlack());
-        setWhite(tempHand.getWhite());
-        setLocomotive(tempHand.getLocomotive());
+    public void replace(Hand tempHand){
+        replaceBlue(tempHand.getBlue());
+        replaceGreen(tempHand.getGreen());
+        replacePurple(tempHand.getPurple());
+        replaceRed(tempHand.getRed());
+        replaceOrange(tempHand.getOrange());
+        replaceYellow(tempHand.getYellow());
+        replaceBlack(tempHand.getBlack());
+        replaceWhite(tempHand.getWhite());
+        replaceLocomotive(tempHand.getLocomotive());
     }
 }
