@@ -18,12 +18,12 @@ public class RouteController extends BaseController {
         DataManager.SINGLETON.setRouteClaimed(route);
         int spaces = route.getSpaces();
         Player dataManagerPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
-        dataManagerPlayer.setPoints(player.getPoints() + spaces);
-        dataManagerPlayer.setTrainCardCount(player.getTrainCardCount());
-        dataManagerPlayer.setTrainCarCount(player.getTrainCarCount());
+        dataManagerPlayer.setPoints(dataManagerPlayer.getPoints() + spaces);
+        dataManagerPlayer.setTrainCardCount(dataManagerPlayer.getTrainCardCount() - spaces);
+        dataManagerPlayer.setTrainCarCount(dataManagerPlayer.getTrainCarCount() - spaces);
         if (isUserPlayer(player) ) { activity.onReturnToMap(); }
         else {
-            DataManager.SINGLETON.findPlayerByID(player.getPlayerID()).decreaseCards(cardsDiscarded);
+            //DataManager.SINGLETON.findPlayerByID(dataManagerPlayer.getPlayerID()).decreaseCards(cardsDiscarded);
             activity.getMapFragment().drawExternal();
         }
 
