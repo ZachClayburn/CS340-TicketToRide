@@ -34,8 +34,9 @@ public class PlayerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
+        int turn = args.getInt("player");
         players = DataManager.getSINGLETON().getGamePlayers();
-        this.player = DataManager.SINGLETON.getPlayer();
+        this.player = DataManager.SINGLETON.findPlayerByTurn(turn);
         fragmentListener = (OnReturnToMapListener) getActivity();
     }
 
