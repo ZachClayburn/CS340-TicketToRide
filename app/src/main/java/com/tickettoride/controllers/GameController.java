@@ -80,12 +80,13 @@ public class GameController extends BaseController {
                                 ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
-            List<DestinationCard> playerHand = DestinationCard.unGsonCards(playerHandMap);
+            List<DestinationCard> playerDestinationCards = DestinationCard.unGsonCards(playerHandMap);
             Game game = new Game(gameID, groupName,true);
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
             DataManager.SINGLETON.setGamePlayers(players);
-            DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
+            DataManager.SINGLETON.getPlayerHand();
+            DataManager.SINGLETON.getPlayerHand().setDestinationCards(playerDestinationCards);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(turn);
             DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
