@@ -58,9 +58,7 @@ public class GameFacade extends BaseFacade {
             Command command;
             if (player == null) { command = GameFacadeHelper.getSingleton().joinCommand(game, user, sessionID); }
             else if (game.IsStarted()) {
-                List<TrainCard> faceUp = TrainCardFacade.getSingleton().initialize(connID, gameID);
-                int deckSize = TrainCardFacade.getSingleton().getDeckSize(gameID);
-                command = GameFacadeHelper.getSingleton().rejoinIsStartedCommand(game, session, user, players, faceUp, deckSize);
+                command = GameFacadeHelper.getSingleton().rejoinIsStartedCommand(game, session, user, players);
             }
             else { command = GameFacadeHelper.getSingleton().rejoinNotStartedCommand(game, player, sessionID); }
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
@@ -100,10 +98,8 @@ public class GameFacade extends BaseFacade {
         PlayerHelper.getSingleton().setUsernames(players);
         PlayerHelper.getSingleton().setTrainCounts(players);
         List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
-        List<TrainCard> faceUp = TrainCardFacade.getSingleton().initialize(connID, gameID);
-        int deckSize = TrainCardFacade.getSingleton().getDeckSize(gameID);
         DestinationCardFacadeHelper.dealCards(gameID);
-        var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn(), faceUp, deckSize);
+        var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
         sendResponseToRoom(connID, command);
     }
 

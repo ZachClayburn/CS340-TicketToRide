@@ -38,19 +38,19 @@ public class TrainCardFacadeProxy {
         } catch(Throwable t){}
     }
 
-//    public void initialize(GameID gameID){
-//        try{
-//            Command command = new Command(FACADE_NAME, "initialize", gameID);
-//            ClientCommunicator.SINGLETON.send(command);
-//        } catch(Throwable t){}
-//    }
+    public void initialize(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "initialize", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
+    }
 
-//    public void rejoin(GameID gameID){
-//        try{
-//            Command command = new Command(FACADE_NAME, "rejoin", gameID);
-//            ClientCommunicator.SINGLETON.send(command);
-//        } catch(Throwable t){}
-//    }
+    public void rejoin(GameID gameID){
+        try{
+            Command command = new Command(FACADE_NAME, "rejoin", gameID);
+            ClientCommunicator.SINGLETON.send(command);
+        } catch(Throwable t){}
+    }
 
     public void finish(GameID gameID){
         try{

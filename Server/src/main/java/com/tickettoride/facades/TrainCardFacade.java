@@ -32,11 +32,12 @@ public class TrainCardFacade extends BaseFacade {
     private static Logger logger = LogManager.getLogger(TrainCardFacade.class.getName());
     private TrainCardFacade() {}
 
-    public List<TrainCard> initialize(UUID connID, GameID gameID) throws DatabaseException {
+    public void initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
 
         try {
             initializeDeck(gameID, deck);
+            int deckSize = getDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = getInitialHand(gameID, player.getPlayerID());
@@ -45,18 +46,17 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            return deck.getFaceUpDeck();
-            //Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
-            //sendResponseToRoom(connID, command);
+            Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
+            sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
-        return null;
     }
 
-    public List<TrainCard> rejoin(UUID connID, GameID gameID) throws DatabaseException {
+    public void rejoin(UUID connID, GameID gameID) throws DatabaseException {
         try (Database database = new Database()){
             TrainCardDAO dao = database.getTrainCardDAO();
 
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
+            int deckSize = getDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = dao.getPlayerHand(player.getPlayerID());
@@ -65,11 +65,9 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            return faceUp;
-            //Command command = new Command(CONTROLLER_NAME, "initializeDecks", faceUp, deckSize);
-            //sendResponseToRoom(connID, command);
+            Command command = new Command(CONTROLLER_NAME, "initializeDecks", faceUp, deckSize);
+            sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
-        return null;
     }
 
     public void drawFromFaceUp(UUID connID, GameID gameID, PlayerID playerID, Integer pos){

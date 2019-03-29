@@ -153,8 +153,10 @@ public class GameRoomActivity extends MyBaseActivity implements
     public Runnable updateCardsRunnable = new Runnable() {
         @Override
         public void run() {
-            mapFragment.setAllColors();
-            mapFragment.updateDeckNumbers();
+            if (mapFragment != null) {
+                mapFragment.setAllColors();
+                mapFragment.updateDeckNumbers();
+            }
         }
     };
 

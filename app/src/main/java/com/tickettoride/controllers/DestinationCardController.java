@@ -38,6 +38,7 @@ public class DestinationCardController extends BaseController {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
         activity.activateTurn();
+        activity.updateCards();
     }
 
     public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {

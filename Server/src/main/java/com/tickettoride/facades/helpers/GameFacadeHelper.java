@@ -92,7 +92,7 @@ public class GameFacadeHelper extends BaseFacade {
     }
 
 
-    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players, List<TrainCard> faceUp, int trainDeckSize) throws DatabaseException {
+    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players) throws DatabaseException {
         PlayerHelper.getSingleton().pickColors(players);
         Player player = PlayerHelper.getSingleton().isAlreadyPlayer(user, players);
         List<DestinationCard> playerDestinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
@@ -100,7 +100,7 @@ public class GameFacadeHelper extends BaseFacade {
         List<Route> routes = RouteHelper.getSingleton().getGameRoutes(game.getGameID());
         int deckCount = gameDeck.size();
         return new Command(CONTROLLER_NAME, "rejoinIsStarted",
-                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn(), faceUp, trainDeckSize);
+                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn());
 
     }
 
