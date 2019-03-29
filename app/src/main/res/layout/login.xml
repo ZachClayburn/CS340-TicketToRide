@@ -5,6 +5,12 @@
         android:orientation="vertical"
         android:layout_gravity="center">
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_progressBar"
+        android:progressDrawable="@drawable/circular_progress_bar"/>
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"

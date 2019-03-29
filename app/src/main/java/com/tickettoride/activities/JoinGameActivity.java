@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class JoinGameActivity extends MyBaseActivity {
     private ArrayList<Game> joinGames = GameIndex.SINGLETON.getJoinGameIndex();
     private ArrayList<Game> rejoinGames = GameIndex.SINGLETON.getRejoinGameIndex();
     private Context context;
+    private ProgressBar loadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class JoinGameActivity extends MyBaseActivity {
         setupJoinGameList();
         setupRejoinGameList();
         setupCreateGameButton();
+        loadingSpinner=(ProgressBar)findViewById(R.id.join_progressBar);
+        loadingSpinner.setVisibility(View.GONE);
         this.context = this;
     }
 
@@ -113,6 +117,7 @@ public class JoinGameActivity extends MyBaseActivity {
                 @Override
                 public void onClick(View view) { 
                     GameFacadeProxy.SINGLETON.join(game.getGameID());
+                    loadingSpinner.setVisibility(View.VISIBLE);
                     //ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
                 }
             });
@@ -121,7 +126,9 @@ public class JoinGameActivity extends MyBaseActivity {
 
     public Runnable joinError = new Runnable() {
         @Override
-        public void run() { Toast.makeText(context ,R.string.join_game_error, Toast.LENGTH_SHORT).show(); }
+        public void run() {
+            loadingSpinner.setVisibility(View.GONE);
+            Toast.makeText(context ,R.string.join_game_error, Toast.LENGTH_SHORT).show(); }
     };
 
     public void JoinError() {
@@ -161,6 +168,7 @@ public class JoinGameActivity extends MyBaseActivity {
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadingSpinner.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(JoinGameActivity.this, CreateGameActivity.class);
                 startActivity(intent);
             }

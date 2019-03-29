@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class LobbyActivity extends MyBaseActivity{
     private TextView numPlayers;
     private Button startGame;
     private Context context;
+    private ProgressBar loadingSpinner;
 
     private static final String TAG = "LOBBY_ACTIVITY";
 
@@ -41,6 +43,8 @@ public class LobbyActivity extends MyBaseActivity{
         gameID.setText("Game ID: " + game.getGameID());
         numPlayers.setText("Number of Players: " + game.getNumPlayer() + "/" + game.getMaxPlayer());
         context = this;
+        loadingSpinner=(ProgressBar)findViewById(R.id.lobby_progressBar);
+        loadingSpinner.setVisibility(View.GONE);
 
         setEnabled();
         startGame.setOnClickListener(new View.OnClickListener() {
@@ -48,6 +52,7 @@ public class LobbyActivity extends MyBaseActivity{
             public void onClick(View view) {
                 Log.d(TAG, "onClick: Start game clicked");
                 GameFacadeProxy.SINGLETON.startGame(game); //FIXME Only let the player start a game if there is at least 2 players
+                loadingSpinner.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -79,6 +84,7 @@ public class LobbyActivity extends MyBaseActivity{
     }
 
     public void startGameError() {
+        loadingSpinner.setVisibility(View.GONE);
         Toast.makeText(this ,R.string.start_game_error, Toast.LENGTH_SHORT).show();
 
     }

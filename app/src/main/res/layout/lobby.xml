@@ -32,5 +32,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/start_game"/>
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lobby_progressBar"
+            android:progressDrawable="@drawable/circular_progress_bar"/>
     </LinearLayout>
 </LinearLayout>

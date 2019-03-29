@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.tickettoride.R;
@@ -26,6 +27,7 @@ public class LoginActivity extends MyBaseActivity {
     private Button login;
     private Button register;
     private Context context;
+    private ProgressBar loadingSpinner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,9 @@ public class LoginActivity extends MyBaseActivity {
         login.setEnabled(false);
         register.setEnabled(false);
         context = this;
+        loadingSpinner=(ProgressBar)findViewById(R.id.login_progressBar);
+        loadingSpinner.setVisibility(View.GONE);
+        
         username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -83,6 +88,7 @@ public class LoginActivity extends MyBaseActivity {
             public void onClick(View view) {
                 try {
                     SessionFacadeProxy.SINGLETON.create(user, pass);
+                    loadingSpinner.setVisibility(View.VISIBLE);
                 } catch (Throwable t) { }
             }
         });
@@ -93,6 +99,7 @@ public class LoginActivity extends MyBaseActivity {
                 Log.i("onClick", "Caught in Register Click Event");
                 try {
                     UserFacadeProxy.SINGLETON.create(user, pass);
+                    loadingSpinner.setVisibility(View.VISIBLE);
                 } catch (Throwable t) { }
 
             }
@@ -119,6 +126,7 @@ public class LoginActivity extends MyBaseActivity {
     public Runnable loginErrorRunnable = new Runnable() {
         @Override
         public void run() {
+            loadingSpinner.setVisibility(View.GONE);
             Toast.makeText(context, R.string.login_error, Toast.LENGTH_SHORT).show();
         }
     };
@@ -126,6 +134,7 @@ public class LoginActivity extends MyBaseActivity {
     public Runnable createErrorRunnable = new Runnable() {
         @Override
         public void run() {
+            loadingSpinner.setVisibility(View.GONE);
             Toast.makeText(context, R.string.register_error, Toast.LENGTH_SHORT).show();
         }
     };

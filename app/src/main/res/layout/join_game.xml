@@ -34,4 +34,11 @@
         android:text="@string/create_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/join_progressBar"
+            android:progressDrawable="@drawable/circular_progress_bar"/>
 </LinearLayout>
