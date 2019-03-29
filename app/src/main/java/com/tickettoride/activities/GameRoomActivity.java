@@ -70,11 +70,11 @@ public class GameRoomActivity extends MyBaseActivity implements
         historyFragment = null;
     }
 
-    public void toPlayerFragment(PlayerID playerID){
+    public void toPlayerFragment(int playerTurn){
         if (playerFragment == null) {
             playerFragment = new PlayerFragment();
             Bundle arguments = new Bundle();
-            arguments.putString("player", playerID.toString());
+            arguments.putInt("player", playerTurn);
             playerFragment.setArguments(arguments);
             fm.beginTransaction().replace(R.id.fragment_holder, playerFragment).commit();
         }

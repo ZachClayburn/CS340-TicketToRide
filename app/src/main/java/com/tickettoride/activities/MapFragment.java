@@ -337,7 +337,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    playerListener.toPlayerFragment(curPlayer.getPlayerID());
+                    playerListener.toPlayerFragment(curPlayer.getTurn());
                 }
             });
             playerName = view.findViewById(R.id.player_name);

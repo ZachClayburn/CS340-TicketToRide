@@ -16,8 +16,12 @@ public class RoutesController extends BaseController {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setRouteClaimed(route);
         int spaces = route.getSpaces();
-        int playerPoints = DataManager.SINGLETON.getPlayer().getPoints();
-        DataManager.SINGLETON.getPlayer().setPoints(playerPoints + spaces);
+        Player managedPlayer = DataManager.getSINGLETON().findPlayerByID(player.getPlayerID());
+        int playerPoints = managedPlayer.getPoints();
+        managedPlayer.setTrainCarCount(managedPlayer.getTrainCarCount() - route.getSpaces());
+        managedPlayer.setPoints(playerPoints + spaces);
+        //DataManager.SINGLETON.getPlayer().setPoints(playerPoints + spaces);
+        //DataManager.SINGLETON.getPlayer().setTrainCarCount(DataManager.SINGLETON.getPlayer().getTrainCarCount() - route.getSpaces());
         if(isUserPlayer(player) ) { activity.onReturnToMap(); } else { activity.getMapFragment().drawExternal(); }
         DataManager.SINGLETON.setTurn(turn);
         activity.setTurn();
