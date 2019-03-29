@@ -24,7 +24,9 @@ public class DestinationCardController extends BaseController {
         if (isUserPlayer(player)){
             List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
-            player.setDestinationCardCount(player.getDestinationCardCount() + destinationDeckCount);
+            player.setDestinationCardCount(player.getDestinationCardCount() + acceptedCards.size());
+            Player managedPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
+            managedPlayer.setDestinationCardCount(managedPlayer.getDestinationCardCount() + acceptedCards.size());
         } else {
             try {
                 Toast.makeText(getCurrentActivity(), "DRAW DESTINATION CARDS", Toast.LENGTH_LONG).show();
