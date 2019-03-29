@@ -53,8 +53,8 @@ public class RouteDAO extends Database.DataAccessObject {
             statement.setString(2, route.getGameID().toString());
             if (route.getClaimedByPlayerID() != null) { statement.setString(3, route.getClaimedByPlayerID().toString()); }
             else { statement.setString(3,null); }
-            statement.setString(4, route.getCities().get(0).toString());
-            statement.setString(5, route.getCities().get(1).toString());
+            statement.setString(4, route.getCities().get(0).name());
+            statement.setString(5, route.getCities().get(1).name());
             statement.setString(6, route.getColor().toString());
             statement.setInt(7, route.getSpaces());
             statement.executeUpdate();
@@ -66,8 +66,8 @@ public class RouteDAO extends Database.DataAccessObject {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, route.getGameID().toString());
             statement.setString(2, route.getClaimedByPlayerID().toString());
-            statement.setString(3, route.getCities().get(0).toString());
-            statement.setString(4, route.getCities().get(1).toString());
+            statement.setString(3, route.getCities().get(0).name());
+            statement.setString(4, route.getCities().get(1).name());
             statement.setString(5, route.getColor().toString());
             statement.setInt(6, route.getSpaces());
             statement.setString(7, route.getRouteID().toString());

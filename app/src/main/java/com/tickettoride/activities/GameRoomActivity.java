@@ -133,6 +133,19 @@ public class GameRoomActivity extends MyBaseActivity implements
         runOnUiThread(updateChatRunnable);
     }
 
+    public Runnable updateHistoryRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if(historyFragment!=null){
+                historyFragment.updateHistory();
+            }
+        }
+    };
+
+    public void updateHistory() {
+        runOnUiThread(updateHistoryRunnable);
+    }
+
     public void updateCards(){
         runOnUiThread(updateCardsRunnable);
     }

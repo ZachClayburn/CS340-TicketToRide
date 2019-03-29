@@ -7,6 +7,7 @@ import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.facadeProxies.TrainCardFacadeProxy;
+import com.tickettoride.facadeProxies.HistoryFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
@@ -92,6 +93,7 @@ public class GameController extends BaseController {
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToGame();
             ChatFacadeProxy.SINGLETON.getChat(gameID);
+            HistoryFacadeProxy.SINGLETON.getHistory(gameID);
         }
     }
 
@@ -125,6 +127,7 @@ public class GameController extends BaseController {
         Game game = DataManager.getSINGLETON().getGame();
         TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
         ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
+        HistoryFacadeProxy.SINGLETON.getHistory(game.getGameID());
     }
 
     public void errorSetup() {

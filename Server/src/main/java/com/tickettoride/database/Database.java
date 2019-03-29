@@ -43,6 +43,7 @@ public class Database implements AutoCloseable {
     protected DestinationCardDAO destinationCardDAO;
     protected RouteDAO routeDAO;
     protected LineDAO lineDAO;
+    protected HistoryDAO historyDAO;
     protected TrainCardDAO trainCardDAO;
 
     /**
@@ -127,6 +128,8 @@ public class Database implements AutoCloseable {
         DAOs.add(routeDAO);
         lineDAO = new LineDAO(connection);
         DAOs.add(lineDAO);
+        historyDAO = new HistoryDAO(connection);
+        DAOs.add(historyDAO);
         trainCardDAO = new TrainCardDAO(connection);
         DAOs.add(trainCardDAO);
     }
@@ -183,6 +186,10 @@ public class Database implements AutoCloseable {
     public RouteDAO getRouteDAO() { return routeDAO; }
 
     public LineDAO getLineDAO() { return  lineDAO; }
+
+    public HistoryDAO getHistoryDAO() {
+        return historyDAO;
+    }
 
     public TrainCardDAO getTrainCardDAO() {return trainCardDAO;}
 

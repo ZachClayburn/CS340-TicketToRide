@@ -177,8 +177,8 @@ public class DestinationCard implements Comparable<DestinationCard> {
     @Override
     public String toString() {
         return "DestinationCard{" +
-                "destination1=" + destination1 +
-                ", destination2=" + destination2 +
+                "destination1=" + destination1.name() +
+                ", destination2=" + destination2.name() +
                 ", pointValue=" + pointValue +
                 '}';
     }

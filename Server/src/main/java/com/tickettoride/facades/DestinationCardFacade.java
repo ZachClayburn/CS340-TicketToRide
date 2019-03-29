@@ -46,6 +46,8 @@ public class DestinationCardFacade extends BaseFacade {
             DestinationCardFacadeHelper.getSingleton().offerCardsToPlayer(player, offeredCards);
             Command command = DestinationCardFacadeHelper.getSingleton().offerDestinationCards(player, offeredCards, cardsToKeep);
             sendResponseToRoom(connID, command);
+            String event="Drew 3 destination cards";
+            updateHistory(connID,player.getPlayerID(),event);
         } catch (Throwable throwable) {
             logger.error(throwable);//FIXME add proper error handling
         }
@@ -61,6 +63,8 @@ public class DestinationCardFacade extends BaseFacade {
             if (incrementTurn) { game = GameFacadeHelper.getSingleton().updateGameTurn(game); }
             Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount, game.getCurTurn());
             sendResponseToRoom(connID, command);
+            String event="Kept "+acceptedCards.size()+" destination cards.";
+            updateHistory(connID,player.getPlayerID(),event);
         } catch (Throwable throwable) {
             logger.error(throwable);//FIXME add proper error handling
         }

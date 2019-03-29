@@ -13,7 +13,7 @@ import command.Command;
 
 public class ChatFacadeProxy {
 
-    private static final String TAG = "GAME_FACADE_PROXY";
+    private static final String TAG = "CHAT_FACADE_PROXY";
     public static ChatFacadeProxy SINGLETON = new ChatFacadeProxy();
     public static String FACADE_NAME = "ChatFacade";
     

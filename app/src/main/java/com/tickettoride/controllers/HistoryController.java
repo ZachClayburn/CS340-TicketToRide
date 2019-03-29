@@ -4,34 +4,33 @@ import android.util.Log;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
-import com.tickettoride.clientModels.Chat;
+import com.tickettoride.clientModels.History;
 import com.tickettoride.models.Message;
 import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-public class ChatController extends BaseController {
-    private static ChatController SINGLETON=new ChatController();
-    
-    private ChatController(){
-        
+public class HistoryController extends BaseController {
+    private static HistoryController SINGLETON=new HistoryController();
+
+    private HistoryController(){
+
     }
-    
-    public static ChatController getSingleton(){
+
+    public static HistoryController getSingleton(){
         return SINGLETON;
     }
-    
-    public void addMessage(Message message){
-        Chat chat=Chat.getSingleton();
-        chat.addMessage(message);
-        ((GameRoomActivity)getCurrentActivity()).updateChat();
+
+    public void addEvent(Message event){
+        History history=History.getSingleton();
+        history.addEvent(event);
+        ((GameRoomActivity)getCurrentActivity()).updateHistory();
     }
-    
-    public void setChat(ArrayList<LinkedTreeMap<String,Object>> messages){
-        Chat chat=Chat.getSingleton();
+
+    public void setHistory(ArrayList<LinkedTreeMap<String,Object>> messages){
+        History history=History.getSingleton();
         List<Message> mess=new ArrayList<>();
         for(LinkedTreeMap<String,Object> instance:messages){
             String message=(String)instance.get("message");
@@ -39,10 +38,10 @@ public class ChatController extends BaseController {
             String time=(String)instance.get("time");
             mess.add(new Message(message,playerID,time));
         }
-        chat.setMessages(mess);
+        history.setHistory(mess);
         //then have the ui update
         try {
-            ((GameRoomActivity) getCurrentActivity()).updateChat();
+            ((GameRoomActivity) getCurrentActivity()).updateHistory();
         }catch(ClassCastException e){
             Log.e("ChatController",e.getMessage());
         }catch(NullPointerException e){
@@ -52,13 +51,8 @@ public class ChatController extends BaseController {
             //the chat has been successfully loaded into the model, as such no need to call update as it will be loaded correctly
         }
     }
-    
-    public void sendMessageError(Throwable t){
-        GameRoomActivity gameRoomActivity = (GameRoomActivity) getCurrentActivity();
-        gameRoomActivity.addMessageError();
-    }
-    
-    public void getChatError(Throwable t){
+
+    public void getHistoryError(Throwable t){
         GameRoomActivity gameRoomActivity = (GameRoomActivity) getCurrentActivity();
         gameRoomActivity.setChatError();
     }
