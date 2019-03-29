@@ -19,9 +19,11 @@ public class TrainCardController extends BaseController {
     public static TrainCardController getSingleton() { return SINGLETON; }
     private TrainCardController() {}
 
+
+    // FIXME: On rejoin, player is null
     public void initializeHand(PlayerID playerID, Hand hand){
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){
-            DataManager.SINGLETON.setPlayerHand(hand);
+        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
+            DataManager.SINGLETON.getPlayerHand().combineHands(hand);
         }
         else{
             Player player = DataManager.SINGLETON.findPlayerByID(playerID);
@@ -29,25 +31,25 @@ public class TrainCardController extends BaseController {
         }
     }
 
-    public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
-        List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
-        DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
-        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
-        DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
+    //public void initializeDecks(ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
+    //    List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
+    //    DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
+    //    GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+    //    DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
         //if (activity != null) {
         //    MapFragment fragment = activity.getMapFragment();
         //    fragment.setAllColors();
         //    fragment.updateDeckNumbers();
         //}
-        if (activity != null) {
-            activity.updateCards();
-        }
-    }
+    //    if (activity != null) {
+    //        activity.updateCards();
+    //    }
+    //}
 
     public void drawFromFaceUp(PlayerID playerID, TrainCard card, ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){ DataManager.SINGLETON.addTrainCardToHand(card); }
+        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){ DataManager.SINGLETON.addTrainCardToHand(card); }
         else{
             /*
             try {
@@ -70,7 +72,7 @@ public class TrainCardController extends BaseController {
     public void drawFromFaceDown(PlayerID playerID, TrainCard card, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
-        if (playerID == DataManager.SINGLETON.getPlayer().getPlayerID()){ DataManager.SINGLETON.addTrainCardToHand(card); }
+        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){ DataManager.SINGLETON.addTrainCardToHand(card); }
         else{
             /*
             try {

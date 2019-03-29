@@ -4,11 +4,13 @@ import com.tickettoride.database.Database;
 import com.tickettoride.database.GameDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.facades.GameFacade;
+import com.tickettoride.facades.TrainCardFacade;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.Route;
 import com.tickettoride.models.Session;
+import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.User;
 
 import com.tickettoride.models.idtypes.GameID;
@@ -90,7 +92,7 @@ public class GameFacadeHelper extends BaseFacade {
     }
 
 
-    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players) throws DatabaseException {
+    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players, List<TrainCard> faceUp, int trainDeckSize) throws DatabaseException {
         PlayerHelper.getSingleton().pickColors(players);
         Player player = PlayerHelper.getSingleton().isAlreadyPlayer(user, players);
         List<DestinationCard> playerDestinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
@@ -98,7 +100,7 @@ public class GameFacadeHelper extends BaseFacade {
         List<Route> routes = RouteHelper.getSingleton().getGameRoutes(game.getGameID());
         int deckCount = gameDeck.size();
         return new Command(CONTROLLER_NAME, "rejoinIsStarted",
-                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn());
+                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn(), faceUp, trainDeckSize);
 
     }
 

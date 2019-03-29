@@ -150,6 +150,8 @@ public class Player {
         this.trainCardCount = trainCardCount;
     }
 
+    public void decreaseCards(int discarded) {trainCarCount -= discarded;}
+
     public int getDestinationCardCount() {
         return destinationCardCount;
     }

@@ -12,15 +12,21 @@ public class RouteController extends BaseController {
         return SINGLETON;
     }
 
-    public void claim(Route route, Player player, Integer turn) {
+
+    public void claim(Route route, Player player, Integer turn, Integer cardsDiscarded) {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setRouteClaimed(route);
         int spaces = route.getSpaces();
         Player dataManagerPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
         dataManagerPlayer.setPoints(player.getPoints() + spaces);
         dataManagerPlayer.setTrainCardCount(player.getTrainCardCount());
-        dataManagerPlayer.setTrainCarCount(player.getTrainCarCount() - spaces);
-        if (isUserPlayer(player) ) { activity.onReturnToMap(); } else { activity.getMapFragment().drawExternal(); }
+        dataManagerPlayer.setTrainCarCount(player.getTrainCarCount());
+        if (isUserPlayer(player) ) { activity.onReturnToMap(); }
+        else {
+            DataManager.SINGLETON.findPlayerByID(player.getPlayerID()).decreaseCards(cardsDiscarded);
+            activity.getMapFragment().drawExternal();
+        }
+
         DataManager.SINGLETON.setTurn(turn);
         activity.activateTurn();
     }

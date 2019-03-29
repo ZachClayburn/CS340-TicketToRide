@@ -32,13 +32,11 @@ public class TrainCardFacade extends BaseFacade {
     private static Logger logger = LogManager.getLogger(TrainCardFacade.class.getName());
     private TrainCardFacade() {}
 
-    public void initialize(UUID connID, GameID gameID) throws DatabaseException {
+    public List<TrainCard> initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
 
         try {
             initializeDeck(gameID, deck);
-
-            int deckSize = getDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = getInitialHand(gameID, player.getPlayerID());
@@ -47,17 +45,18 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
-            sendResponseToRoom(connID, command);
+            return deck.getFaceUpDeck();
+            //Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
+            //sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
+        return null;
     }
 
-    public void rejoin(UUID connID, GameID gameID) throws DatabaseException {
+    public List<TrainCard> rejoin(UUID connID, GameID gameID) throws DatabaseException {
         try (Database database = new Database()){
             TrainCardDAO dao = database.getTrainCardDAO();
 
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
-            int deckSize = dao.getFaceDownDeckSize(gameID);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = dao.getPlayerHand(player.getPlayerID());
@@ -66,9 +65,11 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            Command command = new Command(CONTROLLER_NAME, "initializeDecks", faceUp, deckSize);
-            sendResponseToRoom(connID, command);
+            return faceUp;
+            //Command command = new Command(CONTROLLER_NAME, "initializeDecks", faceUp, deckSize);
+            //sendResponseToRoom(connID, command);
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
+        return null;
     }
 
     public void drawFromFaceUp(UUID connID, GameID gameID, PlayerID playerID, Integer pos){
@@ -129,39 +130,11 @@ public class TrainCardFacade extends BaseFacade {
         }
     }
 
-    public void dummy(PlayerID playerID) throws DatabaseException {
+    public void discard(PlayerID playerID, Color color, int colorCards, int wildCards) throws DatabaseException {
         try (Database database = new Database()) {
             TrainCardDAO dao = database.getTrainCardDAO();
-            Hand hand = dao.getPlayerHand(playerID);
 
-            List<TrainCard> toDiscard = new ArrayList<>();
-
-            if (hand.getRed() > 0) {
-                toDiscard.add(new TrainCard(Color.RED));
-            }
-            else if (hand.getBlue() > 0) {
-                toDiscard.add(new TrainCard(Color.BLUE));
-            }
-            else if (hand.getYellow() > 0) {
-                toDiscard.add(new TrainCard(Color.YELLOW));
-            }
-            else if (hand.getOrange() > 0) {
-                toDiscard.add(new TrainCard(Color.ORANGE));
-            }
-            else if (hand.getPurple() > 0) {
-                toDiscard.add(new TrainCard(Color.PURPLE));
-            }
-            else if (hand.getGreen() > 0) {
-                toDiscard.add(new TrainCard(Color.GREEN));
-            }
-            else if (hand.getBlack() > 0) {
-                toDiscard.add(new TrainCard(Color.BLACK));
-            }
-            else if (hand.getWhite() > 0) {
-                toDiscard.add(new TrainCard(Color.WHITE));
-            }
-
-            dao.discardCards(toDiscard, playerID);
+            dao.discardCards(color, colorCards, wildCards, playerID);
             database.commit();
         }
     }

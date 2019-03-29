@@ -3,7 +3,9 @@ package com.tickettoride.facades;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
 import com.tickettoride.facades.helpers.RouteHelper;
+import com.tickettoride.models.Color;
 import com.tickettoride.models.City;
+
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.Route;
@@ -26,8 +28,10 @@ public class RouteFacade extends BaseFacade {
     }
     private static Logger logger = LogManager.getLogger(RouteFacade.class.getName());
 
-    public void claim(UUID connID, Route route, Player player) {
+    public void claim(UUID connID, Route route, Player player, Color color, Integer colorCards, Integer wildCards) {
         try {
+            TrainCardFacade.getSingleton().discard(player.getPlayerID(), color, colorCards, wildCards);
+            int cardsDiscarded = colorCards + wildCards;
             route.setClaimedByPlayerID(player.getPlayerID());
             RouteHelper.getSingleton().updateRoute(route);
             player.setTrainCarCount(player.getTrainCarCount() - route.getSpaces());
@@ -35,7 +39,7 @@ public class RouteFacade extends BaseFacade {
             player.setPoints(player.getPoints() + route.getSpaces());
             Game game = GameFacadeHelper.getSingleton().findGame(route.getGameID());
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
-            Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn());
+            Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn(), cardsDiscarded);
             sendResponseToRoom(connID, command);
             String event="Claimed route ";
             List<City> cities=route.getCities();

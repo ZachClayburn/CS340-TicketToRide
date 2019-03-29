@@ -157,4 +157,16 @@ public class DiscardHelper {
         if (discardedColor + discardedWild == currentRoute.getSpaces()) { return true; }
         return false;
     }
+
+    public Color getCurrentColor() {
+        return currentColor;
+    }
+
+    public int getDiscardedColor() {
+        return discardedColor;
+    }
+
+    public int getDiscardedWild() {
+        return discardedWild;
+    }
 }

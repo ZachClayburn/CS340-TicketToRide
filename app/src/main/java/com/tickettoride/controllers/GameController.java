@@ -77,7 +77,8 @@ public class GameController extends BaseController {
     public void rejoinIsStarted(SessionID sessionID, GameID gameID,
                                 String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap,
                                 ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount,
-                                ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
+                                ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn,
+                                ArrayList<LinkedTreeMap> gsonCards, Integer deckSize) {
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
             List<DestinationCard> playerHand = DestinationCard.unGsonCards(playerHandMap);
@@ -85,11 +86,14 @@ public class GameController extends BaseController {
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
             DataManager.SINGLETON.setGamePlayers(players);
-            TrainCardFacadeProxy.SINGLETON.rejoin(game.getGameID());
+            //TrainCardFacadeProxy.SINGLETON.rejoin(game.getGameID());
             DataManager.SINGLETON.getPlayerHand().getDestinationCards().addAll(playerHand);
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(turn);
             DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
+            List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
+            DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
+            DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToGame();
             ChatFacadeProxy.SINGLETON.getChat(gameID);
@@ -114,7 +118,7 @@ public class GameController extends BaseController {
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
     }
 
-    public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
+    public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn, ArrayList<LinkedTreeMap> gsonCards, Integer deckSize) {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
@@ -122,10 +126,14 @@ public class GameController extends BaseController {
         DataManager.SINGLETON.setDestinationCardDeckSize(30);
         DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
         DataManager.SINGLETON.setTurn(turn);
+
+        List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
+        DataManager.SINGLETON.setTrainCardDeck(new TrainCardDeck(faceUp));
+        DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
+
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
         Game game = DataManager.getSINGLETON().getGame();
-        TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
         ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
         HistoryFacadeProxy.SINGLETON.getHistory(game.getGameID());
     }

@@ -233,7 +233,11 @@ public class DiscardFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (!discardHelper.wildCheck()) { Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show(); }
-                else if (discardHelper.finalDiscard()) { RouteFacadeProxy.SINGLETON.claimRoute(currentClientRoute); }
+                else if (discardHelper.finalDiscard()) {
+                    RouteFacadeProxy.SINGLETON.claimRoute(
+                            currentClientRoute, discardHelper.getCurrentColor(),
+                            discardHelper.getDiscardedColor(), discardHelper.getDiscardedWild());
+                }
                 else { Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show(); }
             }
         });

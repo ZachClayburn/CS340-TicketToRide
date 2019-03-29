@@ -234,7 +234,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return hand;
     }
 
-    public void discardCards(List<TrainCard> cards, PlayerID playerID) throws DatabaseException {
+    public void discardCards(Color color, int colorCards, int wildCards, PlayerID playerID) throws DatabaseException {
 
         String sql = "UPDATE TrainCards " +
                 "SET state='inDiscard', playerid=NULL, sequenceposition=NULL " +
@@ -247,14 +247,20 @@ public class TrainCardDAO extends Database.DataAccessObject {
             statement.setString(1, playerID.toString());
             statement.setString(3, playerID.toString());
 
-            for (int pos = 0; pos < cards.size(); pos++) {
-                var card = cards.get(pos);
+            for (int i = 0; i < colorCards; i++) {
 
-                statement.setString(2, getColorAsString(card.getColor()));
-                statement.setString(4, getColorAsString(card.getColor()));
+                statement.setString(2, getColorAsString(color));
+                statement.setString(4, getColorAsString(color));
 
                 statement.executeUpdate();
 
+            }
+
+            for (int i = 0; i < wildCards; i++){
+                statement.setString(2, getColorAsString(Color.WILD));
+                statement.setString(4, getColorAsString(Color.WILD));
+
+                statement.executeUpdate();
             }
 
         } catch (SQLException e) {

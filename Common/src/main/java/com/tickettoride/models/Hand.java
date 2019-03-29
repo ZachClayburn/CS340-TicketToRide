@@ -122,4 +122,16 @@ public class Hand {
                 return;
         }
     }
+
+    public void combineHands(Hand tempHand){
+        setBlue(tempHand.getBlue());
+        setGreen(tempHand.getGreen());
+        setPurple(tempHand.getPurple());
+        setRed(tempHand.getRed());
+        setOrange(tempHand.getOrange());
+        setYellow(tempHand.getYellow());
+        setBlack(tempHand.getBlack());
+        setWhite(tempHand.getWhite());
+        setLocomotive(tempHand.getLocomotive());
+    }
 }
