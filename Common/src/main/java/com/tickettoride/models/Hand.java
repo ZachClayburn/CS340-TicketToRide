@@ -91,6 +91,8 @@ public class Hand {
         return destinationCards;
     }
 
+    public void setDestinationCards(List<DestinationCard> destinationCards) { this.destinationCards = destinationCards; }
+
     public void addCard(TrainCard card){
         switch(card.getColor()){
             case RED:
