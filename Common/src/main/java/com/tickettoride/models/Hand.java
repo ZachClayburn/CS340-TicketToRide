@@ -3,6 +3,15 @@ package com.tickettoride.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tickettoride.models.Color.BLACK;
+import static com.tickettoride.models.Color.BLUE;
+import static com.tickettoride.models.Color.GREEN;
+import static com.tickettoride.models.Color.ORANGE;
+import static com.tickettoride.models.Color.PURPLE;
+import static com.tickettoride.models.Color.RED;
+import static com.tickettoride.models.Color.WHITE;
+import static com.tickettoride.models.Color.YELLOW;
+
 public class Hand {
     private List<DestinationCard> destinationCards = new ArrayList<>();
     private int blue = 0;
@@ -71,6 +80,20 @@ public class Hand {
     public int getLocomotive() {
         return locomotive;
     }
+    public int getColor(Color color) {
+        switch(color) {
+            case YELLOW: return getYellow();
+            case RED: return getRed();
+            case BLUE: return getBlue();
+            case PURPLE: return getPurple();
+            case BLACK: return getBlack();
+            case GREEN: return getGreen();
+            case WHITE: return getWhite();
+            case ORANGE: return getOrange();
+        }
+        return -1;
+    }
+
 
     public void discardBlue(int amount) { blue = blue - amount; }
     public void discardGreen(int amount) {green = green - amount; }
@@ -87,41 +110,21 @@ public class Hand {
         return blue + green + purple + red + orange + yellow + black + white + locomotive;
     }
 
-    public List<DestinationCard> getDestinationCards() {
-        return destinationCards;
-    }
+    public List<DestinationCard> getDestinationCards() {return destinationCards;}
 
     public void setDestinationCards(List<DestinationCard> destinationCards) { this.destinationCards = destinationCards; }
 
     public void addCard(TrainCard card){
         switch(card.getColor()){
-            case RED:
-                setRed(1);
-                return;
-            case BLUE:
-                setBlue(1);
-                return;
-            case YELLOW:
-                setYellow(1);
-                return;
-            case PURPLE:
-                setPurple(1);
-                return;
-            case GREEN:
-                setGreen(1);
-                return;
-            case ORANGE:
-                setOrange(1);
-                return;
-            case BLACK:
-                setBlack(1);
-                return;
-            case WHITE:
-                setWhite(1);
-                return;
-            case WILD:
-                setLocomotive(1);
-                return;
+            case RED: setRed(1); return;
+            case BLUE: setBlue(1); return;
+            case YELLOW: setYellow(1); return;
+            case PURPLE: setPurple(1); return;
+            case GREEN: setGreen(1); return;
+            case ORANGE: setOrange(1); return;
+            case BLACK: setBlack(1); return;
+            case WHITE: setWhite(1); return;
+            case WILD: setLocomotive(1);return;
         }
     }
 

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.helpers.RouteHelper;
 import com.tickettoride.models.Route;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class DrawView extends View {
     }
     
     public ClientRoute clickRoute(int x, int y){//todo: actually make this work with the claimroute funtionallity
-        List<ClientRoute> clientRoutes = DataManager.getSINGLETON().getClientRoutes();
+        List<ClientRoute> clientRoutes = RouteHelper.getSingleton().playerFilteredRoutes();
         for(ClientRoute clientRoute : clientRoutes){
             for(int i=x-1;i<x+2;i++) {
                 for(int j=y;j<y+2;j++) {

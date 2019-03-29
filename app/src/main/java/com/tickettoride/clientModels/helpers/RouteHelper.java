@@ -8,10 +8,13 @@ import com.tickettoride.models.Color;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.Route;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.tickettoride.models.Color.GREY;
 
 public class RouteHelper {
     private static RouteHelper SINGLETON = new RouteHelper();
@@ -23,85 +26,36 @@ public class RouteHelper {
         List<ClientRoute> filteredClientRoutes = new ArrayList<>();
         Hand hand = DataManager.getSINGLETON().getPlayerHand();
         for (int i = 0; i < clientRoutes.size(); ++i) {
-            switch(clientRoutes.get(i).getColor()){
-                case YELLOW:
-                    if (hand.getYellow() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
+            if (clientRoutes.get(i).getColor() == GREY) {
+                for (Color color : Color.values()) {
+                    if (hand.getColor(color) + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && isAvailable(clientRoutes.get(i))) {
                         filteredClientRoutes.add(clientRoutes.get(i));
                     }
-                    break;
-                case RED:
-                    if (hand.getRed() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()){
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case BLUE:
-                    if (hand.getBlue() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case PURPLE:
-                    if (hand.getPurple() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case BLACK:
-                    if (hand.getBlack() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case GREEN:
-                    if (hand.getGreen() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case WHITE:
-                    if (hand.getWhite() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case ORANGE:
-                    if (hand.getOrange() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                    }
-                    break;
-                case GREY:
-                    if (hand.getYellow() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getRed() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getBlue() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getPurple() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getBlack() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getGreen() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getWhite() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    if (hand.getOrange() + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && !clientRoutes.get(i).getIsClaimed()) {
-                        filteredClientRoutes.add(clientRoutes.get(i));
-                        break;
-                    }
-                    break;
+                }
+            } else if (hand.getColor(clientRoutes.get(i).getColor()) + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() &&
+                    isAvailable(clientRoutes.get(i))) {
+                filteredClientRoutes.add(clientRoutes.get(i));
             }
         }
         return filteredClientRoutes;
     }
+
+    public boolean isAvailable(ClientRoute clientRoute) {
+        List<ClientRoute> clientRoutes = DataManager.getSINGLETON().getClientRoutes();
+        for (ClientRoute matchClientRoute: clientRoutes) {
+            boolean citiesMatch = true;
+            for (City city : clientRoute.getCities()) {
+                if (!matchClientRoute.getCities().contains(city))
+                    citiesMatch = false;
+            }
+            PlayerID currentPlayerId = DataManager.getSINGLETON().getPlayer().getPlayerID();
+            PlayerID matchClientRouteId = matchClientRoute.getClaimedByPlayerID();
+            if (matchClientRouteId == null) continue;
+            if (citiesMatch && currentPlayerId.equals(matchClientRouteId)) return false;
+    }
+        return true;
+    }
+
 
     public void scaleRouteLines(double scale) {
         ClientLine.setScale(scale);
