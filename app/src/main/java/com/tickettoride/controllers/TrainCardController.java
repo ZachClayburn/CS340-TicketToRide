@@ -49,7 +49,11 @@ public class TrainCardController extends BaseController {
     public void drawFromFaceUp(PlayerID playerID, TrainCard card, ArrayList<LinkedTreeMap> gsonCards, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
-        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){ DataManager.SINGLETON.addTrainCardToHand(card); }
+        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
+            DataManager.SINGLETON.addTrainCardToHand(card);
+            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+            player.setTrainCardCount(player.getTrainCardCount() + 1);
+        }
         else{
             /*
             try {
@@ -72,7 +76,12 @@ public class TrainCardController extends BaseController {
     public void drawFromFaceDown(PlayerID playerID, TrainCard card, Integer deckSize){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         MapFragment fragment = activity.getMapFragment();
-        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){ DataManager.SINGLETON.addTrainCardToHand(card); }
+        if (playerID.equals(DataManager.SINGLETON.getPlayer().getPlayerID())){
+            DataManager.SINGLETON.addTrainCardToHand(card);
+            Player player = DataManager.SINGLETON.findPlayerByID(playerID);
+            player.setTrainCardCount(player.getTrainCardCount() + 1);
+
+        }
         else{
             /*
             try {
