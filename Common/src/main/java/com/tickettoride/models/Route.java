@@ -12,6 +12,7 @@ import java.util.Map;
 public class Route implements Cloneable {
     protected Color color;
     protected int spaces;
+    protected int points;
     protected List<City> cities;
     protected PlayerID claimedByPlayerID;
     protected GameID gameID;
@@ -21,6 +22,7 @@ public class Route implements Cloneable {
     public Route( List<Line> lines, Color color, int spaces, List<City> cities) {
         this.color = color;
         this.spaces = spaces;
+        setPoints();
         this.cities = cities;
         this.routeID = RouteID.randomUUID();
         this.lines = lines;
@@ -33,6 +35,7 @@ public class Route implements Cloneable {
         this.cities = cities;
         this.color = color;
         this.spaces = spaces;
+        setPoints();
     }
 
     public Route() {}
@@ -55,6 +58,33 @@ public class Route implements Cloneable {
     }
     public int getSpaces() {
         return spaces;
+    }
+    public int getPoints(){
+        return points;
+    }
+    private void setPoints(){
+        switch(spaces){
+            case 1:
+                points=1;
+                return;
+            case 2:
+                points=2;
+                return;
+            case 3:
+                points=4;
+                return;
+            case 4:
+                points=7;
+                return;
+            case 5:
+                points=10;
+                return;
+            case 6:
+                points=15;
+                return;
+            default:
+                points=0;
+        }
     }
     public void setGameID(GameID gameID) { this.gameID = gameID; }
     public GameID getGameID() { return this.gameID; }

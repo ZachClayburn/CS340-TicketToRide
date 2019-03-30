@@ -36,7 +36,7 @@ public class RouteFacade extends BaseFacade {
             RouteHelper.getSingleton().updateRoute(route);
             player.setTrainCarCount(player.getTrainCarCount() - route.getSpaces());
             PlayerHelper.getSingleton().updateTrainCount(player);
-            player.setPoints(player.getPoints() + route.getSpaces());
+            player.setPoints(player.getPoints() + route.getPoints());
             PlayerHelper.getSingleton().updatePlayerPoints(player);
             Game game = GameFacadeHelper.getSingleton().findGame(route.getGameID());
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
