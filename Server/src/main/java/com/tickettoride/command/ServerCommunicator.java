@@ -30,7 +30,14 @@ public class ServerCommunicator extends WebSocketServer {
 
     private static Logger logger = LogManager.getLogger(ServerCommunicator.class.getName());
 
-    private static final int SERVER_PORT_NUMBER = 8090;
+    static {
+        var defaultPortNum = 8090;
+        var envPortNum = System.getenv("PORT");
+        SERVER_PORT_NUMBER = (envPortNum == null) ? defaultPortNum : Integer.parseInt(envPortNum);
+    }
+
+
+    private static final int SERVER_PORT_NUMBER;
     private static final int MAX_WAITING_CONNECTIONS = 10;
     private static Gson gson = new Gson();
     
@@ -415,11 +422,7 @@ public class ServerCommunicator extends WebSocketServer {
             } catch (Throwable t) {
                 logger.catching(t);
             }
-
-            int websitePort = args.length > 0 ? Integer.parseInt(args[0]) : WebsiteServer.DEFAULT_PORT_NUMBER;
-            var websiteServer = new WebsiteServer(websitePort);
-            new Thread(websiteServer).start();
-
+            logger.info("Starting Server on port: " + ServerCommunicator.SERVER_PORT_NUMBER);
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {
             logger.fatal("",t);
