@@ -415,6 +415,11 @@ public class ServerCommunicator extends WebSocketServer {
             } catch (Throwable t) {
                 logger.catching(t);
             }
+
+            int websitePort = args.length > 0 ? Integer.parseInt(args[0]) : WebsiteServer.DEFAULT_PORT_NUMBER;
+            var websiteServer = new WebsiteServer(websitePort);
+            new Thread(websiteServer).start();
+
             ServerCommunicator.getINSTANCE().run();
         } catch (Throwable t) {
             logger.fatal("",t);
