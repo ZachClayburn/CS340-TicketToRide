@@ -15,6 +15,7 @@ public class Game {
     private int maxPlayer;
     private int curTurn = 1;
 
+    private boolean finished = false;
     private boolean isStarted = false;
 
     public Game() {}
@@ -26,13 +27,14 @@ public class Game {
         this.maxPlayer = maxPlayer;
     }
 
-    public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn) {
+    public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted, int curTurn, boolean finished) {
         this.gameID = gameID;
         this.groupName = groupName;
         this.maxPlayer = maxPlayer;
         this.numPlayer = numPlayer;
         this.isStarted = isStarted;
         this.curTurn = curTurn;
+        this.finished = finished;
     }
 
     public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
@@ -98,6 +100,10 @@ public class Game {
     }
 
     public Boolean IsStarted() { return isStarted; }
+
+    public Boolean isFinished() { return finished; }
+
+    public void setFinished(boolean finished) { this.finished = finished; }
 
     public int getCurTurn() {return curTurn;}
 

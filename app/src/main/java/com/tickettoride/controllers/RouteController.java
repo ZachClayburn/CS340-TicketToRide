@@ -22,12 +22,9 @@ public class RouteController extends BaseController {
         dataManagerPlayer.setTrainCardCount(dataManagerPlayer.getTrainCardCount() - spaces);
         dataManagerPlayer.setTrainCarCount(dataManagerPlayer.getTrainCarCount() - spaces);
         if (isUserPlayer(player) ) { activity.onReturnToMap(); }
-        else {
-            //DataManager.SINGLETON.findPlayerByID(dataManagerPlayer.getPlayerID()).decreaseCards(cardsDiscarded);
-            activity.getMapFragment().drawExternal();
-        }
+        else { activity.getMapFragment().drawExternal(); }
 
         DataManager.SINGLETON.setTurn(turn);
-        activity.activateTurn();
+        activity.incrementTurnState();
     }
 }

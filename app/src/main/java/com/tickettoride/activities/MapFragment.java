@@ -164,8 +164,6 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         public void onClick(View view) {
             historyListener = (HistoryFragmentListener) getActivity();
             historyListener.moveToHistory();
-            /*gameOverListener = (GameOverFragmentListener) getActivity();//TODO use when game is over
-            gameOverListener.moveToGameOver();*/
         }
     };
     public ViewHandListener viewListener;
@@ -176,7 +174,8 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (DataManager.getSINGLETON().getPlayerState().getClass() != ClaimRouteState.class) { return false; }
+            Class currentStateClass = DataManager.getSINGLETON().getPlayerState().getClass();
+            if (currentStateClass != ClaimRouteState.class && currentStateClass != FinalPlaceTrainsState.class) { return false; }
             int x = (int) event.getX();
             int y = (int) event.getY();
             Log.i("TAG", "touch: (" + x + ", " + y + ")");

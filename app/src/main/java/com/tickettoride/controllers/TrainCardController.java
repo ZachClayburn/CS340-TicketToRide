@@ -80,7 +80,7 @@ public class TrainCardController extends BaseController {
     public void finish(Integer turn){
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
-        activity.activateTurn();
+        activity.incrementTurnState();
     }
 
 }

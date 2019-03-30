@@ -109,4 +109,14 @@ public class GameFacade extends BaseFacade {
         Command command = new Command(CONTROLLER_NAME, "nextTurn", game.getCurTurn());
         sendResponseToRoom(connID, command);
     }
+
+    public void finish(UUID connID, GameID gameID) throws DatabaseException {
+        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
+        List<Player> players = PlayerHelper.getSingleton().getGamePlayers(gameID);
+        GameFacadeHelper.getSingleton().setGameFinished(game);
+//        List<Player> players = RouteHelper.getSingleton().awardEndOfGamePoints(game);
+        PlayerHelper.getSingleton().setUsernames(players);
+        Command command = new Command(CONTROLLER_NAME, "finish", players);
+        sendResponseToRoom(connID, command);
+    }
 }

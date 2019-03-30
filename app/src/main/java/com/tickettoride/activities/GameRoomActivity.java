@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.clientModels.InitializeGameState;
+import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.idtypes.PlayerID;
@@ -183,12 +184,7 @@ public class GameRoomActivity extends MyBaseActivity implements
         onReturnToMap();
     }
 
-    public void activateTurn() {
-        int currentTurn = DataManager.getSINGLETON().getTurn();
-        if (currentTurn == DataManager.getSINGLETON().getPlayer().getTurn()) {
-            DataManager.getSINGLETON().getPlayerState().moveToPlayerTurnState(mapFragment);
-        } else { DataManager.getSINGLETON().getPlayerState().moveToNotTurnState(mapFragment); }
-    }
+    public void incrementTurnState() { PlayerStateHelper.getSingleton().incrementTurnState(mapFragment); }
     @Override
     public void onBackPressed() {
         NavUtils.navigateUpFromSameTask(this);

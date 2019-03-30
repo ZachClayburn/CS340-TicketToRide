@@ -42,12 +42,12 @@ public class GameOverFragment extends Fragment {
         winner = v.findViewById(R.id.winner);
         longestRoute = v.findViewById(R.id.longest_route);
         lobbyButton = v.findViewById(R.id.return_lobby);
-        winner.setText("Winner: ");//TODO set winner username here
+        Player winnerPlayer = DataManager.getSINGLETON().selectWinner();
+        winner.setText("Winner: " + winnerPlayer.getUsername());
         longestRoute.setText("Longest Route: ");//TODO set longest route holder username or none
         lobbyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO remove game from database
                 getActivity().finish();
             }
         });

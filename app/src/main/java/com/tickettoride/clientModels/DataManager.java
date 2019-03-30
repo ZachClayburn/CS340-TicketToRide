@@ -72,11 +72,6 @@ public class DataManager {
     }
     public List<Player> getGamePlayers() { return this.gamePlayers; }
 
-//    public void initializeDeck(int size){
-//        trainCardDeck = new TrainCardDeck();
-//        updateTrainCardDeckSize();
-//    }
-
     public TrainCardDeck getTrainCardDeck() { return trainCardDeck; }
 
     public Hand getPlayerHand() {
@@ -208,5 +203,13 @@ public class DataManager {
                 clientRoute.setClaimedByPlayerID(route.getClaimedByPlayerID());
             }
         }
+    }
+
+    public Player selectWinner() {
+        Player max_player = gamePlayers.get(0);
+        for (Player player: gamePlayers) {
+            if (player.getPoints() > max_player.getPoints()) { max_player = player; }
+        }
+        return max_player;
     }
 }

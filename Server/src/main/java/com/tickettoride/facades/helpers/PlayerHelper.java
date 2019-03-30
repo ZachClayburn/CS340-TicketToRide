@@ -88,7 +88,7 @@ public class PlayerHelper extends BaseFacade {
 
     public void setTrainCounts(List<Player> players) throws DatabaseException {
             for (Player player: players) {
-                player.setTrainCarCount(45);
+                player.setTrainCarCount(5);
                 updateTrainCount(player);
             }
     }
@@ -97,6 +97,14 @@ public class PlayerHelper extends BaseFacade {
         try (Database database = new Database()) {
             PlayerDAO dao = database.getPlayerDAO();
             dao.setTrainCarCount(player.getPlayerID(), player.getTrainCarCount());
+            database.commit();
+        }
+    }
+
+    public void updatePlayerPoints(Player player) throws DatabaseException {
+        try (Database database = new Database()) {
+            PlayerDAO dao = database.getPlayerDAO();
+            dao.setPoints(player.getPlayerID(), player.getPoints());
             database.commit();
         }
     }

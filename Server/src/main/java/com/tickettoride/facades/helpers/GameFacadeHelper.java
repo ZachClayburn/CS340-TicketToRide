@@ -130,4 +130,14 @@ public class GameFacadeHelper extends BaseFacade {
             return game;
         }
     }
+
+    public Game setGameFinished(Game game) throws DatabaseException {
+        game.setFinished(true);
+        try (Database database = new Database()) {
+            GameDAO dao = database.getGameDAO();
+            dao.updateGameFinished(game);
+            database.commit();
+            return game;
+        }
+    }
 }

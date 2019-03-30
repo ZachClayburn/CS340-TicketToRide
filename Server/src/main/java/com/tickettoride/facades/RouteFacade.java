@@ -37,6 +37,7 @@ public class RouteFacade extends BaseFacade {
             player.setTrainCarCount(player.getTrainCarCount() - route.getSpaces());
             PlayerHelper.getSingleton().updateTrainCount(player);
             player.setPoints(player.getPoints() + route.getSpaces());
+            PlayerHelper.getSingleton().updatePlayerPoints(player);
             Game game = GameFacadeHelper.getSingleton().findGame(route.getGameID());
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
             Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn(), cardsDiscarded);

@@ -55,9 +55,10 @@ public class Player {
         this.playerID = PlayerID.fromString((String) ((Map)playerMap.get("playerID")).get("uuid"));
         this.userID = UserID.fromString((String) ((Map) playerMap.get("userID")).get("uuid"));
         this.turn = ((Double) playerMap.get("turn")).intValue();
-        this.color = PlayerColor.valueOf((String) playerMap.get("color"));
+        if (playerMap.get("color") != null) this.color = PlayerColor.valueOf((String) playerMap.get("color"));
         this.username = (String) playerMap.get("username");
         this.trainCarCount = ((Double) playerMap.get("trainCarCount")).intValue();
+        if (playerMap.get("points") != null) this.points = ((Double) playerMap.get("points")).intValue();
     }
 
     public UserID getUserID() { return userID; }

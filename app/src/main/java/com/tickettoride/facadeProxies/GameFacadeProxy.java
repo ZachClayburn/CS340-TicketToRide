@@ -59,4 +59,9 @@ public class GameFacadeProxy {
         Command command = new Command(FACADE_NAME, "setup", game.getGameID());
         ClientCommunicator.SINGLETON.send(command);
     }
+
+    public void finish(Game game) {
+        Command command = new Command(FACADE_NAME, "finish", game.getGameID());
+        ClientCommunicator.SINGLETON.send(command);
+    }
 }

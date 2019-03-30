@@ -10,5 +10,5 @@ public class NotTurnState extends PlayerState {
     public void moveToPlayerTurnState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new PlayerTurnState(mf)); }
 
     @Override
-    public void applyState(MapFragment mf) { mf.onNotTurnStart(); }
+    public void moveToFinalTurnState(MapFragment mf) { DataManager.SINGLETON.setPlayerState(new FinalTurnState(mf));}
 }

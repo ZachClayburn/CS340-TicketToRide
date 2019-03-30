@@ -24,16 +24,18 @@ public class RouteHelper {
     public List<ClientRoute> playerFilteredRoutes() {
         List<ClientRoute> clientRoutes = DataManager.getSINGLETON().getClientRoutes();
         List<ClientRoute> filteredClientRoutes = new ArrayList<>();
+        int trainCount = DataManager.getSINGLETON().getPlayer().getTrainCarCount();
         Hand hand = DataManager.getSINGLETON().getPlayerHand();
         for (int i = 0; i < clientRoutes.size(); ++i) {
             if (clientRoutes.get(i).getColor() == GREY) {
                 for (Color color : Color.values()) {
-                    if (hand.getColor(color) + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() && isAvailable(clientRoutes.get(i))) {
+                    if (hand.getColor(color) + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() &&
+                            isAvailable(clientRoutes.get(i)) && trainCount >= clientRoutes.get(i).getSpaces()) {
                         filteredClientRoutes.add(clientRoutes.get(i));
                     }
                 }
             } else if (hand.getColor(clientRoutes.get(i).getColor()) + hand.getLocomotive() >= clientRoutes.get(i).getSpaces() &&
-                    isAvailable(clientRoutes.get(i))) {
+                    isAvailable(clientRoutes.get(i)) && trainCount >= clientRoutes.get(i).getSpaces()) {
                 filteredClientRoutes.add(clientRoutes.get(i));
             }
         }

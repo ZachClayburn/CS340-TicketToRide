@@ -185,7 +185,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
     }
 
-    public void setPointes(PlayerID playerID, int points) throws DatabaseException {
+    public void setPoints(PlayerID playerID, int points) throws DatabaseException {
         String sql = "UPDATE Players SET points = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setInt(1, points);

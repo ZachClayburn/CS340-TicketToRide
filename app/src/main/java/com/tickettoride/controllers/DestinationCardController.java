@@ -37,7 +37,7 @@ public class DestinationCardController extends BaseController {
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
-        activity.activateTurn();
+        activity.incrementTurnState();
         activity.updateCards();
     }
 

@@ -136,6 +136,13 @@ public class GameController extends BaseController {
         activity.setupError();
     }
 
+    public void finish(ArrayList<LinkedTreeMap<String, Object>> players) {
+        List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
+        DataManager.SINGLETON.setGamePlayers(playerList);
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        activity.moveToGameOver();
+    }
+
     public void errorLeave(Throwable t){
         Log.i("GameController", "Couldn't leave game");
     }

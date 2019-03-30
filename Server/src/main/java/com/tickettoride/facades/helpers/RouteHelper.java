@@ -242,7 +242,7 @@ public class RouteHelper extends BaseFacade {
         }
     }
 
-    public void awardEndOfGamePoints(Game game) throws DatabaseException {
+    public List<Player> awardEndOfGamePoints(Game game) throws DatabaseException {
 
         List<Player> players = PlayerHelper.getSingleton().getGamePlayers(game);
         List<Player> winners = new ArrayList<>();
@@ -266,9 +266,8 @@ public class RouteHelper extends BaseFacade {
         }
 
         winners.forEach((player -> player.givePoints(LONGEST_ROUTE_POINT_BONUS)));
-
-        //FIXME Add the call to persist the players points here
-
+        for (Player player : players) PlayerHelper.getSingleton().updatePlayerPoints(player);
+        return players;
     }
 
     public void awardDestinationCardPoints(Player player, Graph<City, WeightedEdge> graph)

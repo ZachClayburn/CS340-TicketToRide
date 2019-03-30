@@ -25,6 +25,7 @@ public class GameDAO extends Database.DataAccessObject {
                     "numPlayer NUMERIC NOT NULL," +
                     "maxPlayer NUMERIC NOT NULL," +
                     "iStarted BOOLEAN DEFAULT FALSE," +
+                    "finished BOOLEAN DEFAULT FALSE," +
                     "curTurn NUMERIC" +
                     ");";
 
@@ -92,9 +93,19 @@ public class GameDAO extends Database.DataAccessObject {
         }
     }
 
+    public void updateGameFinished(Game game) throws DatabaseException {
+        String sql = "UPDATE games SET finished=FALSE where gameID = ?";
+        try (var statement = connection.prepareStatement(sql)) {
+            statement.setString(1, game.getGameID().toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DatabaseException("Could not update finished", e);
+        }
+    }
+
     public ArrayList<Game> allGames() throws DatabaseException {
         ArrayList<Game> games = new ArrayList<>();
-        String sql = "Select * from Games";
+        String sql = "Select * from Games WHERE finished = false";
         try (var statement = connection.prepareStatement(sql)) {
           var results = statement.executeQuery();
           while (results.next()) {
@@ -115,8 +126,9 @@ public class GameDAO extends Database.DataAccessObject {
         var tableMaxPlayer = result.getInt("maxPlayer");
         var tableIsStarted = result.getBoolean("iStarted");
         var tableCurrentTurn = result.getInt("curTurn");
+        var finished = result.getBoolean("finished");
 
-        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn);
+        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn, finished);
     }
 
     public void setGameToStarted(GameID gameID) throws DatabaseException {
