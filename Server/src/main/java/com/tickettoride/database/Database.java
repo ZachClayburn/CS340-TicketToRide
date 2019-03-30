@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class Database implements AutoCloseable {
@@ -85,26 +86,11 @@ public class Database implements AutoCloseable {
      */
     public Database() throws DatabaseException {
 
-        Gson gson = new Gson();
-        var cl = Database.class.getClassLoader();
-        URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
-        InputStream in = null;
-        try {
-            in = fileurl.openStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        Reader reader = new InputStreamReader(in);
-
-        parameters = gson.fromJson(reader, DatabaseParameters.class);
-
-        final String url = "jdbc:postgresql://" + parameters.getServerAddress();
+        if (!getParametersFromEnv())
+            extractParametersFromConfigFile();
 
         try {
-            connection = DriverManager.getConnection(url,
-                    parameters.getServerUserName(), parameters.getServerPassword());
+            connection = parameters.connectWithParameters();
             connection.setAutoCommit(false);
 
         } catch (SQLException e) {
@@ -132,6 +118,33 @@ public class Database implements AutoCloseable {
         DAOs.add(historyDAO);
         trainCardDAO = new TrainCardDAO(connection);
         DAOs.add(trainCardDAO);
+    }
+
+    private void extractParametersFromConfigFile() {
+        Gson gson = new Gson();
+        URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
+        InputStream in = null;
+        try {
+            in = fileurl.openStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        Reader reader = new InputStreamReader(in);
+
+        parameters = gson.fromJson(reader, DatabaseJSONParameters.class);
+    }
+
+    private boolean getParametersFromEnv(){
+
+        var dbURL = System.getenv("DATABASE_URL");
+        if (dbURL == null) {
+            return false;
+        }
+
+        parameters = new DatabaseEnvironmentParameters(dbURL);
+        return true;
     }
 
     /**
@@ -210,7 +223,28 @@ public class Database implements AutoCloseable {
         abstract String getTableCreateString();
     }
 
-    static class DatabaseParameters {
+
+    interface  DatabaseParameters {
+        Connection connectWithParameters() throws SQLException;
+    }
+
+    static class DatabaseEnvironmentParameters implements DatabaseParameters {
+
+        private String serverURL;
+
+        public DatabaseEnvironmentParameters(String serverURL) {
+
+            this.serverURL = serverURL;
+        }
+
+        @Override
+        public Connection connectWithParameters() throws SQLException {
+            return DriverManager.getConnection(serverURL);
+        }
+
+    }
+
+    static class DatabaseJSONParameters implements DatabaseParameters{
 
         private String URL;
         private Integer port;
@@ -219,7 +253,7 @@ public class Database implements AutoCloseable {
         private String password;
 
         public String getServerAddress() {
-            return URL + ":" + port + "/" + databaseName;
+            return"jdbc:postgresql://" + URL + ":" + port + "/" + databaseName;
         }
 
         public String getServerUserName() {
@@ -232,13 +266,18 @@ public class Database implements AutoCloseable {
 
         @Override
         public String toString() {
-            return "DatabaseParameters{" +
+            return "DatabaseJSONParameters{" +
                     "URL='" + URL + '\'' +
                     ", port=" + port +
                     ", databaseName='" + databaseName + '\'' +
                     ", username='" + username + '\'' +
                     ", password='" + password + '\'' +
                     '}';
+        }
+
+        @Override
+        public Connection connectWithParameters() throws SQLException {
+            return DriverManager.getConnection(getServerAddress(), getServerUserName(), getServerPassword());
         }
     }
 
