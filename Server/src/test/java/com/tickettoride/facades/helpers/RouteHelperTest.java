@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -199,5 +200,42 @@ public class RouteHelperTest {
         assertEquals(player1ExpectedLength, player1Length);
         assertEquals(player2ExpectedLength, player2Length);
         assertEquals(player3ExpectedLength, player3Length);
+    }
+
+    @Test
+    public void destinationCardCompletenessChecked_FunctionsProperly() throws DatabaseException {
+
+        setupPlayers("RouteHelperTestInputs/completedRouteTestInput.json");
+
+        int firtsRouteValue = 4;
+        int secondRouteValue = 5;
+        int thirdRouteValue = 6;
+        int expectedPoints = firtsRouteValue - secondRouteValue - thirdRouteValue;
+
+        List<Route> routes;
+
+        try (var db = new Database()){
+
+            var deck = DestinationCard.getPointOrderedDeck();
+            db.getDestinationCardDAO().addDeck(testGame, deck);
+
+            List<DestinationCard> cards = new ArrayList<>();
+            cards.add(deck.poll());//Denver to El Paso -- Has, worth 4
+            cards.add(deck.poll());//Kansas City to Houston -- Doesn't have, worth 5
+            cards.add(deck.poll());//New York to Atlanta -- Doesn't have, worth 6
+
+            db.getDestinationCardDAO().offerCardsToPlayer(testPlayer1, cards);
+            db.getDestinationCardDAO().acceptCards(testPlayer1, cards);
+
+            routes = db.getRouteDAO().getPlayerRoutes(testPlayer1.getPlayerID());
+
+            db.commit();
+        }
+
+        var routeGraph = RouteHelper.getSingleton().getPlayerRouteGraph(routes);
+
+        RouteHelper.getSingleton().awardDestinationCardPoints(testPlayer1, routeGraph);
+
+        assertEquals(expectedPoints, testPlayer1.getPoints());
     }
 }
