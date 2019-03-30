@@ -65,6 +65,12 @@ public class LobbyActivity extends MyBaseActivity{
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        loadingSpinner.setVisibility(View.GONE);
+    }
+
     public Runnable updateUIRunnable = new Runnable() {
         @Override
         public void run() {

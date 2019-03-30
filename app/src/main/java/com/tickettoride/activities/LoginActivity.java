@@ -106,6 +106,13 @@ public class LoginActivity extends MyBaseActivity {
         });
 
     }
+    
+    @Override
+    public void onResume(){
+        super.onResume();
+        loadingSpinner.setVisibility(View.GONE);
+    }
+    
     public void setEnabled() {
         //if username and password fields have characters, login and register buttons are enabled
         if (!pass.getPassword().equals("") && !user.getUsername().equals("")) {

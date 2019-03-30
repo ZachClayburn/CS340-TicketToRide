@@ -48,6 +48,12 @@ public class JoinGameActivity extends MyBaseActivity {
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        loadingSpinner.setVisibility(View.GONE);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
     }
