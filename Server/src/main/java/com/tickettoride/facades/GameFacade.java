@@ -65,7 +65,7 @@ public class GameFacade extends BaseFacade {
             sendResponseToRoom(connID, command);
             if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
-            logger.error(throwable.getMessage());
+            logger.error(throwable.getMessage(),throwable);
             Command command = new Command(CONTROLLER_NAME, "errorJoin");
             sendResponseToOne(connID, command);
         }
@@ -88,25 +88,33 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public void start(UUID connID, GameID gameID) throws DatabaseException, CloneNotSupportedException {
-        logger.info("Attempting to start game " + gameID);
-        GameFacadeHelper.getSingleton().startGame(gameID);
-        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
-        ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
-        PlayerHelper.getSingleton().pickTurnOrder(players);
-        PlayerHelper.getSingleton().pickColors(players);
-        PlayerHelper.getSingleton().setUsernames(players);
-        PlayerHelper.getSingleton().setTrainCounts(players);
-        List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
-        DestinationCardFacadeHelper.dealCards(gameID);
-        var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
-        sendResponseToRoom(connID, command);
+    public void start(UUID connID, GameID gameID) {
+        try {
+            logger.info("Attempting to start game " + gameID);
+            GameFacadeHelper.getSingleton().startGame(gameID);
+            Game game = GameFacadeHelper.getSingleton().findGame(gameID);
+            ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
+            PlayerHelper.getSingleton().pickTurnOrder(players);
+            PlayerHelper.getSingleton().pickColors(players);
+            PlayerHelper.getSingleton().setUsernames(players);
+            PlayerHelper.getSingleton().setTrainCounts(players);
+            List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
+            DestinationCardFacadeHelper.dealCards(gameID);
+            var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
+            sendResponseToRoom(connID, command);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
     }
 
-    public void incrementTurn(UUID connID, GameID gameID) throws DatabaseException {
-        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
-        game = GameFacadeHelper.getSingleton().updateGameTurn(game);
-        Command command = new Command(CONTROLLER_NAME, "nextTurn", game.getCurTurn());
-        sendResponseToRoom(connID, command);
+    public void incrementTurn(UUID connID, GameID gameID) {
+        try {
+            Game game = GameFacadeHelper.getSingleton().findGame(gameID);
+            game = GameFacadeHelper.getSingleton().updateGameTurn(game);
+            Command command = new Command(CONTROLLER_NAME, "nextTurn", game.getCurTurn());
+            sendResponseToRoom(connID, command);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
     }
 }

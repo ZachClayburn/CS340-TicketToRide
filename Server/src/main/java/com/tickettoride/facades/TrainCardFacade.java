@@ -102,11 +102,16 @@ public class TrainCardFacade extends BaseFacade {
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
 
-    public void finish(UUID connID, GameID gameID) throws DatabaseException {
-        Game game = GameFacadeHelper.getSingleton().findGame(gameID);
-        game = GameFacadeHelper.getSingleton().updateGameTurn(game);
-        Command command = new Command(CONTROLLER_NAME, "finish", game.getCurTurn());
-        sendResponseToRoom(connID, command);
+    public void finish(UUID connID, GameID gameID) {
+        try {
+            Game game = GameFacadeHelper.getSingleton().findGame(gameID);
+            game = GameFacadeHelper.getSingleton().updateGameTurn(game);
+            Command command = new Command(CONTROLLER_NAME, "finish", game.getCurTurn());
+            sendResponseToRoom(connID, command);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            //todo: send message somewhere that it failed
+        }
     }
 
     public void initializeDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
