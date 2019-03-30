@@ -49,7 +49,7 @@ public class DestinationCardFacade extends BaseFacade {
             String event="Drew 3 destination cards";
             updateHistory(connID,player.getPlayerID(),event);
         } catch (Throwable throwable) {
-            logger.error(throwable);//FIXME add proper error handling
+            logger.error(throwable.getMessage(),throwable);//FIXME add proper error handling
         }
     }
 
@@ -66,7 +66,7 @@ public class DestinationCardFacade extends BaseFacade {
             String event="Kept "+acceptedCards.size()+" destination cards.";
             updateHistory(connID,player.getPlayerID(),event);
         } catch (Throwable throwable) {
-            logger.error(throwable);//FIXME add proper error handling
+            logger.error(throwable.getMessage(),throwable);//FIXME add proper error handling
         }
     }
 
@@ -81,6 +81,7 @@ public class DestinationCardFacade extends BaseFacade {
             );
 
         } catch (DatabaseException e) {
+            logger.error(e.getMessage(),e);
             logger.error(e);//FIXME add proper error handling
         }
     }

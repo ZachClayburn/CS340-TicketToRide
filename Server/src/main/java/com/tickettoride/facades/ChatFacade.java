@@ -40,6 +40,7 @@ public class ChatFacade extends BaseFacade {
             sendResponseToRoom(connID,new Command(CONTROLLER_NAME, "addMessage", message));
         }catch(Throwable e){
             //send the error command
+            logger.error(e.getMessage(),e);
             sendResponseToOne(connID,new Command(CONTROLLER_NAME, "sendMessageError",e));
         }
     }
@@ -67,7 +68,8 @@ public class ChatFacade extends BaseFacade {
             chat=chatDAO.getChat(gameID);
             sendResponseToOne(connID, new Command(CONTROLLER_NAME, "setChat", chat));
         }catch(Throwable e){
-              sendResponseToOne(connID,new Command(CONTROLLER_NAME, "getChatError", e));
+            logger.error(e.getMessage(),e);
+            sendResponseToOne(connID,new Command(CONTROLLER_NAME, "getChatError", e));
         }
     }
     
