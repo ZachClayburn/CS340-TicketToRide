@@ -12,7 +12,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class Database implements AutoCloseable {
@@ -27,7 +26,8 @@ public class Database implements AutoCloseable {
         }
     }
 
-    protected DatabaseParameters parameters;
+    DatabaseParameters parameters;
+    private static DatabaseParameters staticParameters = null;
 
     private static Logger logger = LogManager.getLogger(Database.class.getName());
 
@@ -86,8 +86,7 @@ public class Database implements AutoCloseable {
      */
     public Database() throws DatabaseException {
 
-        if (!getParametersFromEnv())
-            extractParametersFromConfigFile();
+        parameters = getParameters();
 
         try {
             connection = parameters.connectWithParameters();
@@ -120,7 +119,14 @@ public class Database implements AutoCloseable {
         DAOs.add(trainCardDAO);
     }
 
-    private void extractParametersFromConfigFile() {
+    private DatabaseParameters getParameters(){
+        if (staticParameters != null) return staticParameters;
+        var envParams = getParametersFromEnv();
+        if (envParams!= null) return envParams;
+        return extractParametersFromConfigFile();
+    }
+
+    private DatabaseParameters extractParametersFromConfigFile() {
         Gson gson = new Gson();
         URL fileurl = Database.class.getClassLoader().getResource("databaseParams.json");
         InputStream in = null;
@@ -133,18 +139,17 @@ public class Database implements AutoCloseable {
 
         Reader reader = new InputStreamReader(in);
 
-        parameters = gson.fromJson(reader, DatabaseJSONParameters.class);
+        return gson.fromJson(reader, DatabaseJSONParameters.class);
     }
 
-    private boolean getParametersFromEnv(){
+    private DatabaseParameters getParametersFromEnv(){
 
-        var dbURL = System.getenv("DATABASE_URL");
+        var dbURL = System.getenv("JDBC_DATABASE_URL");
         if (dbURL == null) {
-            return false;
+            return null;
         }
 
-        parameters = new DatabaseEnvironmentParameters(dbURL);
-        return true;
+        return new DatabaseEnvironmentParameters(dbURL);
     }
 
     /**
