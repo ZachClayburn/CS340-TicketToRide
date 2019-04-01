@@ -22,15 +22,15 @@ public class UserDAOTest extends AbstractDatabaseTest{
     @Test
     public void UserAddedToDatabase_UserExistsInDatabase() throws DatabaseException, SQLException {
 
-        String address = "jdbc:postgresql://";
+        String address;
         String username;
         String password;
 
+        Database.DatabaseParameters parameters;
+
         try (var db = new Database()) {
 
-            address += db.parameters.getServerAddress();
-            username = db.parameters.getServerUserName();
-            password = db.parameters.getServerPassword();
+            parameters = db.parameters;
 
             db.getUserDAO().addUser(testUser);
 
@@ -38,7 +38,7 @@ public class UserDAOTest extends AbstractDatabaseTest{
 
         }
 
-        try (var connection = DriverManager.getConnection(address, username, password)){
+        try (var connection = parameters.connectWithParameters()){
             var results = connection.prepareStatement("select * from Users").executeQuery();
 
             assertTrue(results.next());

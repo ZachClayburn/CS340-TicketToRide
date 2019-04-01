@@ -1,0 +1,1 @@
+web: Server/build/install/Server/bin/Server
