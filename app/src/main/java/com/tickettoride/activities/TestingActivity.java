@@ -9,6 +9,7 @@ import com.tickettoride.R;
 import com.tickettoride.models.DestinationCard;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 public class TestingActivity extends AppCompatActivity implements DestinationCardFragment.OnFragmentInteractionListener{
@@ -20,9 +21,12 @@ public class TestingActivity extends AppCompatActivity implements DestinationCar
 
         Queue<DestinationCard> deck = DestinationCard.getShuffledDeck();
 
+        List<DestinationCard> cards = new ArrayList<>();
+        cards.add(deck.poll());
+
         FragmentManager fm = getSupportFragmentManager();
 
-        Fragment fragment = DestinationCardFragment.newInstance(deck.poll(), deck.poll(), deck.poll(), 2);
+        Fragment fragment = DestinationCardFragment.newInstance(cards, 2);
         fm.beginTransaction()
                 .replace(R.id.fragment_frame, fragment)
                 .commit();

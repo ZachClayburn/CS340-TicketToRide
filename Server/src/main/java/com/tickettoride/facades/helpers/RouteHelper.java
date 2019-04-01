@@ -310,15 +310,15 @@ public class RouteHelper extends BaseFacade {
             if (visited.contains(edge))
                 continue;
 
-            var currentLenght = (int) edge.weight();
+            var currentLength = (int) edge.weight();
             var nextVertex = (graph.getEdgeSource(edge) != currentVertex) ?
                     graph.getEdgeSource(edge) : graph.getEdgeTarget(edge);
 
             visited.add(edge);
-            currentLenght += recursivePathLengthCalculate(graph, nextVertex, visited);
+            currentLength += recursivePathLengthCalculate(graph, nextVertex, visited);
             visited.remove(edge);
 
-            if (currentLenght > pathLength) pathLength = currentLenght;
+            if (currentLength > pathLength) pathLength = currentLength;
         }
 
         return pathLength;

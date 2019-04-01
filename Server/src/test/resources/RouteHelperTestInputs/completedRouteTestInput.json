@@ -1,0 +1,28 @@
+[
+  {
+    "name": "testPlayer1",
+    "routes": [
+      {
+        "city1": "DENVER",
+        "city2": "SANTA_FE"
+      },
+      {
+        "city1": "SANTA_FE",
+        "city2": "EL_PASO"
+      },
+      {
+        "city1": "KANSAS_CITY",
+        "city2": "OKLAHOMA_CITY"
+      },
+      {
+        "city1": "DALLAS",
+        "city2": "HOUSTON"
+      },
+      {
+        "city1": "NEW_YORK",
+        "city2": "WASHINGTON",
+        "color": "BLACK"
+      }
+    ]
+  }
+]

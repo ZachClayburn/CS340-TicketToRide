@@ -40,13 +40,20 @@ public class DestinationCardFacade extends BaseFacade {
         try {
             Queue<DestinationCard> destinationDeck = DestinationCardFacadeHelper.getSingleton().gameDestinationCards(player.getGameID());
             List<DestinationCard> offeredCards = new ArrayList<>();
+            int drawnCards = 1;
             offeredCards.add(destinationDeck.poll());
-            offeredCards.add(destinationDeck.poll());
-            offeredCards.add(destinationDeck.poll());
+            if (!destinationDeck.isEmpty()){
+                offeredCards.add(destinationDeck.poll());
+                drawnCards++;
+            }
+            if (!destinationDeck.isEmpty()){
+                offeredCards.add(destinationDeck.poll());
+                drawnCards++;
+            }
             DestinationCardFacadeHelper.getSingleton().offerCardsToPlayer(player, offeredCards);
             Command command = DestinationCardFacadeHelper.getSingleton().offerDestinationCards(player, offeredCards, cardsToKeep);
             sendResponseToRoom(connID, command);
-            String event="Drew 3 destination cards";
+            String event="Drew " + drawnCards + " destination cards";
             updateHistory(connID,player.getPlayerID(),event);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(),throwable);//FIXME add proper error handling

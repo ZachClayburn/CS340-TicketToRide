@@ -8,6 +8,7 @@ import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
 
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +30,13 @@ public class DestinationCardController extends BaseController {
         if (isUserPlayer(player)){
             List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);
-            player.setDestinationCardCount(player.getDestinationCardCount() + acceptedCards.size());
-            managedPlayer.setDestinationCardCount(managedPlayer.getDestinationCardCount() + acceptedCards.size());
+            player.incrementDestinationCardCount(acceptedCards.size());
+            managedPlayer.incrementDestinationCardCount(acceptedCards.size());
         } else {
             try {
                 Toast.makeText(getCurrentActivity(), "DRAW DESTINATION CARDS", Toast.LENGTH_LONG).show();
             } catch (Throwable t) {}
-            managedPlayer.setDestinationCardCount(managedPlayer.getDestinationCardCount() + acceptedCards.size());
+            managedPlayer.incrementDestinationCardCount(acceptedCards.size());
         }
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
@@ -48,13 +49,14 @@ public class DestinationCardController extends BaseController {
 
     public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
 
-        List<DestinationCard> offeredCards = DestinationCard.unGsonCards(gsonCards);
         if (isUserPlayer(player)) {
+            List<DestinationCard> offeredCards = DestinationCard.unGsonCards(gsonCards);
             DataManager.getSINGLETON().setOfferedCards(requiredToKeep, offeredCards);
             GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
             activity.toDestinationCardFragment();
         } else {
-            //TODO Notify that other player is drawing destination cards
+            Player otherPlayer = DataManager.getSINGLETON().findPlayerByID(player.getPlayerID());
+            otherPlayer.incrementDestinationCardCount(gsonCards.size());
         }
     }
 }

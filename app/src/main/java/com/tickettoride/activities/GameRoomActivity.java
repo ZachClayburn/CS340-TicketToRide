@@ -179,7 +179,7 @@ public class GameRoomActivity extends MyBaseActivity implements
 
         if (destinationCardFragment == null)
             destinationCardFragment = DestinationCardFragment
-                    .newInstance(offeredCards.get(0), offeredCards.get(1), offeredCards.get(2), requiredToKeep);
+                    .newInstance(offeredCards, requiredToKeep);
 
         fm.beginTransaction()
                 .replace(R.id.fragment_holder, destinationCardFragment)

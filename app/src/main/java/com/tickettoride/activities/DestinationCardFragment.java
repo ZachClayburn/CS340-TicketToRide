@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +50,7 @@ public class DestinationCardFragment extends Fragment {
 
     private ConstraintLayout card1Layout;
     private TextView card1City1Text;
+    private TextView card1ToText;
     private TextView card1City2Text;
     private TextView card1PointsText;
     private ImageView card1SelectImageView;
@@ -56,6 +58,7 @@ public class DestinationCardFragment extends Fragment {
 
     private ConstraintLayout card2Layout;
     private TextView card2City1Text;
+    private TextView card2ToText;
     private TextView card2City2Text;
     private TextView card2PointsText;
     private ImageView card2SelectImageView;
@@ -63,6 +66,7 @@ public class DestinationCardFragment extends Fragment {
 
     private ConstraintLayout card3Layout;
     private TextView card3City1Text;
+    private TextView card3ToText;
     private TextView card3City2Text;
     private TextView card3PointsText;
     private ImageView card3SelectImageView;
@@ -77,15 +81,28 @@ public class DestinationCardFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param card1 A card offered to a player
-     * @param card2 A card offered to a player
-     * @param card3 A card offered to a player
+     * @param destinationCards A List of cards offered to the player
      * @param numRequiredCards The number of card the player is required to keep
      * @return A new instance of fragment DestinationCardFragment.
      */
-    public static DestinationCardFragment newInstance(DestinationCard card1, DestinationCard card2, DestinationCard card3, int numRequiredCards) {
+    public static DestinationCardFragment newInstance(List<DestinationCard> destinationCards, int numRequiredCards) {
+
+        if (destinationCards.size() > 3) {
+            throw new IllegalArgumentException("Expected 3 or less cards, got " + destinationCards.size() + " in stead!");
+        }
+
         DestinationCardFragment fragment = new DestinationCardFragment();
         Bundle args = new Bundle();
+        DestinationCard card1 = destinationCards.get(0);
+        DestinationCard card2 = null;
+        DestinationCard card3 = null;
+
+        if (destinationCards.size() > 1)
+            card2 = destinationCards.get(1);
+
+        if (destinationCards.size() > 2)
+            card3 = destinationCards.get(2);
+
         CreationArgs creationArgs = new CreationArgs(card1, card2, card3, numRequiredCards);
         args.putParcelable(ARG_PARAM, creationArgs);
         fragment.setArguments(args);
@@ -142,13 +159,21 @@ public class DestinationCardFragment extends Fragment {
         };
 
         private static DestinationCard unparcelCard(Parcel in){
-            City city1 = City.valueOf(in.readString());
+            String city1String = in.readString();
+            if (city1String == null) {
+                return null;
+            }
+            City city1 = City.valueOf(city1String);
             City city2 = City.valueOf(in.readString());
             DestinationCard.Value pointValue = DestinationCard.Value.valueOf(in.readString());
             return new DestinationCard(city1,city2,pointValue);
         }
 
         private static void parcelCard(DestinationCard card, Parcel dest){
+            if (card == null) {
+                dest.writeValue(null);
+                return;
+            }
             dest.writeString(card.getDestination1().name());
             dest.writeString(card.getDestination2().name());
             dest.writeString(card.getPointValue().name());
@@ -176,6 +201,7 @@ public class DestinationCardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             CreationArgs args = getArguments().getParcelable(ARG_PARAM);
+            assert args != null;
             card1 = args.card1;
             card2 = args.card2;
             card3 = args.card3;
@@ -194,17 +220,20 @@ public class DestinationCardFragment extends Fragment {
 
         card1Layout = (ConstraintLayout) v.findViewById(R.id.destination_card_1);
         card1City1Text = (TextView) v.findViewById(R.id.card_1_city_1);
+        card1ToText = (TextView) v.findViewById(R.id.card_1_to);
         card1City2Text = (TextView) v.findViewById(R.id.card_1_city_2);
         card1PointsText = (TextView) v.findViewById(R.id.card_1_points);
         card1SelectImageView = (ImageView) v.findViewById(R.id.card_1_image);
 
         card2Layout = (ConstraintLayout) v.findViewById(R.id.destination_card_2);
+        card2ToText = (TextView) v.findViewById(R.id.card_2_to);
         card2City1Text = (TextView) v.findViewById(R.id.card_2_city_1);
         card2City2Text = (TextView) v.findViewById(R.id.card_2_city_2);
         card2PointsText = (TextView) v.findViewById(R.id.card_2_points);
         card2SelectImageView = (ImageView) v.findViewById(R.id.card_2_image);
 
         card3Layout = (ConstraintLayout) v.findViewById(R.id.destination_card_3);
+        card3ToText = (TextView) v.findViewById(R.id.card_3_to);
         card3City1Text = (TextView) v.findViewById(R.id.card_3_city_1);
         card3City2Text = (TextView) v.findViewById(R.id.card_3_city_2);
         card3PointsText = (TextView) v.findViewById(R.id.card_3_points);
@@ -216,11 +245,11 @@ public class DestinationCardFragment extends Fragment {
         promptString.setText(getString(R.string.dest_draw_hint, requiredSelectedCards));
 
         card1OnClick = initCardView(card1,
-                card1City1Text, card1City2Text, card1PointsText, card1SelectImageView, card1Layout);
+                card1City1Text, card1ToText, card1City2Text, card1PointsText, card1SelectImageView, card1Layout);
         card2OnClick = initCardView(card2,
-                card2City1Text, card2City2Text, card2PointsText, card2SelectImageView, card2Layout);
+                card2City1Text, card2ToText, card2City2Text, card2PointsText, card2SelectImageView, card2Layout);
         card3OnClick = initCardView(card3,
-                card3City1Text, card3City2Text, card3PointsText, card3SelectImageView, card3Layout);
+                card3City1Text, card3ToText, card3City2Text, card3PointsText, card3SelectImageView, card3Layout);
 
         finishButton.setEnabled(false);
 
@@ -251,24 +280,35 @@ public class DestinationCardFragment extends Fragment {
     }
 
     private CardOnClick initCardView(DestinationCard card,
-                              TextView city1Text, TextView city2Text, TextView pointsText,
-                              ImageView selectImageView, ConstraintLayout cardLayout) {
+                                     TextView city1Text, TextView toText, TextView city2Text, TextView pointsText,
+                                     ImageView selectImageView, ConstraintLayout cardLayout) {
+        if (card == null) {
+            toText.setText("");
+            return new CardOnClick();
+        }
         city1Text.setText(getCityNameResource(card.getDestination1()));
         city2Text.setText(getCityNameResource(card.getDestination2()));
-        pointsText.setText(String.format("%d", card.getPointValue().asInt()));
+        pointsText.setText(String.format(Locale.getDefault() ,"%d", card.getPointValue().asInt()));
         selectImageView.setImageDrawable(getResources().getDrawable(R.drawable.x_icon, null));
-        CardOnClick onClick = new CardOnClick(selectImageView);
+        CardOnClick onClick = new DrawnCardOnClick(selectImageView);
         cardLayout.setOnClickListener(onClick);
         return onClick;
     }
 
-    private class CardOnClick implements View.OnClickListener{
+    class CardOnClick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {}
+
+        public boolean isSelected() {return false;}
+    }
+
+    private class DrawnCardOnClick extends CardOnClick{
         private Drawable xIcon = getResources().getDrawable(R.drawable.x_icon, null);
         private Drawable checkIcon = getResources().getDrawable(R.drawable.check_icon, null);
         private ImageView selectImageView;
         private boolean selected = false;
 
-        CardOnClick(ImageView selectImage){
+        DrawnCardOnClick(ImageView selectImage){
             this.selectImageView = selectImage;
         }
 
@@ -283,6 +323,7 @@ public class DestinationCardFragment extends Fragment {
             updateFinishButton();
         }
 
+        @Override
         public boolean isSelected(){
             return this.selected;
         }
