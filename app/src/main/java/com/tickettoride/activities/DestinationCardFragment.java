@@ -68,7 +68,10 @@ public class DestinationCardFragment extends Fragment {
     private ImageView card3SelectImageView;
     private CardOnClick card3OnClick;
 
+    private Button viewMapButton;
     private Button finishButton;
+
+    private ViewMapFragmentListener viewMapFragmentListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -207,6 +210,7 @@ public class DestinationCardFragment extends Fragment {
         card3PointsText = (TextView) v.findViewById(R.id.card_3_points);
         card3SelectImageView = (ImageView) v.findViewById(R.id.card_3_image);
 
+        viewMapButton = (Button) v.findViewById(R.id.view_map_button);
         finishButton = (Button) v.findViewById(R.id.destination_card_done_button);
 
         promptString.setText(getString(R.string.dest_draw_hint, requiredSelectedCards));
@@ -232,6 +236,14 @@ public class DestinationCardFragment extends Fragment {
                     acceptedCards.add(card3);
 
                 mListener.onAcceptCards(acceptedCards);
+            }
+        });
+
+        viewMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewMapFragmentListener = (ViewMapFragmentListener) getActivity();
+                viewMapFragmentListener.moveToViewMap();
             }
         });
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 public class GameRoomActivity extends MyBaseActivity implements
         OnReturnToMapListener, DestinationCardFragment.OnFragmentInteractionListener, ViewHandListener, PlayerFragmentListener,
-        DiscardFragmentListener, GameOverFragmentListener, HistoryFragmentListener{
+        DiscardFragmentListener, GameOverFragmentListener, HistoryFragmentListener, ViewMapFragmentListener, OnReturnToDestListener{
     private Context context;
     private PlayerFragment playerFragment;
     private ViewHandFragment viewHandFragment;
@@ -31,6 +31,8 @@ public class GameRoomActivity extends MyBaseActivity implements
     private GameOverFragment gameOverFragment;
     private DiscardFragment discardFragment;
     private HistoryFragment historyFragment;
+    private ViewMapFragment viewMapFragment;
+
 
     public MapFragment getMapFragment() { return mapFragment; }
 
@@ -105,6 +107,10 @@ public class GameRoomActivity extends MyBaseActivity implements
             fm.beginTransaction().replace(R.id.fragment_holder, discardFragment).commit();
         }
     }
+    public void moveToDest() {
+        fm.beginTransaction().replace(R.id.fragment_holder, destinationCardFragment).commit();
+        viewMapFragment = null;
+    }
     public void moveToGameOver() {
         if (gameOverFragment == null) {
             gameOverFragment = new GameOverFragment();
@@ -160,7 +166,12 @@ public class GameRoomActivity extends MyBaseActivity implements
             }
         }
     };
-
+    public void moveToViewMap() {
+        if (viewMapFragment == null) {
+            viewMapFragment = new ViewMapFragment();
+            fm.beginTransaction().replace(R.id.fragment_holder, viewMapFragment).commit();
+        }
+    }
     public void toDestinationCardFragment() {
 
         List<DestinationCard> offeredCards = DataManager.getSINGLETON().getOfferedCards();

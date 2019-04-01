@@ -536,6 +536,29 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return wildCount >= 3;
     }
 
+    public boolean hasGameInfo(GameID gameID) throws DatabaseException {
+        boolean hasGame = false;
+
+        String sql = "SELECT 1 FROM TrainCards " +
+                "WHERE gameid=?";
+
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, gameID.toString());
+
+            var results = statement.executeQuery();
+
+            while (results.next())
+                hasGame = true;
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not check deck!", e);
+        }
+
+        return hasGame;
+    }
+
     private Color getColorFromString(String color){
         switch(color){
             case "RED":

@@ -25,7 +25,7 @@ public class DataManager {
     private List<DestinationCard> offeredCards = null;
     private Integer destCardsRequiredToKeep = null;
     private ArrayList<ClientRoute> clientRoutes;
-    private int turn = 0;
+    private int turn = 1;
     private ClientRoute currentClientRoute;
     private List<TrainCard> faceUpDeck;
 

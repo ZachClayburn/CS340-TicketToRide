@@ -128,7 +128,7 @@ public class GameController extends BaseController {
         Game game = DataManager.getSINGLETON().getGame();
         ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
         HistoryFacadeProxy.SINGLETON.getHistory(game.getGameID());
-        TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
+        //TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
     }
 
     public void errorSetup() {

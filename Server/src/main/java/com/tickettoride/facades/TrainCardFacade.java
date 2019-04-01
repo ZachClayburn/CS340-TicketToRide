@@ -36,6 +36,10 @@ public class TrainCardFacade extends BaseFacade {
         TrainCardDeck deck = new TrainCardDeck();
 
         try (Database database = new Database()){
+            if (database.getTrainCardDAO().hasGameInfo(gameID)){
+                return;
+            }
+
             initializeDeck(gameID, deck);
 
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){

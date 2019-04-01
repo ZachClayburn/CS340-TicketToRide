@@ -102,6 +102,7 @@ public class GameFacade extends BaseFacade {
             DestinationCardFacadeHelper.dealCards(gameID);
             var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
             sendResponseToRoom(connID, command);
+            TrainCardFacade.getSingleton().initialize(connID, gameID);
         }catch(Exception e){
             logger.error(e.getMessage(),e);
         }

@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -468,6 +469,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                             case YELLOW:
                                 v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
                                 break;
+                            default:
+                                v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
+                                break;
                         }
                     }
                 }
@@ -631,5 +635,9 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             }
         });
         history.setOnClickListener(historyViewListener);
+    }
+    public Bitmap getBitmap() {
+        Bitmap bitmap = ((BitmapDrawable)board.getDrawable()).getBitmap();
+        return bitmap;
     }
 }

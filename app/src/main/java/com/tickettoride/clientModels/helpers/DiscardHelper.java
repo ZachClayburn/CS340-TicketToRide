@@ -21,9 +21,21 @@ public class DiscardHelper {
                     if (!checkHand(color)) { return false; }
                     break;
                 }
-                else if (currentColor == color) { if (!checkHand(color)) { return false; } break; }
-                else if (color == WILD) { if (!checkHand(color)) { return false; } }
-                else { return false; }
+                else if (currentColor == color) {
+                    if (!checkHand(color)) {
+                        return false;
+                    }
+                    break;
+                }
+                else if (color == WILD) {
+                    if (!checkHand(color)) {
+                        return false;
+                    }
+                    break;
+                }
+                else {
+                    return false;
+                }
             default:
                 currentColor = currentRoute.getColor();
                 if (color == currentRoute.getColor()) { if (!checkHand(color)) { return false; } }

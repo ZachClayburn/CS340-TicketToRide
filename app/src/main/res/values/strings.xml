@@ -121,4 +121,6 @@
     <string name="lost_points">Lost Points: </string>
     <string name="gained_points">Gained Points: </string>
     <string name="history">History</string>
+    <string name="view_map">View Map</string>
+    <string name="return_destination">Back</string>
 </resources>
