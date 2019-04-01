@@ -18,7 +18,7 @@ public class RouteController extends BaseController {
         DataManager.SINGLETON.setRouteClaimed(route);
         int spaces = route.getSpaces();
         Player dataManagerPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
-        dataManagerPlayer.setPoints(dataManagerPlayer.getPoints() + spaces);
+        dataManagerPlayer.setPoints(dataManagerPlayer.getPoints() + route.getPoints());
         dataManagerPlayer.setTrainCardCount(dataManagerPlayer.getTrainCardCount() - spaces);
         dataManagerPlayer.setTrainCarCount(dataManagerPlayer.getTrainCarCount() - spaces);
         if (isUserPlayer(player) ) { activity.onReturnToMap(); }
