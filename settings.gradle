@@ -1,7 +1,4 @@
-if (INCLUDE_ANDROID == "true") {
-    //You need to set this properly to build
-    include ':app'
-}
+include ':app'
 include ':Server'
 include ':Common'
 

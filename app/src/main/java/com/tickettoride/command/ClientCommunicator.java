@@ -32,9 +32,7 @@ public class ClientCommunicator {
     public void connect() {
         try {
             if (mWebSocketClient == null) {
-                //mWebSocketClient = new WebSocketClient(new URI("ws://" + websockethost + ":" + port), new Draft_6455()) {
-                mWebSocketClient = new WebSocketClient(new URI("ws://b-team-ticket-to-ride.herokuapp.com/"), new Draft_6455()) {
-
+                mWebSocketClient = new WebSocketClient(new URI("ws://" + websockethost + ":" + port), new Draft_6455()) {
                     @Override
                     public void onMessage(String message) {
                         Log.i("ClientCommunicator", "Received Message From Server: " + message.replace("\\", ""));
