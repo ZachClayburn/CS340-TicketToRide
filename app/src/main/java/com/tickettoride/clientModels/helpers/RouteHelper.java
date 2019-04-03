@@ -53,7 +53,7 @@ public class RouteHelper {
             PlayerID currentPlayerId = DataManager.getSINGLETON().getPlayer().getPlayerID();
             PlayerID matchClientRouteId = matchClientRoute.getClaimedByPlayerID();
             if (matchClientRouteId == null) continue;
-            if (citiesMatch && currentPlayerId.equals(matchClientRouteId)) return false;
+            if (citiesMatch && (currentPlayerId.equals(matchClientRouteId) || DataManager.SINGLETON.getGamePlayers().size() <= 2)) return false;
     }
         return true;
     }
