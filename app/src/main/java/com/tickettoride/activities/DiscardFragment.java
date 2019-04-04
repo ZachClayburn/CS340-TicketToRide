@@ -37,6 +37,7 @@ public class DiscardFragment extends Fragment {
     private ImageView blackCards;
     private ImageView whiteCards;
     private ImageView wildCards;
+    private TextView infoMessage;
     private TextView numberBlue;
     private TextView numberGreen;
     private TextView numberPurple;
@@ -73,6 +74,7 @@ public class DiscardFragment extends Fragment {
         blackCards = v.findViewById(R.id.black_card);
         whiteCards = v.findViewById(R.id.white_card);
         wildCards = v.findViewById(R.id.wild_card);
+        infoMessage = v.findViewById(R.id.discard_hint);
         numberBlue = v.findViewById(R.id.blue);
         numberGreen = v.findViewById(R.id.green);
         numberPurple = v.findViewById(R.id.purple);
@@ -93,7 +95,8 @@ public class DiscardFragment extends Fragment {
         numberYellow.setText("Yellow: " + currentHand.getYellow());
         numberBlack.setText("Black: " + currentHand.getBlack());
         numberWhite.setText("White: " + currentHand.getWhite());
-        numberWild.setText("Wild: " + currentHand.getLocomotive());
+        numberWild.setText("Locomotive: " + currentHand.getLocomotive());
+        setInfoMessage();
 
         blueCards.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,8 +235,7 @@ public class DiscardFragment extends Fragment {
         discard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!discardHelper.wildCheck()) { Toast.makeText(getContext(), "Invalid discard", Toast.LENGTH_SHORT).show(); }
-                else if (discardHelper.finalDiscard()) {
+                if (discardHelper.finalDiscard()) {
                     RouteFacadeProxy.SINGLETON.claimRoute(
                             currentClientRoute, discardHelper.getCurrentColor(),
                             discardHelper.getDiscardedColor(), discardHelper.getDiscardedWild());
@@ -243,6 +245,37 @@ public class DiscardFragment extends Fragment {
         });
         return v;
     }
+    public void setInfoMessage() {
+        switch(currentClientRoute.getColor()) {
+            case BLUE:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " blue cards");
+                break;
+            case GREEN:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " green cards");
+                break;
+            case RED:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " red cards");
+                break;
+            case PURPLE:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " purple cards");
+                break;
+            case ORANGE:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " orange cards");
+                break;
+            case YELLOW:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " yellow cards");
+                break;
+            case WHITE:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " white cards");
+                break;
+            case BLACK:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " black cards");
+                break;
+            default:
+                infoMessage.setText("Please discard " + currentClientRoute.getSpaces() + " matching cards");
+        }
+    }
+
 
 }
 
