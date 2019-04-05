@@ -242,10 +242,9 @@ public class RouteHelper extends BaseFacade {
         }
     }
 
-    public List<Player> awardEndOfGamePoints(Game game) throws DatabaseException {
+    public HashMap<PlayerID, Integer> awardEndOfGamePoints(Game game, List<Player> players, List<Player> longestWinners) throws DatabaseException {
 
-        List<Player> players = PlayerHelper.getSingleton().getGamePlayers(game);
-        List<Player> winners = new ArrayList<>();
+        HashMap<PlayerID, Integer> lostPonitMap = new HashMap<>();
 
         double longestPath = -1;
         for (var player : players) {
@@ -254,36 +253,42 @@ public class RouteHelper extends BaseFacade {
             var routeGraph = getPlayerRouteGraph(routes);
             double playersLongestPath = getLongestRouteInRouteGraph(routeGraph);
 
-            awardDestinationCardPoints(player, routeGraph);
+            Integer lostPoints = awardDestinationCardPoints(player, routeGraph);
+            lostPonitMap.put(player.getPlayerID(), lostPoints);
+
 
             if (playersLongestPath == longestPath)
-                winners.add(player);
+                longestWinners.add(player);
             if (playersLongestPath > longestPath) {
                 longestPath = playersLongestPath;
-                winners.clear();
-                winners.add(player);
+                longestWinners.clear();
+                longestWinners.add(player);
             }
         }
 
-        winners.forEach((player -> player.givePoints(LONGEST_ROUTE_POINT_BONUS)));
+        longestWinners.forEach((player -> player.givePoints(LONGEST_ROUTE_POINT_BONUS)));
         for (Player player : players) PlayerHelper.getSingleton().updatePlayerPoints(player);
-        return players;
+        return lostPonitMap;
     }
 
-    public void awardDestinationCardPoints(Player player, Graph<City, WeightedEdge> graph)
+    public int awardDestinationCardPoints(Player player, Graph<City, WeightedEdge> graph)
             throws DatabaseException {
 
         var destinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
 
         ConnectivityInspector<City, WeightedEdge> inspector = new ConnectivityInspector<>(graph);
-
+        int lostPoints = 0;
         for (var card : destinationCards) {
-            if (inspector.pathExists(card.getDestination1(), card.getDestination2()))
-                player.givePoints(card.getPointValue().asInt());
-            else
-                player.takePoints(card.getPointValue().asInt());
-        }
 
+            if (graph.vertexSet().contains(card.getDestination1()) &&
+                    inspector.pathExists(card.getDestination1(), card.getDestination2()))
+                player.givePoints(card.getPointValue().asInt());
+            else {
+                player.takePoints(card.getPointValue().asInt());
+                lostPoints += card.getPointValue().asInt();
+            }
+        }
+        return lostPoints;
     }
 
     protected int getLongestRouteInRouteGraph(Graph<City, WeightedEdge> graph) {

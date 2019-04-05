@@ -123,4 +123,6 @@
     <string name="history">History</string>
     <string name="view_map">View Map</string>
     <string name="return_destination">Back</string>
+    <string name="game_over_winner_text">Winner: %1$s</string>
+    <string name="game_over_longest_route_label">Longest Route: %1$s</string>
 </resources>

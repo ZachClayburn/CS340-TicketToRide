@@ -20,10 +20,7 @@ import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.SessionID;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GameController extends BaseController {
     private static GameController SINGLETON = new GameController();
@@ -136,9 +133,15 @@ public class GameController extends BaseController {
         activity.setupError();
     }
 
-    public void finish(ArrayList<LinkedTreeMap<String, Object>> players) {
+    public void finish(ArrayList<LinkedTreeMap<String, Object>> players,
+                       ArrayList<LinkedTreeMap<String, Object>> longestPathWinners,
+                       HashMap<String, Double> lostPoints) {
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
+        DataManager.SINGLETON.setLongestPathWinners(
+                GameControllerHelper.getSingleton().buildPlayerList(longestPathWinners)
+        );
         DataManager.SINGLETON.setGamePlayers(playerList);
+        DataManager.SINGLETON.setLostPoints(lostPoints);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         activity.moveToGameOver();
     }

@@ -210,7 +210,8 @@ public class RouteHelperTest {
         int firtsRouteValue = 4;
         int secondRouteValue = 5;
         int thirdRouteValue = 6;
-        int expectedPoints = firtsRouteValue - secondRouteValue - thirdRouteValue;
+        int fourthRouteValue = 7;
+        int expectedPoints = firtsRouteValue - secondRouteValue - thirdRouteValue - fourthRouteValue;
 
         List<Route> routes;
 
@@ -223,6 +224,7 @@ public class RouteHelperTest {
             cards.add(deck.poll());//Denver to El Paso -- Has, worth 4
             cards.add(deck.poll());//Kansas City to Houston -- Doesn't have, worth 5
             cards.add(deck.poll());//New York to Atlanta -- Doesn't have, worth 6
+            cards.add(deck.poll());//Chicago to New Orleans -- Doesn't have, worth 7
 
             db.getDestinationCardDAO().offerCardsToPlayer(testPlayer1, cards);
             db.getDestinationCardDAO().acceptCards(testPlayer1, cards);

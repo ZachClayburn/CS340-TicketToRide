@@ -121,11 +121,12 @@ public class GameFacade extends BaseFacade {
 
     public void finish(UUID connID, GameID gameID) throws DatabaseException {
         Game game = GameFacadeHelper.getSingleton().findGame(gameID);
-        List<Player> players = PlayerHelper.getSingleton().getGamePlayers(gameID);
         GameFacadeHelper.getSingleton().setGameFinished(game);
-//        List<Player> players = RouteHelper.getSingleton().awardEndOfGamePoints(game);
+        List<Player> players = PlayerHelper.getSingleton().getGamePlayers(game);
+        List<Player> longestPathWinners = new ArrayList<>();
+        var lostPointMap = RouteHelper.getSingleton().awardEndOfGamePoints(game, players, longestPathWinners);
         PlayerHelper.getSingleton().setUsernames(players);
-        Command command = new Command(CONTROLLER_NAME, "finish", players);
+        Command command = new Command(CONTROLLER_NAME, "finish", players, longestPathWinners, lostPointMap);
         sendResponseToRoom(connID, command);
     }
 }

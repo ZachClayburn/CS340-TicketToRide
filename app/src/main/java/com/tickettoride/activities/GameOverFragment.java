@@ -1,7 +1,6 @@
 package com.tickettoride.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +15,6 @@ import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GameOverFragment extends Fragment {
@@ -43,8 +40,16 @@ public class GameOverFragment extends Fragment {
         longestRoute = v.findViewById(R.id.longest_route);
         lobbyButton = v.findViewById(R.id.return_lobby);
         Player winnerPlayer = DataManager.getSINGLETON().selectWinner();
-        winner.setText("Winner: " + winnerPlayer.getUsername());
-        longestRoute.setText("Longest Route: ");//TODO set longest route holder username or none
+        winner.setText(getString(R.string.game_over_winner_text, winnerPlayer.getUsername()));
+        List<Player> longestPathWinners = DataManager.getSINGLETON().getLongestPathWinners();
+        StringBuilder pathWinnerName = new StringBuilder();
+        for (int i = 0; i < longestPathWinners.size(); i++){
+            String winnerName = DataManager.SINGLETON.findPlayerByID(longestPathWinners.get(i).getPlayerID()).getUsername();
+            pathWinnerName.append(winnerName);
+            if (i < longestPathWinners.size()-1)
+                pathWinnerName.append(" & ");
+        }
+        longestRoute.setText(getString(R.string.game_over_longest_route_label, pathWinnerName.toString()));//TODO set longest route holder username or none
         lobbyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,9 +104,11 @@ public class GameOverFragment extends Fragment {
         void bind(Player curPlayer) {
             this.curPlayer = curPlayer;
             username.setText(curPlayer.getUsername());
-            points.setText("Points: " + curPlayer.getPoints());
-            lostPoints.setText("Lost Points: " + curPlayer.getPoints());
-            gainedPoints.setText("Gained Points: " + curPlayer.getPoints());
+            int lostPointValue = DataManager.getSINGLETON().getPlayerLostPoints(curPlayer.getPlayerID());
+            int pointValue = curPlayer.getPoints();
+            points.setText(String.valueOf(pointValue));
+            lostPoints.setText(String.valueOf(lostPointValue));
+            gainedPoints.setText(String.valueOf(pointValue + lostPointValue));
         }
     }
 }

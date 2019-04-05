@@ -17,7 +17,6 @@ public class Player {
     private int trainCardCount = 4;
     private int destinationCardCount = 0;
 
-    //FIXME Add this functionality
     private int points;
 
     public Player(UserID userID, GameID gameID) {

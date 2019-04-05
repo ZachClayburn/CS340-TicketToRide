@@ -1,11 +1,13 @@
 package com.tickettoride.clientModels;
 
+import android.util.Log;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DataManager {
@@ -28,6 +30,10 @@ public class DataManager {
     private int turn = 1;
     private ClientRoute currentClientRoute;
     private List<TrainCard> faceUpDeck;
+    private Map<String, Double> lostPoints = null;
+    private List<Player> longestPathWinners = null;
+
+    private static final String TAG = "DATA_MANAGER";
 
     private DataManager () {
         this.gameIndex = GameIndex.SINGLETON;
@@ -211,5 +217,27 @@ public class DataManager {
             if (player.getPoints() > max_player.getPoints()) { max_player = player; }
         }
         return max_player;
+    }
+
+    public void setLostPoints(Map<String, Double> lostPoints) {
+        this.lostPoints = lostPoints;
+    }
+
+    public int getPlayerLostPoints(PlayerID playerID) {
+
+        Double value =  lostPoints.get(playerID.toString());
+        if (value == null) {
+            Log.e(TAG, "getPlayerLostPoints: No lost points for Player " + playerID, new NullPointerException());
+            return 0;
+        }
+        return value.intValue();
+    }
+
+    public List<Player> getLongestPathWinners() {
+        return longestPathWinners;
+    }
+
+    public void setLongestPathWinners(List<Player> longestPathWinners) {
+        this.longestPathWinners = longestPathWinners;
     }
 }

@@ -201,7 +201,6 @@ public class DestinationCardDAO extends Database.DataAccessObject {
             throws DatabaseException {
 
         var offeredCards = getOfferedCards(player);
-        assert offeredCards.size() == 3;
         assert offeredCards.containsAll(acceptedCards);
 
         offeredCards.removeAll(acceptedCards);
