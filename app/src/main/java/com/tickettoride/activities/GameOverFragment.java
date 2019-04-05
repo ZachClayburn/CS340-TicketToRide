@@ -1,6 +1,7 @@
 package com.tickettoride.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,7 +54,8 @@ public class GameOverFragment extends Fragment {
         lobbyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
+                Intent intent = new Intent(getActivity(), JoinGameActivity.class);
+                startActivity(intent);
             }
         });
         return v;
