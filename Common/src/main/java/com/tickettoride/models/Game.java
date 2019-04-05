@@ -123,9 +123,7 @@ public class Game {
         if (this == o) return true;
         if (!(o instanceof Game)) return false;
         Game game = (Game) o;
-        return getNumPlayer() == game.getNumPlayer() &&
-                getMaxPlayer() == game.getMaxPlayer() &&
-                isStarted() == game.isStarted() &&
+        return getMaxPlayer() == game.getMaxPlayer() &&
                 Objects.equals(getGameID(), game.getGameID()) &&
                 Objects.equals(getGroupName(), game.getGroupName());
     }

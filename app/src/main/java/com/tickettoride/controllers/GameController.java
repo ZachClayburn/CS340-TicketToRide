@@ -82,8 +82,14 @@ public class GameController extends BaseController {
 
     public void create(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
-        try { GameControllerHelper.getSingleton().createGameOnJoinActivity(game); return; } catch (ClassCastException e) { }
-        try { GameControllerHelper.getSingleton().createGameOnCreateGameActivity(game, playerID); return; } catch (ClassCastException e) {
+        try { 
+            GameControllerHelper.getSingleton().createGameOnJoinActivity(game);
+            return; 
+        } catch (ClassCastException e) { }
+        try { 
+            GameControllerHelper.getSingleton().createGameOnCreateGameActivity(game, playerID);
+            return; 
+        } catch (ClassCastException e) {
             Log.i("GAME_CONTROLLER", e.getMessage(), e);
         }
     }
@@ -99,11 +105,14 @@ public class GameController extends BaseController {
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToLobbyJoin(game);
         }
-        else if (DataManager.SINGLETON.getGame().getGameID().equals(game.getGameID())) {
+        else if (DataManager.SINGLETON.getGame() != null && DataManager.SINGLETON.getGame().getGameID().equals(game.getGameID())) {
             LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
             lobbyActivity.updateUI(game);
         }
         else {
+            if(numPlayer>=maxPlayer){
+                DataManager.getSINGLETON().getGameIndex().removeFullGameFromJoin(game);
+            }
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.updateUI();
         }
@@ -165,6 +174,8 @@ public class GameController extends BaseController {
         ArrayList<Game> rejoinGames = Game.buildGames(linkedTreeRejoinGames);
         DataManager.getSINGLETON().getGameIndex().setJoinGameIndex(joinGames);
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
+        JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
+        joinGameActivity.updateUI();
     }
 
     public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn,

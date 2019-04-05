@@ -64,7 +64,7 @@ public class GameFacade extends BaseFacade {
             else { command = GameFacadeHelper.getSingleton().rejoinNotStartedCommand(game, player, sessionID); }
             ServerCommunicator.getINSTANCE().moveToRoom(connID, game.getGameID());
             sendResponseToRoom(connID, command);
-            if (game.getNumPlayer() == game.getMaxPlayer()) sendResponseToMainLobby(command);
+            if (game.getNumPlayer() >= game.getMaxPlayer()) sendResponseToMainLobby(command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(),throwable);
             Command command = new Command(CONTROLLER_NAME, "errorJoin");
@@ -81,7 +81,7 @@ public class GameFacade extends BaseFacade {
             ArrayList<Game> joinGames = GameFacadeHelper.getSingleton().determineJoinGames(user, games);
             ArrayList<Game> rejoinGames = GameFacadeHelper.getSingleton().determineRejoinGames(user, games);
             Command command = new Command(CONTROLLER_NAME, "leave", joinGames, rejoinGames);
-            sendResponseToMainLobby(command);
+            sendResponseToOne(connID, command);
         } catch (Throwable throwable) {
             logger.error(throwable.getMessage(), throwable);
             Command command = new Command(CONTROLLER_NAME, "errorLeave", throwable);
@@ -130,5 +130,19 @@ public class GameFacade extends BaseFacade {
         PlayerHelper.getSingleton().setUsernames(players);
         Command command = new Command(CONTROLLER_NAME, "finish", players, longestPathWinners, lostPointMap);
         sendResponseToRoom(connID, command);
+    }
+    
+    public void getGames(UUID connID,SessionID sessionID){
+        try {
+            Session session = SessionFacade.getSingleton().find_session(sessionID);
+            User user = UserFacade.getSingleton().find_user(session);
+            ArrayList<Game> games = GameFacadeHelper.getSingleton().allGames();
+            ArrayList<Game> joinGames = GameFacadeHelper.getSingleton().determineJoinGames(user, games);
+            ArrayList<Game> rejoinGames = GameFacadeHelper.getSingleton().determineRejoinGames(user, games);
+            Command command = new Command(CONTROLLER_NAME, "leave", joinGames, rejoinGames);//fixme
+            sendResponseToOne(connID, command);//fixme
+        }catch(Exception e){
+            
+        }
     }
 }

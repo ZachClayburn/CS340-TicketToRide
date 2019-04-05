@@ -13,6 +13,9 @@ import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 
 import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.SessionID;
+import com.tickettoride.models.idtypes.UserID;
+
 import command.Command;
 
 public class GameFacadeProxy {
@@ -62,6 +65,12 @@ public class GameFacadeProxy {
 
     public void finish(Game game) {
         Command command = new Command(FACADE_NAME, "finish", game.getGameID());
+        ClientCommunicator.SINGLETON.send(command);
+    }
+    
+    public void getGameLists(){
+        SessionID sessionID=DataManager.SINGLETON.getSession().getSessionID();
+        Command command = new Command(FACADE_NAME, "getGames",sessionID);
         ClientCommunicator.SINGLETON.send(command);
     }
 }

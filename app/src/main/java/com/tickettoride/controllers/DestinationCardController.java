@@ -31,10 +31,6 @@ public class DestinationCardController extends BaseController {
 
     {
         Player managedPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
-        boolean hasInitialized = true;
-        if (managedPlayer.getDestinationCardCount() == 0) {
-            hasInitialized = false;
-        }
         if (isUserPlayer(player)){
             List<DestinationCard> destinationCards = DestinationCard.unGsonCards(acceptedCards);
             DataManager.getSINGLETON().getPlayerHand().getDestinationCards().addAll(destinationCards);

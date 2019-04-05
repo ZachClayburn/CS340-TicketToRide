@@ -81,7 +81,7 @@ public class GameFacadeHelper extends BaseFacade {
         ArrayList<Game> joinGames = new ArrayList<>();
         for (Game game : games) {
             Player alreadyPlayer = PlayerHelper.getSingleton().isAlreadyPlayer(user, game);
-            if (alreadyPlayer == null) { joinGames.add(game); } }
+            if (alreadyPlayer == null && game.getMaxPlayer() > game.getNumPlayer()) { joinGames.add(game); } }
         return joinGames;
     }
 

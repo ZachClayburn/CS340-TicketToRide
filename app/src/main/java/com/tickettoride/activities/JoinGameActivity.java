@@ -50,6 +50,7 @@ public class JoinGameActivity extends MyBaseActivity {
     @Override
     public void onResume(){
         super.onResume();
+        GameFacadeProxy.SINGLETON.getGameLists();
         loadingSpinner.setVisibility(View.GONE);
     }
 
@@ -189,7 +190,7 @@ public class JoinGameActivity extends MyBaseActivity {
 
     private void updateRejoinGames() {
         rejoinGames = GameIndex.SINGLETON.getRejoinGameIndex();
-        rejoinAdapter = new Adapter(context, joinGames);
+        rejoinAdapter = new Adapter(context, rejoinGames);
         rejoinGameList.setAdapter(rejoinAdapter);
     }
 

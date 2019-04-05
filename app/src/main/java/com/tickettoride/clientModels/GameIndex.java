@@ -17,6 +17,10 @@ public class GameIndex {
 
     public void addJoinGame(Game game) { joinGameIndex.add(game); }
     public void addRejoinGame(Game game) { rejoinGameIndex.add(game); }
+    
+    public void removeFullGameFromJoin(Game game){
+        joinGameIndex.remove(game);
+    }
 
     public void setJoinGameIndex(ArrayList<Game> games) { this.joinGameIndex = games;
     }

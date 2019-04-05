@@ -1,4 +1,5 @@
 package com.tickettoride.activities;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -52,7 +53,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     private Button history;
     private RecyclerView playerList;
     private Adapter adapter;
-    private Context context;
+    private Context context = null;
     private PlayerFragmentListener playerListener;
     private ChatFragment chatFragment;
     private View v;
@@ -417,36 +418,42 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void onTurnStart() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setBackgroundColor();
-                disableDrawTrainCards();
-                drawTrain.setEnabled(true);
-                drawDest.setEnabled(true);
-                claimRoute.setEnabled(true);
-                destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(false);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setBackgroundColor();
+                    disableDrawTrainCards();
+                    drawTrain.setEnabled(true);
+                    drawDest.setEnabled(true);
+                    claimRoute.setEnabled(true);
+                    destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+                    destDeck.setEnabled(false);
+                }
+            });
+        }
     }
 
     public void onInitializeTurn() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                disableDrawTrainCards();
-                setBackgroundColor();
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-                drawTrain.setEnabled(false);
-                destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
-                trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(false);
-                Player userPlayer = DataManager.getSINGLETON().getPlayer();
-                DestinationCardFacadeProxy.getOfferedCards(userPlayer, 2);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    disableDrawTrainCards();
+                    setBackgroundColor();
+                    drawDest.setEnabled(false);
+                    claimRoute.setEnabled(false);
+                    drawTrain.setEnabled(false);
+                    destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
+                    trainDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+                    destDeck.setEnabled(false);
+                    Player userPlayer = DataManager.getSINGLETON().getPlayer();
+                    DestinationCardFacadeProxy.getOfferedCards(userPlayer, 2);
+                }
+            });
+        }
     }
 
     public void makeWildCardToast() {
@@ -454,66 +461,77 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void onNotTurnStart() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                setBackgroundColor();
-                disableDrawTrainCards();
-                drawDest.setEnabled(false);
-                drawTrain.setEnabled(false);
-                destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(false);
-                claimRoute.setEnabled(false);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setBackgroundColor();
+                    disableDrawTrainCards();
+                    drawDest.setEnabled(false);
+                    drawTrain.setEnabled(false);
+                    destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+                    destDeck.setEnabled(false);
+                    claimRoute.setEnabled(false);
+                }
+            });
+        }
     }
 
     public void onDrawDestination() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                disableDrawTrainCards();
-                setBackgroundColor();
-                drawDest.setEnabled(false);
-                drawTrain.setEnabled(false);
-                claimRoute.setEnabled(false);
-                destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
-                destDeck.setEnabled(true);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    disableDrawTrainCards();
+                    setBackgroundColor();
+                    drawDest.setEnabled(false);
+                    drawTrain.setEnabled(false);
+                    claimRoute.setEnabled(false);
+                    destDeck.setBackgroundResource(R.drawable.yellowdeckbackground);
+                    destDeck.setEnabled(true);
+                }
+            });
+        }
     }
 
     public void onDrawTrainCards() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                DataManager.SINGLETON.setTrainCardsDrawn(0);
-                enableDrawTrainCards();
-                setBackgroundColor();
-                drawTrain.setEnabled(false);
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-                destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(false);
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DataManager.SINGLETON.setTrainCardsDrawn(0);
+                    enableDrawTrainCards();
+                    setBackgroundColor();
+                    drawTrain.setEnabled(false);
+                    drawDest.setEnabled(false);
+                    claimRoute.setEnabled(false);
+                    destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+                    destDeck.setEnabled(false);
+                }
+            });
+        }
 
     }
 
     public void onClaimRoute() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                disableDrawTrainCards();
-                setBackgroundColor();
-                drawTrain.setEnabled(false);
-                drawDest.setEnabled(false);
-                claimRoute.setEnabled(false);
-                destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
-                destDeck.setEnabled(false);
-            }
-        });
-
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    disableDrawTrainCards();
+                    setBackgroundColor();
+                    drawTrain.setEnabled(false);
+                    drawDest.setEnabled(false);
+                    claimRoute.setEnabled(false);
+                    destDeck.setBackgroundResource(R.drawable.whitedeckbackground);
+                    destDeck.setEnabled(false);
+                }
+            });
+        }
     }
 
     public void enableDrawTrainCards() {
@@ -549,8 +567,10 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     }
 
     public void updateDeckNumbers() {
-        trainDeck.setText(getResources().getString(R.string.train_deck, DataManager.SINGLETON.getTrainCardDeckSize()));
-        destDeck.setText(getResources().getString(R.string.dest_deck, DataManager.SINGLETON.getDestinationCardDeckSize()));
+        if (context != null) {
+            trainDeck.setText(getResources().getString(R.string.train_deck, DataManager.SINGLETON.getTrainCardDeckSize()));
+            destDeck.setText(getResources().getString(R.string.dest_deck, DataManager.SINGLETON.getDestinationCardDeckSize()));
+        }
     }
 
     public void setCardColor(int i) {
@@ -559,19 +579,29 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         }
         switch (i) {
             case 0:
-                cardOne.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));
+                if (cardOne != null) {
+                    cardOne.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(0)));
+                }
                 return;
             case 1:
-                cardTwo.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(1)));
+                if (cardTwo != null) {
+                    cardTwo.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(1)));
+                }
                 return;
             case 2:
-                cardThree.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(2)));
+                if (cardThree != null){
+                    cardThree.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(2)));
+                }
                 return;
             case 3:
-                cardFour.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(3)));
+                if (cardFour != null) {
+                    cardFour.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(3)));
+                }
                 return;
             case 4:
-                cardFive.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(4)));
+                if (cardFive != null) {
+                    cardFive.setImageResource(findCardColor(DataManager.SINGLETON.getTrainCardDeck().getFaceupColor(4)));
+                }
                 return;
         }
     }
