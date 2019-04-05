@@ -102,6 +102,7 @@ public class TrainCardFacade extends BaseFacade {
 
             Command command = new Command(CONTROLLER_NAME, "drawFromFaceUp", playerID, card, faceUp, deckSize);
             sendResponseToRoom(connID, command);
+            updateHistory(connID, playerID, "Drew a " + card.getColor().name() + " train card");
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
 
@@ -117,6 +118,7 @@ public class TrainCardFacade extends BaseFacade {
 
             Command command = new Command(CONTROLLER_NAME, "drawFromFaceDown", playerID, card, deckSize);
             sendResponseToRoom(connID, command);
+            updateHistory(connID, playerID, "Drew a train card");
         } catch (Throwable t) { logger.error(t.getMessage(), t); }
     }
 
