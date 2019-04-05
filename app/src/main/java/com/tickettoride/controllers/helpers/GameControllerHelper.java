@@ -3,6 +3,7 @@ package com.tickettoride.controllers.helpers;
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.CreateGameActivity;
 import com.tickettoride.activities.JoinGameActivity;
+import com.tickettoride.activities.LobbyActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.controllers.BaseController;
 import com.tickettoride.models.Game;
@@ -51,5 +52,10 @@ public class GameControllerHelper extends BaseController {
         DataManager.SINGLETON.setPlayer(player);
         DataManager.SINGLETON.getGameIndex().addRejoinGame(game);
         createGameActivity.moveToLobbyCreate(game);
+    }
+    
+    public void disableStartButton(){
+        LobbyActivity lobbyActivity = (LobbyActivity) getCurrentActivity();
+        lobbyActivity.disableStartButton();
     }
 }

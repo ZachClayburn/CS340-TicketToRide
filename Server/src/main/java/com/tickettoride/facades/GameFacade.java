@@ -92,6 +92,8 @@ public class GameFacade extends BaseFacade {
     public void start(UUID connID, GameID gameID) {
         try {
             logger.info("Attempting to start game " + gameID);
+            var command = new Command(CONTROLLER_NAME, "disableStart");
+            sendResponseToRoom(connID,command);
             GameFacadeHelper.getSingleton().startGame(gameID);
             Game game = GameFacadeHelper.getSingleton().findGame(gameID);
             ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
@@ -102,7 +104,7 @@ public class GameFacade extends BaseFacade {
             PlayerHelper.getSingleton().setTrainCounts(players);
             List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
             DestinationCardFacadeHelper.dealCards(gameID);
-            var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn(), playerStateList);
+            command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn(), playerStateList);
             sendResponseToRoom(connID, command);
             TrainCardFacade.getSingleton().initialize(connID, gameID);
         }catch(Exception e){

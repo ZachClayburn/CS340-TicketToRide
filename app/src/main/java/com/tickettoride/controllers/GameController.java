@@ -93,6 +93,14 @@ public class GameController extends BaseController {
             Log.i("GAME_CONTROLLER", e.getMessage(), e);
         }
     }
+    
+    public void disableStart(){
+        try{
+            GameControllerHelper.getSingleton().disableStartButton();
+        }catch(ClassCastException e){
+            
+        }
+    }
 
     public void join(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer) {
         Session session = DataManager.getSINGLETON().getSession();

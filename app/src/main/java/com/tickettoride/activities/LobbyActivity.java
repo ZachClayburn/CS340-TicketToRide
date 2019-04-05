@@ -64,7 +64,16 @@ public class LobbyActivity extends MyBaseActivity{
             startGame.setEnabled(true);
         }
     }
-
+    
+    public void disableStartButton(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startGame.setEnabled(false);
+            }
+        });
+    }
+    
     @Override
     public void onResume(){
         super.onResume();
