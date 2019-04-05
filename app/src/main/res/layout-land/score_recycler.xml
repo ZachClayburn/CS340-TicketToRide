@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/score_lost"
             android:gravity="center_vertical"
-            android:layout_width="200dp"
+            android:layout_width="175dp"
             android:layout_height="50dp"
             android:text="@string/lost_points"
             android:textSize="20dp"/>

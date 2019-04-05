@@ -161,16 +161,15 @@ public class DiscardHelper {
         discardedWild = 0;
         currentColor = null;
     }
-    public boolean wildCheck() {
-        if (discardedWild == currentRoute.getSpaces()) { return false; }
-        return true;
-    }
     public boolean finalDiscard() {
         if (discardedColor + discardedWild == currentRoute.getSpaces()) { return true; }
         return false;
     }
 
     public Color getCurrentColor() {
+        if (currentColor == null) {
+            return WILD;
+        }
         return currentColor;
     }
 
