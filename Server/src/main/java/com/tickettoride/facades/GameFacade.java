@@ -4,6 +4,7 @@ import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
 import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
+import com.tickettoride.facades.helpers.PlayerStateHelper;
 import com.tickettoride.facades.helpers.RouteHelper;
 import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
@@ -95,12 +96,13 @@ public class GameFacade extends BaseFacade {
             Game game = GameFacadeHelper.getSingleton().findGame(gameID);
             ArrayList<Player> players = (ArrayList<Player>) PlayerHelper.getSingleton().getGamePlayers(gameID);
             PlayerHelper.getSingleton().pickTurnOrder(players);
+            List<PlayerState> playerStateList = PlayerStateHelper.getSingleton().initializePlayerStates(players, gameID);
             PlayerHelper.getSingleton().pickColors(players);
             PlayerHelper.getSingleton().setUsernames(players);
             PlayerHelper.getSingleton().setTrainCounts(players);
             List<Route> routes = RouteHelper.getSingleton().createGameRoutes(gameID);
             DestinationCardFacadeHelper.dealCards(gameID);
-            var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn());
+            var command = new Command(CONTROLLER_NAME, "start", players, routes, game.getCurTurn(), playerStateList);
             sendResponseToRoom(connID, command);
             TrainCardFacade.getSingleton().initialize(connID, gameID);
         }catch(Exception e){

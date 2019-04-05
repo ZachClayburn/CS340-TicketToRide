@@ -1,21 +1,17 @@
 package com.tickettoride.facades;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.tickettoride.command.ServerCommunicator;
 import com.tickettoride.database.Database;
 import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
-import com.tickettoride.models.City;
+import com.tickettoride.facades.helpers.PlayerStateHelper;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
-import com.tickettoride.models.idtypes.GameID;
-
+import com.tickettoride.models.PlayerState;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -34,6 +30,18 @@ public class DestinationCardFacade extends BaseFacade {
     }
 
     private DestinationCardFacade() {}
+
+    public void incrementToDrawDestinationState(UUID connID, Player player) {
+        try {
+            PlayerState playerState = PlayerStateHelper.getSingleton().getPlayerState(player.getPlayerID());
+            PlayerState newPlayerState = playerState.moveToDrawDestinationCardsState();
+            PlayerStateHelper.getSingleton().updatePlayerState(newPlayerState);
+            Command command = new Command("GameController", "setGameState", newPlayerState);
+            sendResponseToRoom(connID, command);
+        } catch (Throwable throwable) {
+            logger.error(throwable.getMessage(), throwable);
+        }
+    }
 
     public void drawDestinationCards(UUID connID, Player player, Integer cardsToKeep) {
         logger.debug("Player " + player.getUsername() + " is drawing cards");
@@ -67,8 +75,15 @@ public class DestinationCardFacade extends BaseFacade {
             Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(game.getGameID());
             int deckCount = gameDeck.size();
             DestinationCardFacadeHelper.getSingleton().acceptCardsForPlayer(player, acceptedCards);
-            if (incrementTurn) { game = GameFacadeHelper.getSingleton().updateGameTurn(game); }
-            Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount, game.getCurTurn());
+            List<PlayerState> playerStates = null;
+            if (incrementTurn) {
+                game = GameFacadeHelper.getSingleton().updateGameTurn(game);
+                playerStates = PlayerStateHelper.getSingleton().incrementGamePlayerStates(game);
+            } else {
+                playerStates = PlayerStateHelper.getSingleton().gamePlayerStates(game.getGameID());
+            }
+            playerStates = PlayerStateHelper.getSingleton().incrementInitialPlayerState(playerStates, player, game.getCurTurn());
+            Command command = new Command(CONTROLLER_NAME, "setPlayerAcceptedCards", player, acceptedCards, deckCount, game.getCurTurn(), playerStates);
             sendResponseToRoom(connID, command);
             String event="Kept "+acceptedCards.size()+" destination cards.";
             updateHistory(connID,player.getPlayerID(),event);

@@ -46,6 +46,7 @@ public class Database implements AutoCloseable {
     protected LineDAO lineDAO;
     protected HistoryDAO historyDAO;
     protected TrainCardDAO trainCardDAO;
+    protected PlayerStateDAO playerStateDAO;
 
     /**
      * Creates a new SQLite database file at {@code location} and initialize the tables
@@ -117,6 +118,8 @@ public class Database implements AutoCloseable {
         DAOs.add(historyDAO);
         trainCardDAO = new TrainCardDAO(connection);
         DAOs.add(trainCardDAO);
+        playerStateDAO = new PlayerStateDAO(connection);
+        DAOs.add(playerStateDAO);
     }
 
     private DatabaseParameters getParameters(){
@@ -210,6 +213,8 @@ public class Database implements AutoCloseable {
     }
 
     public TrainCardDAO getTrainCardDAO() {return trainCardDAO;}
+
+    public PlayerStateDAO getPlayerStateDAO() { return  playerStateDAO; }
 
     public void commit() {
         doCommit = true;

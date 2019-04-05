@@ -8,6 +8,7 @@ import com.tickettoride.facades.TrainCardFacade;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.Route;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.TrainCard;
@@ -18,6 +19,7 @@ import com.tickettoride.models.idtypes.SessionID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -92,15 +94,17 @@ public class GameFacadeHelper extends BaseFacade {
     }
 
 
-    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players) throws DatabaseException {
+    public Command rejoinIsStartedCommand(Game game, Session session, User user, List<Player> players) throws DatabaseException,
+            ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         PlayerHelper.getSingleton().pickColors(players);
         Player player = PlayerHelper.getSingleton().isAlreadyPlayer(user, players);
         List<DestinationCard> playerDestinationCards = DestinationCardFacadeHelper.getSingleton().destinationCardsInPlayersHand(player);
         Queue<DestinationCard> gameDeck = DestinationCardFacadeHelper.getSingleton().destinationCardsinGameDeck(game.getGameID());
         List<Route> routes = RouteHelper.getSingleton().getGameRoutes(game.getGameID());
+        List<PlayerState> playerStateList = PlayerStateHelper.getSingleton().gamePlayerStates(game.getGameID());
         int deckCount = gameDeck.size();
         return new Command(CONTROLLER_NAME, "rejoinIsStarted",
-                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn());
+                           session.getSessionID(), game.getGameID(), game.getGroupName(), players, playerDestinationCards, deckCount, routes, game.getCurTurn(), playerStateList);
 
     }
 

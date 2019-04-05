@@ -1,6 +1,7 @@
 package com.tickettoride.clientModels;
 
 import android.util.Log;
+import com.tickettoride.facadeProxies.GameFacadeProxy;
 import com.tickettoride.models.*;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.idtypes.PlayerID;
@@ -239,5 +240,20 @@ public class DataManager {
 
     public void setLongestPathWinners(List<Player> longestPathWinners) {
         this.longestPathWinners = longestPathWinners;
+    }
+
+    public void setCurrentPLayerState(List<PlayerState> playerStateList) {
+        for (PlayerState playerState : playerStateList) {
+            if (playerState instanceof CompleteGameState) {
+                GameFacadeProxy.SINGLETON.finish(DataManager.getSINGLETON().getGame());
+                return;
+            }
+        }
+        for (PlayerState playerState : playerStateList) {
+            if (playerState.getPlayerID().equals(getPlayer().getPlayerID())) {
+                this.playerState = playerState;
+                return;
+            }
+        }
     }
 }

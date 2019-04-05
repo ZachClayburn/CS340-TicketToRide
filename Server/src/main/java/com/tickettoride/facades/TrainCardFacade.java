@@ -4,10 +4,12 @@ import com.tickettoride.database.Database;
 import com.tickettoride.database.TrainCardDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
+import com.tickettoride.facades.helpers.PlayerStateHelper;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 import com.tickettoride.models.idtypes.GameID;
@@ -31,6 +33,18 @@ public class TrainCardFacade extends BaseFacade {
     private static String CONTROLLER_NAME = "TrainCardController";
     private static Logger logger = LogManager.getLogger(TrainCardFacade.class.getName());
     private TrainCardFacade() {}
+
+    public void incrementToDrawTrainsState(UUID connID, Player player) {
+        try {
+            PlayerState playerState = PlayerStateHelper.getSingleton().getPlayerState(player.getPlayerID());
+            PlayerState newPlayerState = playerState.moveToDrawTrainCardsState();
+            PlayerStateHelper.getSingleton().updatePlayerState(newPlayerState);
+            Command command = new Command("GameController", "setGameState", newPlayerState);
+            sendResponseToRoom(connID, command);
+        } catch (Throwable throwable) {
+            logger.error(throwable.getMessage(), throwable);
+        }
+    }
 
     public void initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
@@ -110,10 +124,11 @@ public class TrainCardFacade extends BaseFacade {
         try {
             Game game = GameFacadeHelper.getSingleton().findGame(gameID);
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
-            Command command = new Command(CONTROLLER_NAME, "finish", game.getCurTurn());
+            List<PlayerState> playerStates = PlayerStateHelper.getSingleton().incrementGamePlayerStates(game);
+            Command command = new Command(CONTROLLER_NAME, "finish", game.getCurTurn(), playerStates);
             sendResponseToRoom(connID, command);
         }catch(Exception e){
-            logger.error(e.getMessage(),e);
+            logger.error(e.getMessage(), e);
             //todo: send message somewhere that it failed
         }
     }

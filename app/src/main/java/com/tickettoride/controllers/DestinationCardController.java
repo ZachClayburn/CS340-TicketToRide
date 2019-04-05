@@ -4,10 +4,14 @@ import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
+import com.tickettoride.activities.MapFragment;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,11 @@ public class DestinationCardController extends BaseController {
         return SINGLETON;
     }
 
-    public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards, Integer destinationDeckCount, Integer turn) {
+    public void setPlayerAcceptedCards(Player player, ArrayList<LinkedTreeMap> acceptedCards, Integer destinationDeckCount,
+                                       Integer turn, ArrayList<LinkedTreeMap<String, Object>> playerStateMap) throws ClassNotFoundException,
+    NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException
+
+    {
         Player managedPlayer = DataManager.SINGLETON.findPlayerByID(player.getPlayerID());
         boolean hasInitialized = true;
         if (managedPlayer.getDestinationCardCount() == 0) {
@@ -39,16 +47,15 @@ public class DestinationCardController extends BaseController {
             managedPlayer.incrementDestinationCardCount(acceptedCards.size());
         }
         DataManager.getSINGLETON().setDestinationCardDeckSize(destinationDeckCount);
+        List<PlayerState> playerStates = PlayerState.buildPlayerStateList(playerStateMap);
+        DataManager.SINGLETON.setCurrentPLayerState(playerStates);
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setTurn(turn);
-        if (hasInitialized) {
-            activity.incrementTurnState();
-        }
         activity.updateCards();
+        activity.applyPlayerState();
     }
 
-    public void offerDestinationCards(Player player,ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
-
+    public void offerDestinationCards(Player player, ArrayList<LinkedTreeMap> gsonCards, Integer requiredToKeep) {
         if (isUserPlayer(player)) {
             List<DestinationCard> offeredCards = DestinationCard.unGsonCards(gsonCards);
             DataManager.getSINGLETON().setOfferedCards(requiredToKeep, offeredCards);

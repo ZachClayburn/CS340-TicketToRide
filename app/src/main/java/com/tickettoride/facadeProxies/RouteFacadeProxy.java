@@ -4,6 +4,7 @@ import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.command.ClientCommunicator;
 import com.tickettoride.models.Color;
+import com.tickettoride.models.Player;
 import com.tickettoride.models.Route;
 
 import command.Command;
@@ -13,6 +14,12 @@ public class RouteFacadeProxy {
     private static final String FACADE_NAME = "RouteFacade";
     public static RouteFacadeProxy SINGLETON = new RouteFacadeProxy();
     private RouteFacadeProxy(){}
+
+    public void incrementToClaimRouteState() {
+        Player player = DataManager.getSINGLETON().getPlayer();
+        Command command = new Command(FACADE_NAME, "incrementToClaimRouteState", DataManager.getSINGLETON().getPlayer());
+        ClientCommunicator.SINGLETON.send(command);
+    }
 
     public void claimRoute(ClientRoute clientRoute, Color color, int colorCards, int wildCards) {
         try{

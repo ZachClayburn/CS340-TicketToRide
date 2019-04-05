@@ -5,14 +5,22 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.*;
 import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.DataManager;
+import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.facadeProxies.ChatFacadeProxy;
 import com.tickettoride.facadeProxies.TrainCardFacadeProxy;
 import com.tickettoride.facadeProxies.HistoryFacadeProxy;
+import com.tickettoride.models.ClaimRouteState;
 import com.tickettoride.models.DestinationCard;
+import com.tickettoride.models.DrawDestinationState;
+import com.tickettoride.models.DrawTrainCardsState;
+import com.tickettoride.models.FinalDrawDestinationCardState;
+import com.tickettoride.models.FinalDrawTrainCardsState;
+import com.tickettoride.models.FinalPlaceTrainsState;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
 import com.tickettoride.controllers.helpers.GameControllerHelper;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
@@ -26,6 +34,50 @@ public class GameController extends BaseController {
     private static GameController SINGLETON = new GameController();
     public static GameController getSingleton() { return SINGLETON; }
     private GameController() {}
+
+    public void setGameState(DrawTrainCardsState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            activity.applyPlayerState();
+        }
+    }
+
+    public void setGameState(FinalDrawTrainCardsState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            MapFragment mf = activity.getMapFragment();
+            PlayerStateHelper.getSingleton().applyPlayerState(playerState, mf);
+        }
+    }
+
+    public void setGameState(DrawDestinationState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            MapFragment mf = activity.getMapFragment();
+            PlayerStateHelper.getSingleton().applyPlayerState(playerState, mf);
+        }
+    }
+
+    public void setGameState(FinalDrawDestinationCardState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            MapFragment mf = activity.getMapFragment();
+            PlayerStateHelper.getSingleton().applyPlayerState(playerState, mf);
+        }
+    }
+
+    public void setGameState(ClaimRouteState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            MapFragment mf = activity.getMapFragment();
+            PlayerStateHelper.getSingleton().applyPlayerState(playerState, mf);
+        }
+    }
 
     public void create(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
@@ -71,13 +123,13 @@ public class GameController extends BaseController {
         }
     }
 
-    public void rejoinIsStarted(SessionID sessionID, GameID gameID,
-                                String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap,
-                                ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount,
-                                ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
+    public void rejoinIsStarted(SessionID sessionID, GameID gameID, String groupName, ArrayList<LinkedTreeMap<String, Object>> playersMap, ArrayList<LinkedTreeMap> playerHandMap, Integer deckCount,
+                                ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn, ArrayList<LinkedTreeMap<String, Object>> playerStateMap) throws ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         if (DataManager.SINGLETON.getSession().getSessionID().equals(sessionID)) {
             List<Player> players = GameControllerHelper.getSingleton().buildPlayerList(playersMap);
             List<DestinationCard> playerDestinationCards = DestinationCard.unGsonCards(playerHandMap);
+            List<PlayerState> playerStates = PlayerState.buildPlayerStateList(playerStateMap);
             Game game = new Game(gameID, groupName,true);
             GameControllerHelper.getSingleton().setPlayerInfo(players);
             DataManager.SINGLETON.setGame(game);
@@ -87,6 +139,8 @@ public class GameController extends BaseController {
             DataManager.SINGLETON.setDestinationCardDeckSize(deckCount);
             DataManager.SINGLETON.setTurn(turn);
             DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
+            List<PlayerState> playerStateList = PlayerState.buildPlayerStateList(playerStateMap);
+            DataManager.SINGLETON.setCurrentPLayerState(playerStateList);
             JoinGameActivity joinGameActivity = (JoinGameActivity) getCurrentActivity();
             joinGameActivity.moveToGame();
             ChatFacadeProxy.SINGLETON.getChat(gameID);
@@ -112,7 +166,9 @@ public class GameController extends BaseController {
         DataManager.getSINGLETON().getGameIndex().setRejoinGameIndex(rejoinGames);
     }
 
-    public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn) {
+    public void start(ArrayList<LinkedTreeMap<String, Object>> players, ArrayList<LinkedTreeMap<String, Object>> routes, Integer turn,
+                      ArrayList<LinkedTreeMap<String, Object>> playerStateMap) throws ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Log.i("GAME_CONTROLLER", "Calling Start");
         List<Player> playerList = GameControllerHelper.getSingleton().buildPlayerList(players);
         DataManager.SINGLETON.setGamePlayers(playerList);
@@ -120,12 +176,13 @@ public class GameController extends BaseController {
         DataManager.SINGLETON.setDestinationCardDeckSize(30);
         DataManager.SINGLETON.setClientRoutes(ClientRoute.buildClientRoutes(routes));
         DataManager.SINGLETON.setTurn(turn);
+        List<PlayerState> playerStateList = PlayerState.buildPlayerStateList(playerStateMap);
+        DataManager.SINGLETON.setCurrentPLayerState(playerStateList);
         LobbyActivity activity = (LobbyActivity) getCurrentActivity();
         activity.moveToGame();
         Game game = DataManager.getSINGLETON().getGame();
         ChatFacadeProxy.SINGLETON.getChat(game.getGameID());
         HistoryFacadeProxy.SINGLETON.getHistory(game.getGameID());
-        //TrainCardFacadeProxy.SINGLETON.initialize(game.getGameID());
     }
 
     public void errorSetup() {

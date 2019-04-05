@@ -2,21 +2,25 @@ package com.tickettoride.facadeProxies;
 
 import android.util.Log;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.InitializeGameState;
 import com.tickettoride.command.ClientCommunicator;
 import com.tickettoride.models.DestinationCard;
+import com.tickettoride.models.InitializeGameState;
 import com.tickettoride.models.Player;
-import com.tickettoride.models.Session;
+
 import command.Command;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class DestinationCardFacadeProxy {
 
     public static final String TAG = "DESTINATION_CARD_FACADE_PROXY";
     private static final String FACADE_NAME = "DestinationCardFacade";
+
+    public static void incrementToDrawDestinationState() {
+        Player player = DataManager.getSINGLETON().getPlayer();
+        Command command = new Command(FACADE_NAME, "incrementToDrawDestinationState", DataManager.getSINGLETON().getPlayer());
+        ClientCommunicator.SINGLETON.send(command);
+    }
 
     public static void drawDestinationCards(Player player, int cardsToKeep){
 
