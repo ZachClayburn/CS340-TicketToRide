@@ -88,7 +88,7 @@ public class PlayerHelper extends BaseFacade {
 
     public void setTrainCounts(List<Player> players) throws DatabaseException {
             for (Player player: players) {
-                player.setTrainCarCount(5);
+                player.setTrainCarCount(45);
                 updateTrainCount(player);
             }
     }

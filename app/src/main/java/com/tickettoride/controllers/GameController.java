@@ -80,6 +80,15 @@ public class GameController extends BaseController {
         }
     }
 
+    public void setGameState(FinalPlaceTrainsState playerState) {
+        if (playerState.getPlayerID().equals(DataManager.getSINGLETON().getPlayer().getPlayerID())) {
+            DataManager.SINGLETON.setPlayerState(playerState);
+            GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+            MapFragment mf = activity.getMapFragment();
+            PlayerStateHelper.getSingleton().applyPlayerState(playerState, mf);
+        }
+    }
+
     public void create(PlayerID playerID, SessionID sessionID, GameID gameID, String groupName, Integer numPlayer, Integer maxPlayer, Boolean isStarted) {
         Game game = new Game(gameID, groupName, numPlayer, maxPlayer, isStarted);
         try { 

@@ -38,6 +38,7 @@ public class ClientRoute extends Route {
     public void resetLines() {for (Line line: lines) { ((ClientLine) line).resetLine(); }}
 
     private int convertLineColor(PlayerColor lineColor) {
+        if (lineColor == null) {return android.graphics.Color.TRANSPARENT; }
         switch(lineColor) {
             case BLUE:
                 return android.graphics.Color.BLUE;
