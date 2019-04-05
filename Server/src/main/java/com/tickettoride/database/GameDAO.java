@@ -94,7 +94,7 @@ public class GameDAO extends Database.DataAccessObject {
     }
 
     public void updateGameFinished(Game game) throws DatabaseException {
-        String sql = "UPDATE games SET finished=FALSE where gameID = ?";
+        String sql = "UPDATE games SET finished=TRUE where gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, game.getGameID().toString());
             statement.executeUpdate();

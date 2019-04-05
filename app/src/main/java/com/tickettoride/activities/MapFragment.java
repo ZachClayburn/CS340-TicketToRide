@@ -393,6 +393,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     public void setBackgroundColor() {
         for (Player player : DataManager.getSINGLETON().getGamePlayers()) {
             if (player.getTurn() == DataManager.getSINGLETON().getTurn()) {
+                if (player.getColor() == null) { return; }
                 switch(player.getColor()){
                     case BLACK:
                         v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
