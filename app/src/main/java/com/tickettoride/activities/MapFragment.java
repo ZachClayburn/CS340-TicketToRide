@@ -389,11 +389,10 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         }
     }
 
-    public void onTurnStart() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                switch(DataManager.getSINGLETON().getPlayer().getColor()){
+    public void setBackgroundColor() {
+        for (Player player : DataManager.getSINGLETON().getGamePlayers()) {
+            if (player.getTurn() == DataManager.getSINGLETON().getTurn()) {
+                switch(player.getColor()){
                     case BLACK:
                         v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
                         break;
@@ -409,7 +408,19 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
                     case YELLOW:
                         v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
                         break;
+                    default:
+                        v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
+                        break;
                 }
+            }
+        }
+    }
+
+    public void onTurnStart() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setBackgroundColor();
                 disableDrawTrainCards();
                 drawTrain.setEnabled(true);
                 drawDest.setEnabled(true);
@@ -425,6 +436,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             @Override
             public void run() {
                 disableDrawTrainCards();
+                setBackgroundColor();
                 drawDest.setEnabled(false);
                 claimRoute.setEnabled(false);
                 drawTrain.setEnabled(false);
@@ -445,30 +457,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                for (Player player : DataManager.getSINGLETON().getGamePlayers()) {
-                    if (player.getTurn() == DataManager.getSINGLETON().getTurn()) {
-                        switch(player.getColor()){
-                            case BLACK:
-                                v.setBackgroundColor(getResources().getColor(R.color.blackPlayer, getActivity().getTheme()));
-                                break;
-                            case RED:
-                                v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
-                                break;
-                            case BLUE:
-                                v.setBackgroundColor(getResources().getColor(R.color.bluePlayer, getActivity().getTheme()));
-                                break;
-                            case GREEN:
-                                v.setBackgroundColor(getResources().getColor(R.color.greenPlayer, getActivity().getTheme()));
-                                break;
-                            case YELLOW:
-                                v.setBackgroundColor(getResources().getColor(R.color.yellowPlayer, getActivity().getTheme()));
-                                break;
-                            default:
-                                v.setBackgroundColor(getResources().getColor(R.color.redPlayer, getActivity().getTheme()));
-                                break;
-                        }
-                    }
-                }
+                setBackgroundColor();
                 disableDrawTrainCards();
                 drawDest.setEnabled(false);
                 drawTrain.setEnabled(false);
@@ -484,6 +473,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             @Override
             public void run() {
                 disableDrawTrainCards();
+                setBackgroundColor();
                 drawDest.setEnabled(false);
                 drawTrain.setEnabled(false);
                 claimRoute.setEnabled(false);
@@ -499,6 +489,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             public void run() {
                 DataManager.SINGLETON.setTrainCardsDrawn(0);
                 enableDrawTrainCards();
+                setBackgroundColor();
                 drawTrain.setEnabled(false);
                 drawDest.setEnabled(false);
                 claimRoute.setEnabled(false);
@@ -514,6 +505,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
             @Override
             public void run() {
                 disableDrawTrainCards();
+                setBackgroundColor();
                 drawTrain.setEnabled(false);
                 drawDest.setEnabled(false);
                 claimRoute.setEnabled(false);
