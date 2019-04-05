@@ -24,6 +24,12 @@ public class TrainCardFacadeProxy {
 
     private TrainCardFacadeProxy() { }
 
+    public void incrementToDrawTrainsState() {
+        Player player = DataManager.getSINGLETON().getPlayer();
+        Command command = new Command(FACADE_NAME, "incrementToDrawTrainsState", DataManager.getSINGLETON().getPlayer());
+        ClientCommunicator.SINGLETON.send(command);
+    }
+
     public void drawFaceupCard(GameID gameID, PlayerID playerID, int pos){
         try{
             Command command = new Command(FACADE_NAME, "drawFromFaceUp", gameID, playerID, pos);
@@ -58,5 +64,4 @@ public class TrainCardFacadeProxy {
             ClientCommunicator.SINGLETON.send(command);
         } catch(Throwable t){}
     }
-
 }

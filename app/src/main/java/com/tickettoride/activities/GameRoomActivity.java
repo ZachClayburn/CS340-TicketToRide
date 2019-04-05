@@ -10,11 +10,9 @@ import android.widget.Toast;
 
 import com.tickettoride.R;
 import com.tickettoride.clientModels.DataManager;
-import com.tickettoride.clientModels.InitializeGameState;
 import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
 import com.tickettoride.models.DestinationCard;
-import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,10 +39,14 @@ public class GameRoomActivity extends MyBaseActivity implements
         setContentView(R.layout.game_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         fm = this.getSupportFragmentManager();
-        mapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_holder);
+        try {
+            mapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_holder);
+        } catch (RuntimeException e) {}
         if (mapFragment == null) {
             mapFragment = new MapFragment();
-            fm.beginTransaction().add(R.id.fragment_holder, mapFragment).commit();
+            if (fm.findFragmentById(R.id.fragment_holder) == null) {
+                fm.beginTransaction().add(R.id.fragment_holder, mapFragment).commit();
+            }
         }
         playerFragment = (PlayerFragment) fm.findFragmentById(R.id.player_layout);
         this.context = this;
@@ -195,7 +197,6 @@ public class GameRoomActivity extends MyBaseActivity implements
         onReturnToMap();
     }
 
-    public void incrementTurnState() { PlayerStateHelper.getSingleton().incrementTurnState(mapFragment); }
     @Override
     public void onBackPressed() {
         NavUtils.navigateUpFromSameTask(this);
@@ -206,5 +207,9 @@ public class GameRoomActivity extends MyBaseActivity implements
 
     public void setChatError(){
         //figure out what message to display
+    }
+
+    public void applyPlayerState() {
+        PlayerStateHelper.getSingleton().applyPlayerState(DataManager.getSINGLETON().getPlayerState(), mapFragment);
     }
 }

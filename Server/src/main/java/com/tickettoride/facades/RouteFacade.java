@@ -2,12 +2,14 @@ package com.tickettoride.facades;
 
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
+import com.tickettoride.facades.helpers.PlayerStateHelper;
 import com.tickettoride.facades.helpers.RouteHelper;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.City;
 
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.Route;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +30,18 @@ public class RouteFacade extends BaseFacade {
     }
     private static Logger logger = LogManager.getLogger(RouteFacade.class.getName());
 
+    public void incrementToClaimRouteState(UUID connID, Player player) {
+        try {
+            PlayerState playerState = PlayerStateHelper.getSingleton().getPlayerState(player.getPlayerID());
+            PlayerState newPlayerState = playerState.moveToPlaceTrainsState();
+            PlayerStateHelper.getSingleton().updatePlayerState(newPlayerState);
+            Command command = new Command("GameController", "setGameState", newPlayerState);
+            sendResponseToRoom(connID, command);
+        } catch (Throwable throwable) {
+            logger.error(throwable.getMessage(), throwable);
+        }
+    }
+
     public void claim(UUID connID, Route route, Player player, Color color, Integer colorCards, Integer wildCards) {
         try {
             TrainCardFacade.getSingleton().discard(player.getPlayerID(), color, colorCards, wildCards);
@@ -40,7 +54,8 @@ public class RouteFacade extends BaseFacade {
             PlayerHelper.getSingleton().updatePlayerPoints(player);
             Game game = GameFacadeHelper.getSingleton().findGame(route.getGameID());
             game = GameFacadeHelper.getSingleton().updateGameTurn(game);
-            Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn(), cardsDiscarded);
+            List<PlayerState> playerStates = PlayerStateHelper.getSingleton().incrementGamePlayerStates(game);
+            Command command = new Command(CONTROLLER_NAME, "claim", route, player, game.getCurTurn(), cardsDiscarded, playerStates);
             sendResponseToRoom(connID, command);
             String event="Claimed route ";
             List<City> cities=route.getCities();

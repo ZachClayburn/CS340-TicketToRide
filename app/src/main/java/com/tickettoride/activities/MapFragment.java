@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +27,7 @@ import com.tickettoride.clientModels.ClientRoute;
 import com.tickettoride.clientModels.helpers.PlayerStateHelper;
 import com.tickettoride.clientModels.helpers.RouteHelper;
 import com.tickettoride.facadeProxies.DestinationCardFacadeProxy;
+import com.tickettoride.facadeProxies.RouteFacadeProxy;
 import com.tickettoride.facadeProxies.TrainCardFacadeProxy;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.*;
@@ -75,9 +75,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
 
     private View.OnClickListener drawTrainViewListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) {
-            DataManager.SINGLETON.getPlayerState().moveToDrawTrainCardsState(selfMapFragment);
-        }
+        public void onClick(View view) { TrainCardFacadeProxy.SINGLETON.incrementToDrawTrainsState(); }
     };
     private View.OnClickListener card1ViewListener = new View.OnClickListener() {
         @Override
@@ -150,15 +148,12 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
 
     private View.OnClickListener drawDestinationListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) {
-            DataManager.SINGLETON.getPlayerState().moveToDrawDestinationCardsState(selfMapFragment);
-            //List<Player> players = DataManager.getSINGLETON().getGamePlayers();
-        }
+        public void onClick(View view) { DestinationCardFacadeProxy.incrementToDrawDestinationState(); }
     };
 
     private View.OnClickListener claimRouteListener = new View.OnClickListener() {
         @Override
-        public void onClick(View view) { DataManager.SINGLETON.getPlayerState().moveToPlaceTrainsState(selfMapFragment); }
+        public void onClick(View view) { RouteFacadeProxy.SINGLETON.incrementToClaimRouteState(); }
     };
     private View.OnClickListener historyViewListener = new View.OnClickListener() {
         @Override
@@ -176,7 +171,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             Class currentStateClass = DataManager.getSINGLETON().getPlayerState().getClass();
-            if (currentStateClass != ClaimRouteState.class && currentStateClass != FinalPlaceTrainsState.class) { return false; }
+//            if (currentStateClass != ClientClaimRouteState.class && currentStateClass != ClientFinalPlaceTrainsState.class) { return false; }
             int x = (int) event.getX();
             int y = (int) event.getY();
             Log.i("TAG", "touch: (" + x + ", " + y + ")");
@@ -263,7 +258,7 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
         decorView.setSystemUiVisibility(uiOptions);
         android.support.v7.app.ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         actionBar.hide();
-        PlayerState state = DataManager.getSINGLETON().getPlayerState();
+//        ClientPlayerState state = DataManager.getSINGLETON().getPlayerState();
         int turn = DataManager.getSINGLETON().getTurn();
         cardOne = v.findViewById(R.id.first_card);
         cardTwo = v.findViewById(R.id.second_card);
@@ -293,9 +288,8 @@ public class MapFragment extends Fragment {//TODO once train cars reach 2 and tu
     @Override
     public void onResume() {
         super.onResume();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            PlayerStateHelper.getSingleton().determinePlayerState(selfMapFragment);
         drawExternal();
+        PlayerStateHelper.getSingleton().applyPlayerState(DataManager.getSINGLETON().getPlayerState(), selfMapFragment);
     }
 
     @Override

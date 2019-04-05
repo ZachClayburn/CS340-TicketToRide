@@ -1,8 +1,14 @@
 package com.tickettoride.controllers;
+import com.google.gson.internal.LinkedTreeMap;
 import com.tickettoride.activities.GameRoomActivity;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.Route;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RouteController extends BaseController {
     private static final RouteController SINGLETON = new RouteController();
@@ -13,7 +19,8 @@ public class RouteController extends BaseController {
     }
 
 
-    public void claim(Route route, Player player, Integer turn, Integer cardsDiscarded) {
+    public void claim(Route route, Player player, Integer turn, Integer cardsDiscarded, ArrayList<LinkedTreeMap<String, Object>> playerStateMap) throws ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
         DataManager.SINGLETON.setRouteClaimed(route);
         int spaces = route.getSpaces();
@@ -25,6 +32,8 @@ public class RouteController extends BaseController {
         else { activity.getMapFragment().drawExternal(); }
 
         DataManager.SINGLETON.setTurn(turn);
-        activity.incrementTurnState();
+        List<PlayerState> playerStates = PlayerState.buildPlayerStateList(playerStateMap);
+        DataManager.SINGLETON.setCurrentPLayerState(playerStates);
+        activity.applyPlayerState();
     }
 }

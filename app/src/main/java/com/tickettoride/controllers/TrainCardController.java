@@ -6,11 +6,13 @@ import com.tickettoride.activities.MapFragment;
 import com.tickettoride.clientModels.DataManager;
 import com.tickettoride.models.Hand;
 import com.tickettoride.models.Player;
+import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.TrainCardDeck;
 import com.tickettoride.models.idtypes.PlayerID;
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,10 +79,13 @@ public class TrainCardController extends BaseController {
         activity.updateCards();
     }
 
-    public void finish(Integer turn){
-        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+    public void finish(Integer turn, ArrayList<LinkedTreeMap<String, Object>> playerStateMap) throws ClassNotFoundException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        List<PlayerState> playerStates = PlayerState.buildPlayerStateList(playerStateMap);
+        DataManager.SINGLETON.setCurrentPLayerState(playerStates);
         DataManager.SINGLETON.setTurn(turn);
-        activity.incrementTurnState();
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        activity.applyPlayerState();
     }
 
 }
