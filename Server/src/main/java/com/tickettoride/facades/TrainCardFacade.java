@@ -159,12 +159,26 @@ public class TrainCardFacade extends BaseFacade {
         }
     }
 
-    public void discard(PlayerID playerID, Color color, int colorCards, int wildCards, GameID gameID) throws DatabaseException {
+    public void discard(UUID connID, PlayerID playerID, Color color, int colorCards, int wildCards, GameID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             TrainCardDAO dao = database.getTrainCardDAO();
 
             dao.discardCards(color, colorCards, wildCards, playerID, gameID);
             database.commit();
+
+
+            if (dao.getFaceDownDeckSize(gameID) == 0){
+                dao.replaceFaceDown(gameID);
+                dao.replaceMissingFaceUp(gameID);
+                database.commit();
+
+                List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
+
+                int deckSize = dao.getFaceDownDeckSize(gameID);
+
+                Command command = new Command(CONTROLLER_NAME, "updateDecks", faceUp, deckSize);
+                sendResponseToRoom(connID, command);
+            }
         }
     }
 }

@@ -163,7 +163,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         List<TrainCard> faceUp = new ArrayList<>();
 
         String sql = "SELECT " +
-                "color AND sequenceposition FROM TrainCards " +
+                "color, sequenceposition FROM TrainCards " +
                 "WHERE gameid=? AND state='faceUp' " +
                 "ORDER BY sequenceposition";
 
@@ -175,13 +175,16 @@ public class TrainCardDAO extends Database.DataAccessObject {
             int curPos = 0;
             int seqPos = 0;
 
-            while (results.next())
+            while (results.next()) {
                 seqPos = results.getInt("sequenceposition");
-                while (curPos != seqPos && curPos < 5){
+
+                while (curPos < seqPos && curPos < 5) {
                     faceUp.add(new TrainCard(Color.GREY));
+                    curPos += 1;
                 }
                 faceUp.add(buildTrainCardFromResult(results));
-
+                curPos += 1;
+            }
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not get the faceup deck!", e);
@@ -304,10 +307,6 @@ public class TrainCardDAO extends Database.DataAccessObject {
             throw new DatabaseException("Could not discard Cards!", e);
         }
 
-        if (getFaceDownDeckSize(gameID) == 0){
-            replaceFaceDown(gameID);
-            replaceMissingFaceUp(gameID);
-        }
     }
 
     private void replaceAllFaceUpCards(GameID gameID) throws DatabaseException {
@@ -560,6 +559,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
     public void replaceMissingFaceUp(GameID gameID) throws DatabaseException {
         List<Integer> missingPos = new ArrayList<>();
         int curPos = 0;
+        List<Integer> hasPos = new ArrayList<>();
 
         String sql = "SELECT sequenceposition FROM TrainCards " +
                 "WHERE gameid=? AND state='faceUp' " +
@@ -570,12 +570,13 @@ public class TrainCardDAO extends Database.DataAccessObject {
 
             var results = statement.executeQuery();
 
-            while (results.next())
-                while (curPos < results.getInt("sequenceposition") && curPos < 5){
+            while (results.next()) {
+                while (curPos < results.getInt("sequenceposition") && curPos < 5) {
                     missingPos.add(curPos);
                     curPos += 1;
                 }
-
+                curPos += 1;
+            }
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not get the facedown deck!", e);

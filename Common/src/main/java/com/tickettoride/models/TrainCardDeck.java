@@ -30,7 +30,7 @@ public class TrainCardDeck {
         faceUpDeck = new ArrayList<>();
         discardPile = new ArrayList<>();
 
-        for (int i = 0; i < 12; i++){
+        for (int i = 0; i < 2; i++){
             faceDownDeck.add(new TrainCard(Color.BLACK));
             faceDownDeck.add(new TrainCard(Color.RED));
             faceDownDeck.add(new TrainCard(Color.GREEN));
@@ -40,7 +40,7 @@ public class TrainCardDeck {
             faceDownDeck.add(new TrainCard(Color.YELLOW));
             faceDownDeck.add(new TrainCard(Color.ORANGE));
         }
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 1; i++) {
             faceDownDeck.add(new TrainCard(Color.WILD));
         }
 

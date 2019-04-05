@@ -88,4 +88,13 @@ public class TrainCardController extends BaseController {
         activity.applyPlayerState();
     }
 
+    public void updateDecks(ArrayList<LinkedTreeMap> gsonCards, Integer deckSize) {
+        GameRoomActivity activity = (GameRoomActivity) getCurrentActivity();
+        MapFragment fragment = activity.getMapFragment();
+        List<TrainCard> faceUp = TrainCard.unGsonCards(gsonCards);
+        DataManager.SINGLETON.updateFaceUpDeck(faceUp);
+        DataManager.SINGLETON.updateTrainCardDeckSize(deckSize);
+        activity.updateCards();
+    }
+
 }

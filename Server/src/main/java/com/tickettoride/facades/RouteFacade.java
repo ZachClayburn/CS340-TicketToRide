@@ -44,7 +44,7 @@ public class RouteFacade extends BaseFacade {
 
     public void claim(UUID connID, Route route, Player player, Color color, Integer colorCards, Integer wildCards) {
         try {
-            TrainCardFacade.getSingleton().discard(player.getPlayerID(), color, colorCards, wildCards, route.getGameID());
+            TrainCardFacade.getSingleton().discard(connID, player.getPlayerID(), color, colorCards, wildCards, route.getGameID());
             int cardsDiscarded = colorCards + wildCards;
             route.setClaimedByPlayerID(player.getPlayerID());
             RouteHelper.getSingleton().updateRoute(route);
