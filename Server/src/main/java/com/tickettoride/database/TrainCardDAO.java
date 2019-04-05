@@ -59,7 +59,33 @@ public class TrainCardDAO extends Database.DataAccessObject {
     public void addDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
         addFaceDown(gameID, deck.getFaceDownDeck());
         addFaceUp(gameID, deck.getFaceUpDeck());
-        // TODO: Add Discard? Just in case deck is initialized with 3 wild cards
+        addDiscard(gameID, deck.getDiscardPile());
+    }
+
+    public void addDiscard(GameID gameID, List<TrainCard> discard) throws DatabaseException{
+        if (discard.size() == 0) {
+            return;
+        }
+        String sql = "INSERT INTO TrainCards " +
+                "(gameID, color, state)" +
+                "VALUES (?, ?, 'inDiscard')";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, gameID.toString());
+
+            for (TrainCard card:discard) {
+
+                statement.setString(2, getColorAsString(card.getColor()));
+
+                statement.executeUpdate();
+
+            }
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not add the deck!", e);
+        }
     }
 
     public void addFaceUp(GameID gameID, List<TrainCard> faceUpDeck) throws DatabaseException {
@@ -137,7 +163,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         List<TrainCard> faceUp = new ArrayList<>();
 
         String sql = "SELECT " +
-                "color FROM TrainCards " +
+                "color AND sequenceposition FROM TrainCards " +
                 "WHERE gameid=? AND state='faceUp' " +
                 "ORDER BY sequenceposition";
 
@@ -146,13 +172,23 @@ public class TrainCardDAO extends Database.DataAccessObject {
             statement.setString(1, gameID.toString());
 
             var results = statement.executeQuery();
+            int curPos = 0;
+            int seqPos = 0;
 
             while (results.next())
+                seqPos = results.getInt("sequenceposition");
+                while (curPos != seqPos && curPos < 5){
+                    faceUp.add(new TrainCard(Color.GREY));
+                }
                 faceUp.add(buildTrainCardFromResult(results));
 
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not get the faceup deck!", e);
+        }
+
+        while(faceUp.size() != 5){
+            faceUp.add(new TrainCard(Color.GREY));
         }
 
         return faceUp;
@@ -234,7 +270,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return hand;
     }
 
-    public void discardCards(Color color, int colorCards, int wildCards, PlayerID playerID) throws DatabaseException {
+    public void discardCards(Color color, int colorCards, int wildCards, PlayerID playerID, GameID gameID) throws DatabaseException {
 
         String sql = "UPDATE TrainCards " +
                 "SET state='inDiscard', playerid=NULL, sequenceposition=NULL " +
@@ -266,6 +302,11 @@ public class TrainCardDAO extends Database.DataAccessObject {
         } catch (SQLException e) {
             logger.catching(e);
             throw new DatabaseException("Could not discard Cards!", e);
+        }
+
+        if (getFaceDownDeckSize(gameID) == 0){
+            replaceFaceDown(gameID);
+            replaceMissingFaceUp(gameID);
         }
     }
 
@@ -483,6 +524,9 @@ public class TrainCardDAO extends Database.DataAccessObject {
             logger.catching(e);
             throw new DatabaseException("Could not draw card!", e);
         }
+        if (card == null) {
+            card = new TrainCard(Color.GREY);
+        }
         return card;
     }
 
@@ -511,6 +555,35 @@ public class TrainCardDAO extends Database.DataAccessObject {
         }
 
         return deckSize;
+    }
+
+    public void replaceMissingFaceUp(GameID gameID) throws DatabaseException {
+        List<Integer> missingPos = new ArrayList<>();
+        int curPos = 0;
+
+        String sql = "SELECT sequenceposition FROM TrainCards " +
+                "WHERE gameid=? AND state='faceUp' " +
+                "ORDER BY sequenceposition";
+        try (var statement = connection.prepareStatement(sql)){
+
+            statement.setString(1, gameID.toString());
+
+            var results = statement.executeQuery();
+
+            while (results.next())
+                while (curPos < results.getInt("sequenceposition") && curPos < 5){
+                    missingPos.add(curPos);
+                    curPos += 1;
+                }
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not get the facedown deck!", e);
+        }
+
+        for (Integer pos: missingPos) {
+            replaceOneFaceUpCard(pos, gameID);
+        }
     }
 
     private boolean tooManyWilds(GameID gameID) throws DatabaseException {

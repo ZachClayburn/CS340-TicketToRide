@@ -159,11 +159,11 @@ public class TrainCardFacade extends BaseFacade {
         }
     }
 
-    public void discard(PlayerID playerID, Color color, int colorCards, int wildCards) throws DatabaseException {
+    public void discard(PlayerID playerID, Color color, int colorCards, int wildCards, GameID gameID) throws DatabaseException {
         try (Database database = new Database()) {
             TrainCardDAO dao = database.getTrainCardDAO();
 
-            dao.discardCards(color, colorCards, wildCards, playerID);
+            dao.discardCards(color, colorCards, wildCards, playerID, gameID);
             database.commit();
         }
     }

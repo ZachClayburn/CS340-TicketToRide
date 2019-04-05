@@ -256,4 +256,13 @@ public class DataManager {
             }
         }
     }
+
+    public boolean faceUpIsEmpty() {
+        for (TrainCard card: trainCardDeck.getFaceUpDeck()){
+            if (card.getColor() != Color.GREY){
+                return false;
+            }
+        }
+        return true;
+    }
 }
