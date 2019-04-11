@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.ILineDAO;
 import com.tickettoride.models.Line;
 import com.tickettoride.models.idtypes.LineID;
 import com.tickettoride.models.idtypes.RouteID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 import exceptions.DatabaseException;
 
-public class LineDAO extends Database.DataAccessObject {
+public class LineDAO extends Database.DataAccessObject implements ILineDAO {
     private final String tableCreateString =
             // language=PostgreSQL
             "CREATE TABLE Lines" +
@@ -42,6 +43,7 @@ public class LineDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
+    @Override
     public void createLine(Line line) throws DatabaseException {
         final String sql = "INSERT INTO Lines (lineID, routeID, startX, endX, startY, endY) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -57,6 +59,7 @@ public class LineDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public List<Line> getLines(RouteID routeID) throws DatabaseException {
         List<Line> lines = new ArrayList<>();
         String sql = "Select * from Lines WHERE routeID = ?";
@@ -68,6 +71,7 @@ public class LineDAO extends Database.DataAccessObject {
         return lines;
     }
 
+    @Override
     public Line buildLineFromQueryResult(ResultSet result) throws SQLException {
         RouteID routeID = RouteID.fromString(result.getString("routeID"));
         LineID lineID = LineID.fromString(result.getString("lineID"));

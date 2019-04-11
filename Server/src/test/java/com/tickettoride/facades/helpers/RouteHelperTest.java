@@ -3,14 +3,13 @@ package com.tickettoride.facades.helpers;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import com.tickettoride.database.Database;
+import com.tickettoride.database.DatabaseProvider;
 import com.tickettoride.facades.helpers.RouteHelper.WeightedEdge;
 import com.tickettoride.models.*;
 import exceptions.DatabaseException;
 import org.jetbrains.annotations.NotNull;
 import org.jgrapht.Graph;
-import org.jgrapht.alg.transform.LineGraphConverter;
-import org.jgrapht.graph.*;
+import org.jgrapht.graph.SimpleWeightedGraph;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,10 +18,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 import static com.tickettoride.models.City.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 
 
@@ -50,7 +48,7 @@ public class RouteHelperTest {
     @Before
     public void setup() throws DatabaseException, CloneNotSupportedException {
 
-        try (var db = new Database()){
+        try (var db = DatabaseProvider.getDatabase()){
             db.resetDatabase();
 
             testGame = new Game("Test Game", 5);
@@ -87,7 +85,7 @@ public class RouteHelperTest {
 
         RouteHelper.getSingleton().createGameRoutes(testGame.getGameID());
 
-        try (var db = new Database()) {
+        try (var db = DatabaseProvider.getDatabase()) {
             routes = db.getRouteDAO().getRoutes(testGame.getGameID());
         }
 
@@ -122,7 +120,7 @@ public class RouteHelperTest {
         var reader = new InputStreamReader(inputJson);
         List<SetupParamPlayer> paramPlayers = new Gson().fromJson(reader, paramsListType);
 
-        try (var db = new Database()) {
+        try (var db = DatabaseProvider.getDatabase()) {
             for (var paramPlayer : paramPlayers) {
                 Player player;
                 switch (paramPlayer.name) {
@@ -168,7 +166,7 @@ public class RouteHelperTest {
         expectedGraph.setEdgeWeight(expectedGraph.addEdge(HELENA, WINNIPEG), 4);
 
         List<Route> routes;
-        try (var db = new Database()) {
+        try (var db = DatabaseProvider.getDatabase()) {
             routes = db.getRouteDAO().getPlayerRoutes(testPlayer1.getPlayerID());
         }
         var graph = RouteHelper.getSingleton().getPlayerRouteGraph(routes);
@@ -215,7 +213,7 @@ public class RouteHelperTest {
 
         List<Route> routes;
 
-        try (var db = new Database()){
+        try (var db = DatabaseProvider.getDatabase()){
 
             var deck = DestinationCard.getPointOrderedDeck();
             db.getDestinationCardDAO().addDeck(testGame, deck);

@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.IGameDAO;
 import com.tickettoride.models.Game;
 
 import com.tickettoride.models.idtypes.GameID;
@@ -14,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class GameDAO extends Database.DataAccessObject {
+public class GameDAO extends Database.DataAccessObject implements IGameDAO {
 
     private final String tableCreateString =
             // language=PostgreSQL
@@ -40,6 +41,7 @@ public class GameDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
+    @Override
     public void addGame(Game game) throws DatabaseException {
 
         final String sql = "INSERT INTO Games (gameID, groupName, numPlayer, maxPlayer, curTurn) " +
@@ -55,6 +57,7 @@ public class GameDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not add new game to Database!", e); }
     }
 
+    @Override
     @Nullable
     public Game getGame(GameID gameID) throws DatabaseException {
         Game game = null;
@@ -71,6 +74,7 @@ public class GameDAO extends Database.DataAccessObject {
         return game;
     }
 
+    @Override
     public void updatePlayerCount(GameID gameID, int numberPlayers) throws DatabaseException {
         String sql = "UPDATE Games SET numPlayer = ? WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -82,6 +86,7 @@ public class GameDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public void updateTurn(Game game) throws DatabaseException {
         String sql = "UPDATE Games SET curTurn = ? WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -93,6 +98,7 @@ public class GameDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public void updateGameFinished(Game game) throws DatabaseException {
         String sql = "UPDATE games SET finished=TRUE where gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -103,6 +109,7 @@ public class GameDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public ArrayList<Game> allGames() throws DatabaseException {
         ArrayList<Game> games = new ArrayList<>();
         String sql = "Select * from Games WHERE finished = false";
@@ -118,19 +125,7 @@ public class GameDAO extends Database.DataAccessObject {
         return games;
     }
 
-    private Game buildGameFromQueryResult(ResultSet result) throws SQLException {
-
-        var tableGameID = GameID.fromString(result.getString("GameID"));
-        var tableGroupName = result.getString("groupName");
-        var tableNumPlayer = result.getInt("numPlayer");
-        var tableMaxPlayer = result.getInt("maxPlayer");
-        var tableIsStarted = result.getBoolean("iStarted");
-        var tableCurrentTurn = result.getInt("curTurn");
-        var finished = result.getBoolean("finished");
-
-        return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn, finished);
-    }
-
+    @Override
     public void setGameToStarted(GameID gameID) throws DatabaseException {
 
         String sql = "UPDATE games SET istarted=TRUE WHERE gameid= ?";

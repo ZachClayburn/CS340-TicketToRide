@@ -1,7 +1,8 @@
 package com.tickettoride.facades.helpers;
 
-import com.tickettoride.database.Database;
-import com.tickettoride.database.PlayerStateDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.IPlayerStateDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.InitializeGameState;
@@ -9,12 +10,11 @@ import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
+import exceptions.DatabaseException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import exceptions.DatabaseException;
 
 public class PlayerStateHelper extends BaseFacade {
     private static PlayerStateHelper SINGLETON = new PlayerStateHelper();
@@ -32,34 +32,34 @@ public class PlayerStateHelper extends BaseFacade {
     }
 
     public void createPlayerState(PlayerState playerState) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerStateDAO dao = database.getPlayerStateDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerStateDAO dao = IDatabase.getPlayerStateDAO();
             dao.addPlayerState(playerState);
-            database.commit();
+            IDatabase.commit();
         }
     }
 
     public List<PlayerState> gamePlayerStates(GameID gameID) throws DatabaseException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try (Database database = new Database()) {
-            PlayerStateDAO dao = database.getPlayerStateDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerStateDAO dao = IDatabase.getPlayerStateDAO();
             return dao.getGamePlayerStates(gameID);
         }
     }
 
     public PlayerState getPlayerState(PlayerID playerID) throws DatabaseException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        try (Database database = new Database()) {
-            PlayerStateDAO dao = database.getPlayerStateDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerStateDAO dao = IDatabase.getPlayerStateDAO();
             return dao.getPlayerState(playerID);
         }
     }
 
     public void updatePlayerState(PlayerState playerState) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerStateDAO dao = database.getPlayerStateDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerStateDAO dao = IDatabase.getPlayerStateDAO();
             dao.updatePlayerState(playerState);
-            database.commit();
+            IDatabase.commit();
         }
     }
 

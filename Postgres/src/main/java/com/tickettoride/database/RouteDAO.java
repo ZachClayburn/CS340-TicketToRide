@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.IRouteDAO;
 import com.tickettoride.models.City;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Route;
@@ -19,7 +20,7 @@ import java.util.UUID;
 
 import exceptions.DatabaseException;
 
-public class RouteDAO extends Database.DataAccessObject {
+public class RouteDAO extends Database.DataAccessObject implements IRouteDAO {
     private final String tableCreateString =
         // language=PostgreSQL
         "CREATE TABLE Routes" +
@@ -46,6 +47,7 @@ public class RouteDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
+    @Override
     public void addRoute(Route route) throws DatabaseException {
         final String sql = "INSERT INTO Routes (routeID, gameID, claimedByPlayerID, firstCity, secondCity, color, spaces) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -61,6 +63,7 @@ public class RouteDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not add new route to Database!", e); }
     }
 
+    @Override
     public void updateRoute(Route route) throws DatabaseException {
         final String sql = "UPDATE Routes SET gameId = ?, claimedByPlayerId = ?, firstCity = ?, secondCity = ?, color = ?, spaces = ? WHERE routeId = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -75,6 +78,7 @@ public class RouteDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not update route in Database!", e); }
     }
 
+    @Override
     public Route getRoute(RouteID routeID) throws DatabaseException{
         Route route = null;
         String sql = "SELECT * FROM Routes WHERE routeID = ?";
@@ -86,6 +90,7 @@ public class RouteDAO extends Database.DataAccessObject {
         return route;
     }
 
+    @Override
     public List<Route> getRoutes(GameID gameID) throws DatabaseException {
         List<Route> routes = new ArrayList<>();
         String sql = "Select * from Routes WHERE gameID = ?";
@@ -97,6 +102,7 @@ public class RouteDAO extends Database.DataAccessObject {
         return routes;
     }
 
+    @Override
     public List<Route> getPlayerRoutes(PlayerID playerID) throws DatabaseException {
 
         List<Route> routes = new ArrayList<>();
@@ -117,6 +123,7 @@ public class RouteDAO extends Database.DataAccessObject {
         return routes;
     }
 
+    @Override
     public Route buildRouteFromQueryResult(ResultSet result) throws SQLException {
         RouteID routeID = RouteID.fromString(result.getString("routeID"));
         GameID gameID = GameID.fromString(result.getString("gameID"));

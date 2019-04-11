@@ -1,23 +1,19 @@
 package com.tickettoride.facades;
 
 import com.tickettoride.command.ServerCommunicator;
-import com.tickettoride.database.Database;
-import com.tickettoride.models.idtypes.SessionID;
-import exceptions.DatabaseException;
-import com.tickettoride.database.UserDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.IUserDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
-import com.tickettoride.models.Game;
-import com.tickettoride.models.Session;
-import com.tickettoride.models.User;
+import com.tickettoride.models.*;
+import com.tickettoride.models.idtypes.SessionID;
+import command.Command;
+import exceptions.DatabaseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import command.Command;
-import com.tickettoride.models.Password;
-import com.tickettoride.models.Username;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class UserFacade extends BaseFacade {
     private static UserFacade SINGLETON = new UserFacade();
@@ -46,8 +42,8 @@ public class UserFacade extends BaseFacade {
     }
 
     public User find_user(Username username, Password password) throws DatabaseException {
-        try (Database database = new Database()) {
-            UserDAO dao = database.getUserDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IUserDAO dao = IDatabase.getUserDAO();
             return dao.getUser(username, password);
         }
     }
@@ -58,18 +54,18 @@ public class UserFacade extends BaseFacade {
     }
 
     public User find_user(SessionID sessionID) throws DatabaseException {
-        try (Database db = new Database()) {
+        try (IDatabase db = DatabaseProvider.getDatabase()) {
             return db.getUserDAO().getUserBySessionID(sessionID);
         }
     }
 
 
     public User create_user(Username username, Password password) throws DatabaseException {
-        try (Database database = new Database()) {
-            UserDAO dao = database.getUserDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IUserDAO dao = IDatabase.getUserDAO();
             User user = new User(username, password);
             dao.addUser(user);
-            database.commit();
+            IDatabase.commit();
             return user;
         }
     }

@@ -1,21 +1,21 @@
 package com.tickettoride.facades.helpers;
 
-import com.tickettoride.database.Database;
-import com.tickettoride.database.PlayerDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.IPlayerDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.UserID;
+import exceptions.DatabaseException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
-import com.tickettoride.models.idtypes.GameID;
-import com.tickettoride.models.idtypes.UserID;
-import exceptions.DatabaseException;
 
 public class PlayerHelper extends BaseFacade {
 
@@ -24,11 +24,11 @@ public class PlayerHelper extends BaseFacade {
     private PlayerHelper() {}
 
     public Player createPlayer(UserID userID, GameID gameID) throws DatabaseException {
-        try (Database database = new Database()) {
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
             Player player = new Player(userID, gameID);
-            PlayerDAO dao = database.getPlayerDAO();
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             dao.addPlayer(player);
-            database.commit();
+            IDatabase.commit();
             return player;
         }
     }
@@ -39,24 +39,24 @@ public class PlayerHelper extends BaseFacade {
 
 
     public List<Player> getGamePlayers(GameID gameID) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             return dao.getGamePlayers(gameID);
         }
     }
 
     public void setUsernames(List<Player> players) throws DatabaseException {
-        try (var db = new Database()){
+        try (var db = DatabaseProvider.getDatabase()){
             db.getPlayerDAO().setPlayersUserName(players);
         }
     }
 
 
     public void deletePlayer(UUID playerID) throws DatabaseException, SQLException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             dao.deletePlayer(playerID);
-            database.commit();
+            IDatabase.commit();
         }
     }
 
@@ -73,14 +73,14 @@ public class PlayerHelper extends BaseFacade {
 
     public void pickTurnOrder(List<Player> players) throws DatabaseException {
         Collections.shuffle(players);
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
                 player.setTurn(i + 1);
                 dao.setTurn(player.getPlayerID(), player.getTurn());
             }
-            database.commit();
+            IDatabase.commit();
         }
     }
 
@@ -94,18 +94,18 @@ public class PlayerHelper extends BaseFacade {
     }
 
     public void updateTrainCount(Player player) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             dao.setTrainCarCount(player.getPlayerID(), player.getTrainCarCount());
-            database.commit();
+            IDatabase.commit();
         }
     }
 
     public void updatePlayerPoints(Player player) throws DatabaseException {
-        try (Database database = new Database()) {
-            PlayerDAO dao = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO dao = IDatabase.getPlayerDAO();
             dao.setPoints(player.getPlayerID(), player.getPoints());
-            database.commit();
+            IDatabase.commit();
         }
     }
 

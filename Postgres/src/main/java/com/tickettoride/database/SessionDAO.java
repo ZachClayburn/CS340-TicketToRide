@@ -7,12 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.tickettoride.models.Session;
+import com.tickettoride.database.interfaces.ISessionDAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.UUID;
 
-public class SessionDAO extends Database.DataAccessObject {
+public class SessionDAO extends Database.DataAccessObject implements ISessionDAO {
 
     private static final Logger logger = LogManager.getLogger(SessionDAO.class.getName());
 
@@ -29,6 +29,7 @@ public class SessionDAO extends Database.DataAccessObject {
         super(connection);
     }
 
+    @Override
     public void createSession(Session session) throws DatabaseException {
         String sql = "INSERT INTO Sessions (userID, sessionID) VALUES (?, ?)";
         try (var statement = connection.prepareStatement(sql)) {
@@ -41,6 +42,7 @@ public class SessionDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public Session findSession(SessionID sessionID) throws DatabaseException {
         String sql = "SELECT * FROM Sessions WHERE sessionID = ?";
         Session session = new Session();
@@ -56,6 +58,7 @@ public class SessionDAO extends Database.DataAccessObject {
         return session;
     }
 
+    @Override
     public void deleteSession(SessionID sessionID) throws SQLException {
         String sql = "DELETE FROM Sessions WHERE sessionID = ?";
         try (var statement = connection.prepareStatement(sql)) {

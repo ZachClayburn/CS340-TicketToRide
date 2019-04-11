@@ -1,23 +1,23 @@
 package com.tickettoride.facades.helpers;
 
-import com.tickettoride.database.Database;
-import com.tickettoride.database.LineDAO;
-import com.tickettoride.database.RouteDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.ILineDAO;
+import com.tickettoride.database.interfaces.IRouteDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.RouteID;
-
-import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
-
 import exceptions.DatabaseException;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
+
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 public class RouteHelper extends BaseFacade {
     private static RouteHelper SINGLETON = new RouteHelper();
@@ -193,26 +193,26 @@ public class RouteHelper extends BaseFacade {
     }
 
     public Route createRoute(Route route) throws DatabaseException {
-        try (Database database = new Database()) {
-            RouteDAO dao = database.getRouteDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IRouteDAO dao = IDatabase.getRouteDAO();
             dao.addRoute(route);
-            database.commit();
+            IDatabase.commit();
             return route;
         }
     }
 
     public Route updateRoute(Route route) throws DatabaseException {
-        try (Database database = new Database()) {
-            RouteDAO dao = database.getRouteDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IRouteDAO dao = IDatabase.getRouteDAO();
             dao.updateRoute(route);
-            database.commit();
+            IDatabase.commit();
             return route;
         }
     }
 
     public List<Route> getGameRoutes(GameID gameID) throws DatabaseException {
-        try (Database database = new Database()) {
-            RouteDAO dao = database.getRouteDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IRouteDAO dao = IDatabase.getRouteDAO();
             List<Route> routes = dao.getRoutes(gameID);
             for (Route route: routes) { route.setLines(getRouteLines(route.getRouteID())); }
             return routes;
@@ -220,23 +220,23 @@ public class RouteHelper extends BaseFacade {
     }
 
     public List<Route> getPlayerRoutes(PlayerID playerID) throws DatabaseException {
-        try (var db = new Database()){
+        try (var db = DatabaseProvider.getDatabase()){
             return db.getRouteDAO().getPlayerRoutes(playerID);
         }
     }
 
     public Line createLine(Line line) throws DatabaseException {
-        try (Database database = new Database()) {
-            LineDAO dao = database.getLineDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ILineDAO dao = IDatabase.getLineDAO();
             dao.createLine(line);
-            database.commit();
+            IDatabase.commit();
             return line;
         }
     }
 
     public List<Line> getRouteLines(RouteID routeID) throws DatabaseException {
-        try (Database database = new Database()) {
-            LineDAO dao = database.getLineDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ILineDAO dao = IDatabase.getLineDAO();
             List<Line> lines = dao.getLines(routeID);
             return lines;
         }

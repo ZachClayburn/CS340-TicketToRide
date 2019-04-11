@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.IDestinationCardDAO;
 import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
@@ -16,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class DestinationCardDAO extends Database.DataAccessObject {
+public class DestinationCardDAO extends Database.DataAccessObject implements IDestinationCardDAO {
 
     private static final String tableCreateString =
             // language=PostgreSQL
@@ -50,10 +51,12 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         super(connection);
     }
 
+    @Override
     public void addDeck(Game game, Queue<DestinationCard> deck) throws DatabaseException {
         addDeck(game.getGameID(), deck);
     }
 
+    @Override
     public void addDeck(GameID gameID, Queue<DestinationCard> deck) throws DatabaseException {
         deck = new ArrayDeque<>(deck);
 
@@ -85,10 +88,12 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     }
 
+    @Override
     public Queue<DestinationCard> getDeckForGame(Game game) throws DatabaseException {
         return getDeckForGame(game.getGameID());
     }
 
+    @Override
     public Queue<DestinationCard> getDeckForGame(GameID gameID) throws DatabaseException {
 
         Queue<DestinationCard> deck = new ArrayDeque<>();
@@ -114,6 +119,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         return deck;
     }
 
+    @Override
     public void offerCardsToPlayer(Player player, Collection<DestinationCard> cards) throws DatabaseException {
 
          //FIXME There is the possibility of an error if the collection of cards offered to the player is not in the
@@ -163,6 +169,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
 
     }
 
+    @Override
     public List<DestinationCard> getPlayerHand(Player player) throws DatabaseException {
 
         List<DestinationCard> hand = new ArrayList<>();
@@ -197,6 +204,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         return new DestinationCard(destination1, destination2, pointValue);
     }
 
+    @Override
     public void acceptCards(Player player, Collection<DestinationCard> acceptedCards)
             throws DatabaseException {
 
@@ -239,6 +247,7 @@ public class DestinationCardDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public List<DestinationCard> getOfferedCards(Player player) throws DatabaseException {
         String sql = "SELECT destination1, destination2, pointvalue FROM destinationcards " +
                 "WHERE state='offeredToPlayer' AND playerid=?";

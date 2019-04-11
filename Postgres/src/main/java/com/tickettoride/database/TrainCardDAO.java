@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.ITrainCardDAO;
 import com.tickettoride.models.Color;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Hand;
@@ -26,7 +27,7 @@ import exceptions.DatabaseException;
 
 // TODO: Refactoring needed, lots of repeated code
 
-public class TrainCardDAO extends Database.DataAccessObject {
+public class TrainCardDAO extends Database.DataAccessObject implements ITrainCardDAO {
     private static final String tableCreateString =
             // language=PostgreSQL
             "CREATE TABLE TrainCards" +
@@ -56,12 +57,14 @@ public class TrainCardDAO extends Database.DataAccessObject {
         super(connection);
     }
 
+    @Override
     public void addDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
         addFaceDown(gameID, deck.getFaceDownDeck());
         addFaceUp(gameID, deck.getFaceUpDeck());
         // TODO: Add Discard? Just in case deck is initialized with 3 wild cards
     }
 
+    @Override
     public void addFaceUp(GameID gameID, List<TrainCard> faceUpDeck) throws DatabaseException {
         String sql = "INSERT INTO TrainCards " +
                 "(gameID, color, sequencePosition, state)" +
@@ -88,6 +91,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public Hand makeHand(GameID gameID, PlayerID playerID) throws DatabaseException {
         Hand hand = new Hand();
 
@@ -98,6 +102,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return hand;
     }
 
+    @Override
     public void addFaceDown(GameID gameID, List<TrainCard> faceDownDeck) throws DatabaseException {
         String sql = "INSERT INTO TrainCards " +
                 "(gameID, color, sequencePosition, state)" +
@@ -125,6 +130,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
     }
 
 
+    @Override
     public TrainCardDeck getDeckForGame(GameID gameID) throws DatabaseException {
         List<TrainCard> faceDown = getFaceDownDeck(gameID);
         List<TrainCard> faceUp = getFaceUpDeck(gameID);
@@ -133,6 +139,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return new TrainCardDeck(faceUp, faceDown, discard);
     }
 
+    @Override
     public List<TrainCard> getFaceUpDeck(GameID gameID) throws DatabaseException {
         List<TrainCard> faceUp = new ArrayList<>();
 
@@ -158,6 +165,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return faceUp;
     }
 
+    @Override
     public List<TrainCard> getFaceDownDeck(GameID gameID) throws DatabaseException {
 
         List<TrainCard> faceDown = new ArrayList<>();
@@ -184,6 +192,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return faceDown;
     }
 
+    @Override
     public List<TrainCard> getDiscardDeck(GameID gameID) throws DatabaseException {
         List<TrainCard> discardDeck = new ArrayList<>();
 
@@ -209,6 +218,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return discardDeck;
     }
 
+    @Override
     public Hand getPlayerHand(PlayerID playerID) throws DatabaseException {
         Hand hand = new Hand();
 
@@ -234,6 +244,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return hand;
     }
 
+    @Override
     public void discardCards(Color color, int colorCards, int wildCards, PlayerID playerID) throws DatabaseException {
 
         String sql = "UPDATE TrainCards " +
@@ -335,6 +346,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public void replaceFaceDown(GameID gameID) throws DatabaseException{
         List<TrainCard> discardDeck = getDiscardDeck(gameID);
         clearDiscard(gameID);
@@ -356,6 +368,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public TrainCard drawFromFaceUp(GameID gameID, PlayerID playerID, int pos) throws DatabaseException {
         String sql = "SELECT " +
                 "color FROM TrainCards " +
@@ -378,6 +391,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return card;
     }
 
+    @Override
     public TrainCard drawFromFaceDown(GameID gameID, PlayerID playerID) throws DatabaseException {
         String sql = "SELECT " +
                 "color FROM TrainCards " +
@@ -491,6 +505,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return new TrainCard(getColorFromString(color));
     }
 
+    @Override
     public int getFaceDownDeckSize(GameID gameID) throws DatabaseException {
         int deckSize = 0;
 
@@ -536,6 +551,7 @@ public class TrainCardDAO extends Database.DataAccessObject {
         return wildCount >= 3;
     }
 
+    @Override
     public boolean hasGameInfo(GameID gameID) throws DatabaseException {
         boolean hasGame = false;
 

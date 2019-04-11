@@ -1,0 +1,33 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+plugins {
+    id "com.github.johnrengelman.shadow" version "4.0.4"
+    id 'java'
+}
+
+sourceCompatibility = 10
+
+repositories {
+    mavenCentral()
+}
+
+shadowJar{
+    destinationDir = file("$rootDir/libs")
+    classifier = null
+    version = null
+    exclude 'org/postgresql/osgi/*'
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        exclude 'org/postgresql/sspi/*'
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    shadow 'com.google.code.gson:gson:2.8.5'
+    shadow project(':Common')
+    shadow project(':Databases')
+    implementation 'org.postgresql:postgresql:42.2.5'
+    shadow 'org.jetbrains:annotations:15.0'
+    shadow 'org.apache.logging.log4j:log4j-api:2.11.1'
+    shadow 'org.apache.logging.log4j:log4j-core:2.11.1'
+    shadow 'com.lmax:disruptor:3.3.4'
+}

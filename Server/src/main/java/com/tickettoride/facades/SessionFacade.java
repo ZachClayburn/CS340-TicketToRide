@@ -1,23 +1,20 @@
 package com.tickettoride.facades;
+
 import com.tickettoride.command.ServerCommunicator;
-import com.tickettoride.database.Database;
-import com.tickettoride.models.idtypes.SessionID;
-import exceptions.DatabaseException;
-import com.tickettoride.database.SessionDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.ISessionDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
-import com.tickettoride.models.Game;
-import com.tickettoride.models.Session;
-import com.tickettoride.models.User;
+import com.tickettoride.models.*;
+import com.tickettoride.models.idtypes.SessionID;
+import command.Command;
+import exceptions.DatabaseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import command.Command;
-import com.tickettoride.models.Password;
-import com.tickettoride.models.Username;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class SessionFacade extends BaseFacade {
 
@@ -48,27 +45,27 @@ public class SessionFacade extends BaseFacade {
     }
 
     public Session create_session(User user) throws DatabaseException {
-        try (Database database = new Database()) {
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
             Session session = new Session(user);
-            SessionDAO dao = database.getSessionDAO();
+            ISessionDAO dao = IDatabase.getSessionDAO();
             dao.createSession(session);
-            database.commit();
+            IDatabase.commit();
             return session;
         }
     }
 
     public void delete(UUID connID, SessionID sessionID) throws DatabaseException, SQLException {
-        try (Database database = new Database()) {
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
             ServerCommunicator.getINSTANCE().moveToLogin(connID);
-            SessionDAO dao = database.getSessionDAO();
+            ISessionDAO dao = IDatabase.getSessionDAO();
             dao.deleteSession(sessionID);
-            database.commit();
+            IDatabase.commit();
         }
     }
 
     public Session find_session(SessionID sessionID) throws DatabaseException {
-        try (Database database = new Database()) {
-            SessionDAO dao = database.getSessionDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ISessionDAO dao = IDatabase.getSessionDAO();
             return dao.findSession(sessionID);
         }
     }

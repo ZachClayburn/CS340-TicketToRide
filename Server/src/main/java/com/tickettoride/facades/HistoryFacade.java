@@ -1,22 +1,20 @@
 package com.tickettoride.facades;
 
-import com.tickettoride.database.ChatDAO;
-import com.tickettoride.database.Database;
-import com.tickettoride.database.HistoryDAO;
-import com.tickettoride.database.PlayerDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.IHistoryDAO;
+import com.tickettoride.database.interfaces.IPlayerDAO;
 import com.tickettoride.models.Message;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
-
+import command.Command;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import command.Command;
-import exceptions.DatabaseException;
 
 public class HistoryFacade extends BaseFacade {
     private static HistoryFacade SINGLETON=new HistoryFacade();
@@ -32,10 +30,10 @@ public class HistoryFacade extends BaseFacade {
     public void sendEvent(UUID connID, Message message){
         try{
             GameID gameID=getGameID(message.getPlayerID());
-            try(Database database= new Database()){
-                HistoryDAO historyDAO=database.getHistoryDAO();
-                historyDAO.addEvent(gameID,message);
-                database.commit();
+            try(IDatabase IDatabase = DatabaseProvider.getDatabase()){
+                IHistoryDAO IHistoryDAO = IDatabase.getHistoryDAO();
+                IHistoryDAO.addEvent(gameID,message);
+                IDatabase.commit();
             }
             sendResponseToRoom(connID,new Command(CONTROLLER_NAME, "addEvent", message));
         }catch(Throwable e){
@@ -48,8 +46,8 @@ public class HistoryFacade extends BaseFacade {
     //helper
     public GameID getGameID(PlayerID playerID) throws DatabaseException, Exception {
         List<GameID> games;
-        try (Database database = new Database()) {
-            PlayerDAO playerDAO = database.getPlayerDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IPlayerDAO playerDAO = IDatabase.getPlayerDAO();
             games = playerDAO.getGameForPlayer(playerID);
         }
         if(games.size()==0){
@@ -63,9 +61,9 @@ public class HistoryFacade extends BaseFacade {
 
     public void getHistory(UUID connID, GameID gameID){
         List<Message> events=new ArrayList<>();
-        try(Database database=new Database()){
-            HistoryDAO historyDAO=database.getHistoryDAO();
-            events=historyDAO.getHistory(gameID);
+        try(IDatabase IDatabase = DatabaseProvider.getDatabase()){
+            IHistoryDAO IHistoryDAO = IDatabase.getHistoryDAO();
+            events= IHistoryDAO.getHistory(gameID);
             sendResponseToOne(connID, new Command(CONTROLLER_NAME, "setHistory", events));
         }catch(Throwable e){
             logger.error(e.getMessage(),e);

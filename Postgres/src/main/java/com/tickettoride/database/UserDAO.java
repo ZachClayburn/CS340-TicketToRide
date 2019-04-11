@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.IUserDAO;
 import com.tickettoride.models.User;
 import com.tickettoride.models.idtypes.SessionID;
 import com.tickettoride.models.idtypes.UserID;
@@ -15,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class UserDAO extends Database.DataAccessObject {
+public class UserDAO extends Database.DataAccessObject implements IUserDAO {
 
     private static final Logger logger = LogManager.getLogger(UserDAO.class.getName());
 
@@ -37,6 +38,7 @@ public class UserDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
+    @Override
     public void addUser(User user) throws DatabaseException {
         final String sql = "INSERT INTO Users (userID, userName, password) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
@@ -50,6 +52,7 @@ public class UserDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     @Nullable
     public User getUser(Username userName, Password password) throws DatabaseException {
         User user = null;
@@ -67,18 +70,7 @@ public class UserDAO extends Database.DataAccessObject {
         return user;
     }
 
-    private User getUserFromStatementResult(PreparedStatement statement) throws SQLException {
-        User user = null;
-        var result = statement.executeQuery();
-        if (result.next()) {
-            var tableUserName = new Username(result.getString("userName"));
-            var tablePassWord = new Password(result.getString("password"));
-            var userID = result.getString("userID");
-            user = new User(tableUserName, tablePassWord, userID);
-        }
-        return user;
-    }
-
+    @Override
     @Nullable
     public User getUserByID(UserID id) throws DatabaseException {
         User user = null;
@@ -93,6 +85,7 @@ public class UserDAO extends Database.DataAccessObject {
         return user;
     }
 
+    @Override
     public User getUserBySessionID(SessionID sessionID) throws DatabaseException{
         User user = null;
         UserID userID;

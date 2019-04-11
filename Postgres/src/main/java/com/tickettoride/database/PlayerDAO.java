@@ -1,5 +1,6 @@
 package com.tickettoride.database;
 
+import com.tickettoride.database.interfaces.IPlayerDAO;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerColor;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
 
 
 /** This class represents the DAO for Players and accesses the Players table */
-public class PlayerDAO extends Database.DataAccessObject {
+public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
     /** Language - PostgreSQL: SQL string that generates the Players table */
     private final String tableCreateString =
             // language=PostgreSQL
@@ -74,6 +75,7 @@ public class PlayerDAO extends Database.DataAccessObject {
      * @pre Players table exists, Player variables (playerID, userID, gameID, turn) are not null
      * @post Row with player information is in the table
      */
+    @Override
     public void addPlayer(Player player) throws DatabaseException {
         final String sql = "INSERT INTO Players (playerID, userID, gameID, turn, trainCarCount, points) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
@@ -93,6 +95,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         }
     }
     
+    @Override
     public List<Player> getGamePlayers(GameID gameID) throws DatabaseException{
         List<Player> players=new ArrayList<>();
         Player player;
@@ -111,6 +114,7 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
     
     //should return 0 or 1 but never more, just set up to handle unexpected cases
+    @Override
     public List<GameID> getGameForPlayer(PlayerID playerID) throws DatabaseException{
         List<GameID> games= new ArrayList<>();
         String sql = "SELECT * FROM Players WHERE playerID = ?";
@@ -161,6 +165,7 @@ public class PlayerDAO extends Database.DataAccessObject {
      * @pre Players table exists, playerID is UUID
      * @post None
      */
+    @Override
     @Nullable
     public Player getPlayerByPlayerID(PlayerID playerID) throws DatabaseException {
         String sql = "SELECT * FROM players WHERE playerid=?";
@@ -176,6 +181,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         return player;
     }
 
+    @Override
     public void setTurn(PlayerID playerID, int turn) throws DatabaseException {
         String sql = "UPDATE Players SET turn = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -185,6 +191,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
     }
 
+    @Override
     public void setPoints(PlayerID playerID, int points) throws DatabaseException {
         String sql = "UPDATE Players SET points = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -194,6 +201,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not set turn!", e); }
     }
 
+    @Override
     public void setTrainCarCount(PlayerID playerID, int trainCarCount) throws DatabaseException {
         String sql = "UPDATE Players SET trainCarCount = ? WHERE playerID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -204,6 +212,7 @@ public class PlayerDAO extends Database.DataAccessObject {
     }
 
 
+    @Override
     public void setPlayersUserName(List<Player> players) throws DatabaseException {
         String sql = "SELECT username FROM users WHERE userid=?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -219,6 +228,7 @@ public class PlayerDAO extends Database.DataAccessObject {
         }
     }
 
+    @Override
     public void deletePlayer(UUID sessionID) throws SQLException {
         String sql = "DELETE FROM Players WHERE sessionID = ?";
         //FIXME This is broken, no such field sessionID, remove or fix

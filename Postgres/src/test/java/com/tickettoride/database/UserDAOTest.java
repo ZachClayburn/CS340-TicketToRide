@@ -7,7 +7,6 @@ import com.tickettoride.models.Username;
 import org.junit.Test;
 import org.postgresql.util.PSQLException;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;

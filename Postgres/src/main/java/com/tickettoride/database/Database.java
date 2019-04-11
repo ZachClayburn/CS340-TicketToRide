@@ -1,6 +1,7 @@
 package com.tickettoride.database;
 
 import com.google.gson.Gson;
+import com.tickettoride.database.interfaces.IPlayerStateDAO;
 import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Database implements AutoCloseable {
+public class Database implements com.tickettoride.database.interfaces.IDatabase {
 
     static {
         try {
@@ -54,6 +55,7 @@ public class Database implements AutoCloseable {
      * @throws DatabaseException If there is an error in creating the database and tables, or if the
      *                           database already exists
      */
+    @Override
     public void resetDatabase() throws DatabaseException {
 
         try (var statement = connection.createStatement()) {
@@ -180,42 +182,54 @@ public class Database implements AutoCloseable {
         }
     }
 
+    @Override
     public SessionDAO getSessionDAO() {
         return sessionDAO;
     }
 
+    @Override
     public UserDAO getUserDAO() {
         return userDAO;
     }
 
+    @Override
     public GameDAO getGameDAO() {
         return gameDAO;
     }
 
+    @Override
     public PlayerDAO getPlayerDAO() {
         return playerDAO;
     }
 
+    @Override
     public ChatDAO getChatDAO() {
         return chatDAO;
     }
 
+    @Override
     public DestinationCardDAO getDestinationCardDAO() {
         return destinationCardDAO;
     }
 
+    @Override
     public RouteDAO getRouteDAO() { return routeDAO; }
 
+    @Override
     public LineDAO getLineDAO() { return  lineDAO; }
 
+    @Override
     public HistoryDAO getHistoryDAO() {
         return historyDAO;
     }
 
+    @Override
     public TrainCardDAO getTrainCardDAO() {return trainCardDAO;}
 
+    @Override
     public PlayerStateDAO getPlayerStateDAO() { return  playerStateDAO; }
 
+    @Override
     public void commit() {
         doCommit = true;
     }

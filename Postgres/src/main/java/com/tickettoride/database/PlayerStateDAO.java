@@ -1,4 +1,5 @@
 package com.tickettoride.database;
+import com.tickettoride.database.interfaces.IPlayerStateDAO;
 import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
@@ -19,7 +20,7 @@ import exceptions.DatabaseException;
 /**
  * Data Access Object for interacting with the chat table of the database
  */
-public class PlayerStateDAO extends Database.DataAccessObject {
+public class PlayerStateDAO extends Database.DataAccessObject implements IPlayerStateDAO {
 
     private final String tableCreateString =
             // language=PostgreSQL
@@ -42,6 +43,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         return tableCreateString;
     }
 
+    @Override
     public void addPlayerState(PlayerState playerState) throws DatabaseException {
         final String sql = "INSERT INTO playerstates (playerStateID, playerID, gameID, type) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
@@ -53,6 +55,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not add new player state to Database!", e); }
     }
 
+    @Override
     public PlayerState getPlayerState(PlayerStateID playerStateID) throws DatabaseException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String sql = "SELECT * FROM playerstates WHERE playerstateID = ?";
@@ -67,6 +70,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         return playerState;
     }
 
+    @Override
     public PlayerState getPlayerState(PlayerID playerID) throws DatabaseException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String sql = "SELECT * FROM playerstates WHERE playerID = ?";
@@ -81,6 +85,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         return playerState;
     }
 
+    @Override
     public void updatePlayerState(PlayerState playerState) throws DatabaseException {
         String sql = "UPDATE playerstates SET playerID = ?, type = ? WHERE playerStateID = ?";
         try (var statement = connection.prepareStatement(sql)) {
@@ -91,6 +96,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not update player state!", e); }
     }
 
+    @Override
     public List<PlayerState> getGamePlayerStates(GameID gameID) throws DatabaseException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         String sql = "SELECT * FROM playerstates WHERE gameID = ?";
@@ -103,6 +109,7 @@ public class PlayerStateDAO extends Database.DataAccessObject {
         } catch (SQLException e) { throw new DatabaseException("Could not get game player states", e); }
     }
 
+    @Override
     public PlayerState buildPlayerStateFromResult(ResultSet result) throws SQLException, ClassNotFoundException,
             NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         PlayerStateID playerStateID = PlayerStateID.fromString(result.getString("playerStateID"));

@@ -1,21 +1,15 @@
 package com.tickettoride.facades.helpers;
 
-import com.tickettoride.database.Database;
-import com.tickettoride.database.GameDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.IGameDAO;
 import com.tickettoride.facades.BaseFacade;
 import com.tickettoride.facades.GameFacade;
-import com.tickettoride.facades.TrainCardFacade;
-import com.tickettoride.models.DestinationCard;
-import com.tickettoride.models.Game;
-import com.tickettoride.models.Player;
-import com.tickettoride.models.PlayerState;
-import com.tickettoride.models.Route;
-import com.tickettoride.models.Session;
-import com.tickettoride.models.TrainCard;
-import com.tickettoride.models.User;
-
+import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.SessionID;
+import command.Command;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,10 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
-
-import command.Command;
-import exceptions.DatabaseException;
 
 public class GameFacadeHelper extends BaseFacade {
 
@@ -37,7 +27,7 @@ public class GameFacadeHelper extends BaseFacade {
     private GameFacadeHelper() {}
 
     public void startGame(GameID gameID) throws DatabaseException {
-        try (var db = new Database()){
+        try (var db = DatabaseProvider.getDatabase()){
             db.getGameDAO().setGameToStarted(gameID);
             db.getDestinationCardDAO().addDeck(gameID, DestinationCard.getShuffledDeck());
             db.commit();
@@ -45,35 +35,35 @@ public class GameFacadeHelper extends BaseFacade {
     }
 
     public Game findGame(GameID gameID) throws DatabaseException {
-        try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IGameDAO dao = IDatabase.getGameDAO();
             return dao.getGame(gameID);
         }
     }
 
     public Game createGame(String gameName, Integer maxPlayers) throws DatabaseException {
-        try (Database database = new Database()) {
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
             Game game = new Game(gameName, maxPlayers);
             game.setGameID(GameID.randomUUID());
-            GameDAO dao = database.getGameDAO();
+            IGameDAO dao = IDatabase.getGameDAO();
             dao.addGame(game);
-            database.commit();
+            IDatabase.commit();
             return game;
         }
     }
 
     public ArrayList<Game> allGames() throws DatabaseException {
-        try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IGameDAO dao = IDatabase.getGameDAO();
             return dao.allGames();
         }
     }
 
     public void updateGamePlayerCount(GameID gameID, Integer playerCount) throws DatabaseException {
-        try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IGameDAO dao = IDatabase.getGameDAO();
             dao.updatePlayerCount(gameID, playerCount);
-            database.commit();
+            IDatabase.commit();
         }
     }
 
@@ -127,20 +117,20 @@ public class GameFacadeHelper extends BaseFacade {
         currentTurn++;
         if (currentTurn > game.getNumPlayer()) { currentTurn = 1; }
         game.setCurTurn(currentTurn);
-        try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IGameDAO dao = IDatabase.getGameDAO();
             dao.updateTurn(game);
-            database.commit();
+            IDatabase.commit();
             return game;
         }
     }
 
     public Game setGameFinished(Game game) throws DatabaseException {
         game.setFinished(true);
-        try (Database database = new Database()) {
-            GameDAO dao = database.getGameDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            IGameDAO dao = IDatabase.getGameDAO();
             dao.updateGameFinished(game);
-            database.commit();
+            IDatabase.commit();
             return game;
         }
     }

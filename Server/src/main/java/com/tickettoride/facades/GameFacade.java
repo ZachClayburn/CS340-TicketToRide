@@ -1,24 +1,18 @@
 package com.tickettoride.facades;
+
 import com.tickettoride.command.ServerCommunicator;
-import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
-import com.tickettoride.database.Database;
-import com.tickettoride.facades.helpers.GameFacadeHelper;
-import com.tickettoride.facades.helpers.PlayerHelper;
-import com.tickettoride.facades.helpers.PlayerStateHelper;
-import com.tickettoride.facades.helpers.RouteHelper;
+import com.tickettoride.facades.helpers.*;
 import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.SessionID;
+import command.Command;
 import exceptions.DatabaseException;
-import com.tickettoride.database.GameDAO;
-import com.tickettoride.database.PlayerDAO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-
-import command.Command;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class GameFacade extends BaseFacade {
     private static GameFacade SINGLETON = new GameFacade();

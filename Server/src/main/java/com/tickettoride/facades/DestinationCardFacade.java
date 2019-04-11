@@ -1,7 +1,7 @@
 package com.tickettoride.facades;
 
 import com.google.gson.internal.LinkedTreeMap;
-import com.tickettoride.database.Database;
+import com.tickettoride.database.DatabaseProvider;
 import com.tickettoride.facades.helpers.DestinationCardFacadeHelper;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerStateHelper;
@@ -9,15 +9,15 @@ import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerState;
+import command.Command;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
-
-import command.Command;
-import exceptions.DatabaseException;
 
 public class DestinationCardFacade extends BaseFacade {
 
@@ -94,7 +94,7 @@ public class DestinationCardFacade extends BaseFacade {
 
     public void getOfferedCards(UUID conID, Player player, Integer requiredToKeep){
 
-        try (var db = new Database()) {
+        try (var db = DatabaseProvider.getDatabase()) {
 
             var offeredCards = db.getDestinationCardDAO().getOfferedCards(player);
 

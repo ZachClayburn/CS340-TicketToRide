@@ -1,0 +1,29 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "4.0.4"
+    id 'java'
+}
+
+sourceCompatibility = 10
+
+repositories {
+    mavenCentral()
+}
+
+shadowJar{
+    destinationDir = file("$rootDir/libs")
+    classifier = null
+    version = null
+    exclude 'com/mongodb/connection/netty/*'
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    shadow 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.mongodb:mongo-java-driver:3.7.1'
+    shadow project(':Common')
+    shadow project(':Databases')
+    shadow 'org.jetbrains:annotations:15.0'
+    shadow 'org.apache.logging.log4j:log4j-api:2.11.1'
+    shadow 'org.apache.logging.log4j:log4j-core:2.11.1'
+    shadow 'com.lmax:disruptor:3.3.4'
+}

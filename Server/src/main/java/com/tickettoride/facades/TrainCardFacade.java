@@ -1,31 +1,21 @@
 package com.tickettoride.facades;
 
-import com.tickettoride.database.Database;
-import com.tickettoride.database.TrainCardDAO;
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
+import com.tickettoride.database.interfaces.ITrainCardDAO;
 import com.tickettoride.facades.helpers.GameFacadeHelper;
 import com.tickettoride.facades.helpers.PlayerHelper;
 import com.tickettoride.facades.helpers.PlayerStateHelper;
-import com.tickettoride.models.Color;
-import com.tickettoride.models.Game;
-import com.tickettoride.models.Hand;
-import com.tickettoride.models.Player;
-import com.tickettoride.models.PlayerState;
-import com.tickettoride.models.TrainCard;
-import com.tickettoride.models.TrainCardDeck;
+import com.tickettoride.models.*;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.PlayerID;
-
+import command.Command;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import javax.xml.crypto.Data;
-
-import command.Command;
-import exceptions.DatabaseException;
 
 public class TrainCardFacade extends BaseFacade {
     private static TrainCardFacade SINGLETON = new TrainCardFacade();
@@ -49,8 +39,8 @@ public class TrainCardFacade extends BaseFacade {
     public void initialize(UUID connID, GameID gameID) throws DatabaseException {
         TrainCardDeck deck = new TrainCardDeck();
 
-        try (Database database = new Database()){
-            if (database.getTrainCardDAO().hasGameInfo(gameID)){
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()){
+            if (IDatabase.getTrainCardDAO().hasGameInfo(gameID)){
                 return;
             }
 
@@ -63,7 +53,7 @@ public class TrainCardFacade extends BaseFacade {
                 sendResponseToRoom(connID, command);
             }
 
-            int deckSize = database.getTrainCardDAO().getFaceDownDeckSize(gameID);
+            int deckSize = IDatabase.getTrainCardDAO().getFaceDownDeckSize(gameID);
 
             Command command = new Command(CONTROLLER_NAME, "initializeDecks", deck.getFaceUpDeck(), deckSize);
             sendResponseToRoom(connID, command);
@@ -71,8 +61,8 @@ public class TrainCardFacade extends BaseFacade {
     }
 
     public void rejoin(UUID connID, GameID gameID) throws DatabaseException {
-        try (Database database = new Database()){
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()){
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
 
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
 
@@ -91,12 +81,12 @@ public class TrainCardFacade extends BaseFacade {
     }
 
     public void drawFromFaceUp(UUID connID, GameID gameID, PlayerID playerID, Integer pos){
-        try (Database database = new Database()){
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()){
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceUp(gameID, playerID, pos);
             List<TrainCard> faceUp = dao.getFaceUpDeck(gameID);
-            database.commit();
+            IDatabase.commit();
 
             int deckSize = dao.getFaceDownDeckSize(gameID);
 
@@ -107,12 +97,12 @@ public class TrainCardFacade extends BaseFacade {
     }
 
     public void drawFromFaceDown(UUID connID, GameID gameID, PlayerID playerID){
-        try (Database database = new Database()){
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()){
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
 
             TrainCard card = dao.drawFromFaceDown(gameID, playerID);
 
-            database.commit();
+            IDatabase.commit();
 
             int deckSize = dao.getFaceDownDeckSize(gameID);
 
@@ -136,35 +126,35 @@ public class TrainCardFacade extends BaseFacade {
     }
 
     public void initializeDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
-        try (Database database = new Database()) {
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
             dao.addDeck(gameID, deck);
-            database.commit();
+            IDatabase.commit();
         }
     }
 
     public Hand getInitialHand(GameID gameID, PlayerID playerID) throws DatabaseException {
-        try (Database database = new Database()) {
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
             Hand hand = dao.makeHand(gameID, playerID);
-            database.commit();
+            IDatabase.commit();
             return hand;
         }
     }
 
     public int getDeckSize(GameID gameID) throws DatabaseException{
-        try (Database database = new Database()) {
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
             return dao.getFaceDownDeckSize(gameID);
         }
     }
 
     public void discard(PlayerID playerID, Color color, int colorCards, int wildCards) throws DatabaseException {
-        try (Database database = new Database()) {
-            TrainCardDAO dao = database.getTrainCardDAO();
+        try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+            ITrainCardDAO dao = IDatabase.getTrainCardDAO();
 
             dao.discardCards(color, colorCards, wildCards, playerID);
-            database.commit();
+            IDatabase.commit();
         }
     }
 }

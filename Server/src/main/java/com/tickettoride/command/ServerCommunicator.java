@@ -1,19 +1,11 @@
 package com.tickettoride.command;
 
 import com.google.gson.Gson;
-import com.tickettoride.database.Database;
-
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.tickettoride.database.DatabaseProvider;
+import com.tickettoride.database.interfaces.IDatabase;
 import com.tickettoride.models.idtypes.GameID;
+import command.Command;
+import command.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
@@ -21,8 +13,10 @@ import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import command.Command;
-import command.Response;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.util.*;
 
 
 //to start the server just call run()
@@ -417,10 +411,10 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static void main(String[] args) {
         try {
-            try (Database database = new Database()) {
-                database.resetDatabase();
-            } catch (Throwable t) {
-                logger.catching(t);
+            String databasePluginJarFile = args[0];
+            DatabaseProvider.intiDatabasePlugin(databasePluginJarFile);
+            try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
+                IDatabase.resetDatabase();
             }
             logger.info("Starting Server on port: " + ServerCommunicator.SERVER_PORT_NUMBER);
             ServerCommunicator.getINSTANCE().run();
