@@ -30,8 +30,8 @@ public class HistoryDAO extends Database.DataAccessObject implements IHistoryDAO
             "CREATE TABLE Histories" +
                     "(" +
                     "gameID TEXT NOT NULL CHECK ( length(gameID) > 0 )," +
-                    "message BLOB NOT NULL" +
-                    "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
+                    "message BYTEA NOT NULL," +
+                    "FOREIGN KEY (gameID) REFERENCES games(gameid)" +
                     ");";
 
     /**constructor
