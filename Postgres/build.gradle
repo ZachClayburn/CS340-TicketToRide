@@ -15,9 +15,7 @@ shadowJar{
     classifier = null
     version = null
     exclude 'org/postgresql/osgi/*'
-    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        exclude 'org/postgresql/sspi/*'
-    }
+    exclude 'org/postgresql/sspi/*'
 }
 
 dependencies {
