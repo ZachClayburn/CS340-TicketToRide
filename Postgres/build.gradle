@@ -21,11 +21,18 @@ shadowJar{
 dependencies {
     testCompile 'junit:junit:4.12'
     shadow 'com.google.code.gson:gson:2.8.5'
+    testImplementation 'com.google.code.gson:gson:2.8.5'
     shadow project(':Common')
+    testImplementation project(':Common')
     shadow project(':Databases')
+    testImplementation project(':Databases')
     implementation 'org.postgresql:postgresql:42.2.5'
     shadow 'org.jetbrains:annotations:15.0'
+    testImplementation 'org.jetbrains:annotations:15.0'
     shadow 'org.apache.logging.log4j:log4j-api:2.11.1'
+    testImplementation 'org.apache.logging.log4j:log4j-api:2.11.1'
     shadow 'org.apache.logging.log4j:log4j-core:2.11.1'
+    testImplementation 'org.apache.logging.log4j:log4j-core:2.11.1'
     shadow 'com.lmax:disruptor:3.3.4'
+    testImplementation 'com.lmax:disruptor:3.3.4'
 }

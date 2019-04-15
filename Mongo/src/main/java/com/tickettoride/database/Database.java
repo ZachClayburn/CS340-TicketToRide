@@ -57,6 +57,11 @@ public class Database implements IDatabase {
         mongoCommands = new SynchronousQueue<>();
     }
 
+    @Override
+    public void setSyncInterval(int delta) {
+        queDelay = delta;
+    }
+
     private void executeCommands() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         while (mongoCommands.size() > 0) {
             MongoCommand mongoCommand = mongoCommands.poll();

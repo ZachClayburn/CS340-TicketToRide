@@ -20,11 +20,11 @@ public class DatabaseProvider {
     public static void intiDatabasePlugin(String pluginJarName) throws DatabaseException {
 
         if (!pluginJarName.endsWith(".jar"))
-            throw new DatabaseException(pluginJarName + " is not a path to a valid jar file!");
+            throw new IllegalArgumentException(pluginJarName + " is not a path to a valid jar file!");
 
         var jarFile = new File(pluginJarName);
         if (!jarFile.isFile() || !jarFile.canRead())
-            throw new DatabaseException(pluginJarName + " does not exist or cannot be read!");
+            throw new IllegalArgumentException(pluginJarName + " does not exist or cannot be read!");
 
         processJarFile(jarFile);
     }

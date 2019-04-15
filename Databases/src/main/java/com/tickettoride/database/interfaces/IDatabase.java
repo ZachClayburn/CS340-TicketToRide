@@ -8,6 +8,8 @@ public interface IDatabase extends AutoCloseable {
 
     void close() throws DatabaseException;
 
+    void setSyncInterval(int delta);
+
     ISessionDAO getSessionDAO();
 
     IUserDAO getUserDAO();

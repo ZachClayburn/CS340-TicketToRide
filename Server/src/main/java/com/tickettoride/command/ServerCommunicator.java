@@ -6,6 +6,7 @@ import com.tickettoride.database.interfaces.IDatabase;
 import com.tickettoride.models.idtypes.GameID;
 import command.Command;
 import command.Response;
+import exceptions.DatabaseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.java_websocket.WebSocket;
@@ -411,8 +412,7 @@ public class ServerCommunicator extends WebSocketServer {
 
     public static void main(String[] args) {
         try {
-            String databasePluginJarFile = args[0];
-            DatabaseProvider.intiDatabasePlugin(databasePluginJarFile);
+            processCLArgs(args);
             try (IDatabase IDatabase = DatabaseProvider.getDatabase()) {
                 IDatabase.resetDatabase();
             }
@@ -422,5 +422,27 @@ public class ServerCommunicator extends WebSocketServer {
             logger.fatal("",t);
             System.exit(1);
         }
+    }
+
+    private static void processCLArgs(String[] args){
+
+        try {
+            if (args.length != 2)
+                throw new IllegalArgumentException("Expected 2 command line arguments, got " + args.length + " instead!");
+            String databasePluginJarFile = args[0];
+            DatabaseProvider.intiDatabasePlugin(databasePluginJarFile);
+
+            int delta = Integer.parseInt(args[1]);
+            DatabaseProvider.getDatabase().setSyncInterval(delta);
+
+        } catch (DatabaseException e) {
+            logger.fatal("Fatal error occurred during database startup!", e);
+            System.exit(1);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            System.err.println("Usage: java SeverCommunicator <database plugin jar> <database sync interval>");
+            System.exit(1);
+        }
+
     }
 }
