@@ -3,16 +3,20 @@ package com.tickettoride.database;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Line;
+import com.tickettoride.models.Message;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.PlayerState;
 import com.tickettoride.models.Route;
 import com.tickettoride.models.Session;
 import com.tickettoride.models.TrainCard;
 import com.tickettoride.models.User;
+import com.tickettoride.models.idtypes.GameID;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataManager {
     private static List<DestinationCard> destinationCardList = Collections.synchronizedList(new ArrayList<>());
@@ -24,6 +28,8 @@ public class DataManager {
     private static List<Session> sessionList = Collections.synchronizedList(new ArrayList<>());
     private static List<TrainCard> trainCardList = Collections.synchronizedList(new ArrayList<>());
     private static List<User> userList = Collections.synchronizedList(new ArrayList<>());
+    private static Map<GameID,List<Message>> chatMap = Collections.synchronizedMap(new HashMap<>());
+    private static Map<GameID,List<Message>> historyMap = Collections.synchronizedMap(new HashMap<>());
     private static boolean dataInitialized = false;
     public static boolean getDataInitialized() { return dataInitialized; }
     public static void setDataInitialized(boolean newadtaInitialized) { dataInitialized = newadtaInitialized; }
@@ -37,5 +43,8 @@ public class DataManager {
     public static List<Session> getSessionList() { return sessionList; }
     public static List<TrainCard> getTrainCardList() { return trainCardList; }
     public static List<User> getUserList() { return userList; }
-
+    public static Map<GameID,List<Message>> getChatMap(){ return chatMap; }
+    public static Map<GameID, List<Message>> getHistoryMap() {
+        return historyMap;
+    }
 }
