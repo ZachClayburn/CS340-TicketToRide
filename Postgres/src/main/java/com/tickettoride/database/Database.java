@@ -183,6 +183,9 @@ public class Database implements com.tickettoride.database.interfaces.IDatabase 
     }
 
     @Override
+    public void setSyncInterval(int delta) {/* No op */}
+
+    @Override
     public SessionDAO getSessionDAO() {
         return sessionDAO;
     }

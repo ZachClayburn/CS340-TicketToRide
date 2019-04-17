@@ -59,6 +59,11 @@ public class Database implements IDatabase {
         initializeDataManagerData();
     }
 
+    @Override
+    public void setSyncInterval(int delta) {
+        queDelay = delta;
+    }
+
     private void executeCommands() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         while (mongoCommands.size() > 0) {
             MongoCommand mongoCommand = mongoCommands.remove(0);
