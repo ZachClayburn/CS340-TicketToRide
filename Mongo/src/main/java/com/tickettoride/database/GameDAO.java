@@ -68,7 +68,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
     public @Nullable Game getGame(GameID gameID) throws DatabaseException {
         for (Game game: gameList) {
             if (game.getGameID().equals(gameID)) {
-                return game;
+                return new Game(game);
             }
         }
         return null;

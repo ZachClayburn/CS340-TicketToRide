@@ -37,6 +37,16 @@ public class Game {
         this.finished = finished;
     }
 
+    public Game(Game game) {
+        this.gameID = game.getGameID();
+        this.groupName = game.getGroupName();
+        this.maxPlayer = game.getMaxPlayer();
+        this.numPlayer = game.getNumPlayer();
+        this.isStarted = game.isStarted();
+        this.curTurn = game.getCurTurn();
+        this.finished = game.isFinished();
+    }
+
     public Game(GameID gameID, String groupName, int numPlayer, int maxPlayer, boolean isStarted) {
         this.gameID = gameID;
         this.groupName = groupName;
