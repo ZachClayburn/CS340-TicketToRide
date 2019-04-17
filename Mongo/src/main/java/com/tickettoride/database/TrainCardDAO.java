@@ -552,11 +552,8 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         var gameID = GameID.fromString(doc.getString("gameid"));
         var sequencePosition = doc.getInteger("sequenceposition");
         var state = CardState.valueOf(doc.getString("state"));
-        var playerID = PlayerID.fromString(doc.getString("playerid"));
-        if (playerID.toString().equals("NULL")){
-            playerID = null;
-        }
-
+        PlayerID playerID = null;
+        if (!doc.getString("playerid").equals("NULL")) playerID = PlayerID.fromString(doc.getString("playerid"));
         return new TrainCard(color, gameID, sequencePosition, state, playerID);
     }
 }

@@ -290,14 +290,12 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
 
         var destination1 = City.valueOf(doc.getString("destination1"));
         var destination2 = City.valueOf(doc.getString("destination2"));
-        var pointValue = DestinationCard.Value.fromInt(doc.getInteger("pointValue"));
+        var pointValue = DestinationCard.Value.fromInt(doc.getInteger("pointvalue"));
         var gameID = GameID.fromString(doc.getString("gameid"));
         var sequencePosition = doc.getInteger("sequenceposition");
         var state = CardState.valueOf(doc.getString("state"));
-        var playerID = PlayerID.fromString(doc.getString("playerid"));
-        if (playerID.toString().equals("NULL")){
-            playerID = null;
-        }
+        PlayerID playerID = null;
+        if (!doc.getString("playerid").equals("NULL")) playerID = PlayerID.fromString(doc.getString("playerid"));
 
         return new DestinationCard(destination1, destination2, gameID, sequencePosition, state, playerID, pointValue);
     }
