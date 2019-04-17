@@ -123,10 +123,7 @@ public class Database implements IDatabase {
     @Override
     public void close() throws DatabaseException {
         try {
-            if (mongoCommands.size() >= queDelay) {
-                executeCommands();
-                doCommit = true;
-            }
+            if (mongoCommands.size() >= queDelay && doCommit) executeCommands();
         } catch (Exception e) { throw new DatabaseException("Mongo Database Transaction failed", e); }
     }
 
