@@ -41,7 +41,7 @@ public class Database implements IDatabase {
 
     protected MongoDatabase database;
 
-    private static List<MongoCommand> mongoCommands;
+    private static List<MongoCommand> mongoCommands = (List) Collections.synchronizedList(new LinkedList<MongoCommand>());
     private static int queDelay = 4;
     private boolean doCommit = false;
 
@@ -57,7 +57,6 @@ public class Database implements IDatabase {
         initializeDAOs();
         createAllCollections();
         initializeDataManagerData();
-        mongoCommands = (List) Collections.synchronizedList(new LinkedList<MongoCommand>());
     }
 
     private void executeCommands() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
