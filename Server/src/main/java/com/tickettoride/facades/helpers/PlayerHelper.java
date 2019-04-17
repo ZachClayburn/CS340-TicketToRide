@@ -4,11 +4,16 @@ import com.tickettoride.database.DatabaseProvider;
 import com.tickettoride.database.interfaces.IDatabase;
 import com.tickettoride.database.interfaces.IPlayerDAO;
 import com.tickettoride.facades.BaseFacade;
+import com.tickettoride.facades.GameFacade;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.User;
 import com.tickettoride.models.idtypes.GameID;
 import com.tickettoride.models.idtypes.UserID;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import exceptions.DatabaseException;
 
 import java.sql.SQLException;
@@ -62,7 +67,9 @@ public class PlayerHelper extends BaseFacade {
 
     public Player isAlreadyPlayer(User user, List<Player> players){
         if( players == null || players.size() == 0) { return null; }
-        for (Player p : players) { if (user.getUserID().equals(p.getUserID())) { return p; } }
+        for (Player p : players) {
+            if (user.getUserID().equals(p.getUserID())) { return p; }
+        }
         return null;
     }
 
