@@ -74,7 +74,7 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
             var card = deck.remove();
 
             Document document = new Document();
-            document.append("gameid", gameID);
+            document.append("gameid", gameID.toString());
             document.append("destination1", card.getDestination1().name());
             document.append("destination2", card.getDestination2().name());
             document.append("pointvalue", card.getPointValue().asInt());
@@ -178,7 +178,7 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
                 Updates.set("state", CardState.IN_PLAYER_HAND.name()),
                 Updates.set("sequencePosition", 0));
 
-        Bson filters2 = Filters.eq("gameid", player.getGameID());
+        Bson filters2 = Filters.eq("gameid", player.getGameID().toString());
         Bson updates2 = Updates.combine(
                 Updates.set("state", CardState.IN_DECK.name()),
                 Updates.set("playerid", "NULL"),

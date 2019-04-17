@@ -76,7 +76,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
 
     @Override
     public void updatePlayerCount(GameID gameID, int numberPlayers) throws DatabaseException {
-        Bson filters = Filters.eq("gameid", gameID);
+        Bson filters = Filters.eq("gameid", gameID.toString());
         Bson updates = Updates.set("numplayer", numberPlayers);
 
         MongoCollection collection = getCollection();
@@ -99,7 +99,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
 
     @Override
     public void updateTurn(Game game) throws DatabaseException {
-        Bson filters = Filters.eq("gameid", game.getGameID());
+        Bson filters = Filters.eq("gameid", game.getGameID().toString());
         Bson updates = Updates.set("curturn", game.getCurTurn());
 
         MongoCollection collection = getCollection();
@@ -122,7 +122,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
 
     @Override
     public void updateGameFinished(Game game) throws DatabaseException {
-        Bson filters = Filters.eq("gameid", game.getGameID());
+        Bson filters = Filters.eq("gameid", game.getGameID().toString());
         Bson updates = Updates.set("finished", Boolean.TRUE);
 
         MongoCollection collection = getCollection();
@@ -159,7 +159,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
 
     @Override
     public void setGameToStarted(GameID gameID) throws DatabaseException {
-        Bson filters = Filters.eq("gameid", gameID);
+        Bson filters = Filters.eq("gameid", gameID.toString());
         Bson updates = Updates.set("isstarted", Boolean.TRUE);
 
         MongoCollection collection = getCollection();
