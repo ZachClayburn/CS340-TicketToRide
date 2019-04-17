@@ -8,6 +8,9 @@ import exceptions.DatabaseException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.MongoClient;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;

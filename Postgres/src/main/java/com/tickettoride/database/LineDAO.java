@@ -71,7 +71,6 @@ public class LineDAO extends Database.DataAccessObject implements ILineDAO {
         return lines;
     }
 
-    @Override
     public Line buildLineFromQueryResult(ResultSet result) throws SQLException {
         RouteID routeID = RouteID.fromString(result.getString("routeID"));
         LineID lineID = LineID.fromString(result.getString("lineID"));

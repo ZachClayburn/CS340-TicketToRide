@@ -13,5 +13,4 @@ public interface ILineDAO {
 
     List<Line> getLines(RouteID routeID) throws DatabaseException;
 
-    Line buildLineFromQueryResult(ResultSet result) throws SQLException;
 }
