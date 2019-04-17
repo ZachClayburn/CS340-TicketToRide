@@ -77,8 +77,8 @@ public class RouteDAO extends Database.DataAccessObject implements IRouteDAO {
 
     @Override
     public void updateRoute(Route route) throws DatabaseException {
-        Bson filters = Filters.eq("routeID", route.getRouteID());
-        Bson updates = Updates.set("claimedByPlayerID", route.getClaimedByPlayerID());
+        Bson filters = Filters.eq("routeID", route.getRouteID().toString());
+        Bson updates = Updates.set("claimedByPlayerID", route.getClaimedByPlayerID().toString());
         MongoCollection collection = getCollection();
         List<Object> parameters = new ArrayList<>();
         parameters.add(filters);
