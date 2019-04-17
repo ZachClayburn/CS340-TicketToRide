@@ -2,6 +2,8 @@ package com.tickettoride.models;
 
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -11,6 +13,12 @@ public class DestinationCard implements Comparable<DestinationCard> {
 
     private final City destination1;
     private final City destination2;
+
+    // Only used in Mongo
+    private GameID gameID = null;
+    private int sequencePosition = 0;
+    private CardState state = CardState.IN_DECK;
+    private PlayerID playerID = null;
 
     public City getDestination1() {
         return destination1;
@@ -31,6 +39,49 @@ public class DestinationCard implements Comparable<DestinationCard> {
         this.destination1 = destination1;
         this.destination2 = destination2;
         this.pointValue = pointValue;
+    }
+
+    public DestinationCard(City destination1, City destination2, GameID gameID, int sequencePosition,
+                           CardState state, PlayerID playerID, Value pointValue) {
+        this.destination1 = destination1;
+        this.destination2 = destination2;
+        this.gameID = gameID;
+        this.sequencePosition = sequencePosition;
+        this.state = state;
+        this.playerID = playerID;
+        this.pointValue = pointValue;
+    }
+
+    public GameID getGameID() {
+        return gameID;
+    }
+
+    public void setGameID(GameID gameID) {
+        this.gameID = gameID;
+    }
+
+    public int getSequencePosition() {
+        return sequencePosition;
+    }
+
+    public void setSequencePosition(int sequencePosition) {
+        this.sequencePosition = sequencePosition;
+    }
+
+    public CardState getState() {
+        return state;
+    }
+
+    public void setState(CardState state) {
+        this.state = state;
+    }
+
+    public PlayerID getPlayerID() {
+        return playerID;
+    }
+
+    public void setPlayerID(PlayerID playerID) {
+        this.playerID = playerID;
     }
 
     @Override

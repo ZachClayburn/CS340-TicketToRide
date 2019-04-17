@@ -6,11 +6,13 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.tickettoride.database.interfaces.IDestinationCardDAO;
+import com.tickettoride.models.CardState;
 import com.tickettoride.models.City;
 import com.tickettoride.models.DestinationCard;
 import com.tickettoride.models.Game;
 import com.tickettoride.models.Player;
 import com.tickettoride.models.idtypes.GameID;
+import com.tickettoride.models.idtypes.PlayerID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -77,7 +79,7 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
             document.append("destination2", card.getDestination2().name());
             document.append("pointvalue", card.getPointValue().asInt());
             document.append("sequenceposition", deckPosition);
-            document.append("state", "inDeck");
+            document.append("state", CardState.IN_DECK.name());
             document.append("playerid", "NULL");
 
             MongoCollection collection = getCollection();
@@ -85,6 +87,11 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
             parameters.add(document);
             MongoCommand mongoCommand = new MongoCommand(collection, Database.INSERT_METHOD_NAME, parameters);
             Database.addCommand(mongoCommand);
+
+            card.setGameID(gameID);
+            card.setSequencePosition(deckPosition);
+            card.setPlayerID(null);
+            card.setState(CardState.IN_DECK);
             destinationCardList.add(card);
         }
     }
@@ -98,15 +105,12 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     public Queue<DestinationCard> getDeckForGame(GameID gameID) throws DatabaseException {
         Queue<DestinationCard> deck = new ArrayDeque<>();
 
-        FindIterable<Document> iterCards = getCollection().find();
-        Iterator iter = iterCards.iterator();
-        List<DestinationCard> destinationCards = new ArrayList<>();
-        while(iter.hasNext()) {
-            Document doc = (Document) iter.next();
-            if(doc.getString("gameid").equals(gameID.toString())
-                    && doc.getString("state").equals("inDeck")) {
-                deck.add(buildCardFromDocument(doc));
-                logger.debug(Integer.toString(doc.getInteger("sequenceposition")));
+        for (DestinationCard card: destinationCardList) {
+            if (card.getGameID().equals(gameID)
+                    && card.getState().equals(CardState.IN_DECK)) {
+                deck.add(card);
+                logger.debug("Dest Position: " + Integer.toString(card.getSequencePosition()));
+                // TODO: Order by sequenceposition? Is it doing it?
             }
         }
         return deck;
@@ -123,13 +127,13 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
                     Filters.eq("destination1", card.getDestination1().name()),
                     Filters.eq("destination2", card.getDestination2().name()));
             Bson updates1 = Updates.combine(
-                    Updates.set("sequenceposition", "NULL"),
-                    Updates.set("state", "offeredToPlayer"),
+                    Updates.set("sequenceposition", 0),
+                    Updates.set("state", CardState.OFFERED_TO_PLAYER.name()),
                     Updates.set("playerid", player.getPlayerID().toString()));
 
             Bson filters2 = Filters.and(
                     Filters.eq("gameid", player.getGameID().toString()),
-                    Filters.eq("state", "inDeck"));
+                    Filters.eq("state", CardState.IN_DECK.name()));
             Bson updates2 = Updates.inc("sequenceposition", -1);
 
             MongoCollection collection = getCollection();
@@ -143,6 +147,9 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
             MongoCommand mongoCommand2 = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters2);
             Database.addCommand(mongoCommand1);
             Database.addCommand(mongoCommand2);
+
+            updateDataManagerMakeOffer(card, player);
+            updateDataManagerAdjustPos(player.getGameID());
         }
     }
 
@@ -150,13 +157,10 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     public List<DestinationCard> getPlayerHand(Player player) throws DatabaseException {
         List<DestinationCard> hand = new ArrayList<>();
 
-        FindIterable<Document> iterCards = getCollection().find();
-        Iterator iter = iterCards.iterator();
-        while(iter.hasNext()) {
-            Document doc = (Document) iter.next();
-            if(doc.getString("playerid").equals(player.getPlayerID().toString())
-                    && doc.getString("state").equals("inPlayerHand")) {
-                hand.add(buildCardFromDocument(doc));
+        for (DestinationCard card: destinationCardList) {
+            if (card.getPlayerID().equals(player.getPlayerID())
+                    && card.getState().equals(CardState.IN_PLAYER_HAND)) {
+                hand.add(card);
             }
         }
 
@@ -169,19 +173,22 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
         assert offeredCards.containsAll(acceptedCards);
         offeredCards.removeAll(acceptedCards);
 
-        Bson filters1 = Filters.eq("state", "offeredToPlayer");
+        Bson filters1 = Filters.eq("state", CardState.OFFERED_TO_PLAYER.name());
         Bson updates1 = Updates.combine(
-                Updates.set("state", "inPlayerHand"),
-                Updates.set("sequencePosition", "NULL"));
+                Updates.set("state", CardState.IN_PLAYER_HAND.name()),
+                Updates.set("sequencePosition", 0));
 
         Bson filters2 = Filters.eq("gameid", player.getGameID());
         Bson updates2 = Updates.combine(
-                Updates.set("state", "inDeck"),
+                Updates.set("state", CardState.IN_DECK.name()),
                 Updates.set("playerid", "NULL"),
                 Updates.set("sequenceposition", getMaxSequencePosition(player.getGameID()) + 1));
 
         runCardUpdate(player, acceptedCards, filters1, updates1);
         runCardUpdate(player, offeredCards, filters2, updates2);
+
+        updateDataManagerAccepted(player.getPlayerID(), acceptedCards);
+        updateDataManagerOffered(player.getPlayerID(), player.getGameID(), offeredCards);
     }
 
     private void runCardUpdate(Player player, Collection<DestinationCard> cards, Bson filters, Bson updates) {
@@ -204,15 +211,11 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     private int getMaxSequencePosition(GameID gameID) {
         int pos = 0;
 
-        FindIterable<Document> iterCards = getCollection().find();
-        Iterator iter = iterCards.iterator();
-        while(iter.hasNext()) {
-            Document doc = (Document) iter.next();
-            if(doc.getString("gameid").equals(gameID.toString())
-                    && doc.getString("state").equals("inDeck")) {
-                int curPos = doc.getInteger("sequenceposition");
-                if (curPos > pos) {
-                    pos = curPos;
+        for (DestinationCard card: destinationCardList) {
+            if (card.getGameID().equals(gameID)
+                    && card.getState().equals(CardState.IN_DECK)) {
+                if (card.getSequencePosition() > pos){
+                    pos = card.getSequencePosition();
                 }
             }
         }
@@ -224,17 +227,63 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     public List<DestinationCard> getOfferedCards(Player player) throws DatabaseException {
         List<DestinationCard> offeredCards = new ArrayList<>();
 
-        FindIterable<Document> iterCards = getCollection().find();
-        Iterator iter = iterCards.iterator();
-        while(iter.hasNext()) {
-            Document doc = (Document) iter.next();
-            if(doc.getString("playerid").equals(player.getPlayerID().toString())
-                    && doc.getString("state").equals("offeredToPlayer")) {
-                offeredCards.add(buildCardFromDocument(doc));
+        for (DestinationCard card: destinationCardList) {
+            if (card.getPlayerID().equals(player.getPlayerID())
+                    && card.getState().equals(CardState.OFFERED_TO_PLAYER)) {
+                offeredCards.add(card);
             }
         }
 
         return offeredCards;
+    }
+
+    private void updateDataManagerMakeOffer(DestinationCard curCard, Player player){
+        for (DestinationCard card: destinationCardList) {
+            if (card.getGameID().equals(player.getGameID())
+                    && card.getDestination1().equals(curCard.getDestination1())
+                    && card.getDestination2().equals(curCard.getDestination2())) {
+                card.setSequencePosition(0);
+                card.setState(CardState.OFFERED_TO_PLAYER);
+                card.setPlayerID(player.getPlayerID());
+            }
+        }
+    }
+
+    private void updateDataManagerAdjustPos(GameID gameID){
+        for (DestinationCard card: destinationCardList) {
+            if (card.getGameID().equals(gameID)
+                    && card.getState().equals(CardState.IN_DECK)) {
+                card.setSequencePosition(card.getSequencePosition() - 1);
+            }
+        }
+    }
+
+    private void updateDataManagerAccepted(PlayerID playerID, Collection<DestinationCard> cards){
+        for (var curCard : cards) {
+            for (DestinationCard card: destinationCardList) {
+                if (card.getState().equals(CardState.OFFERED_TO_PLAYER)
+                        && card.getPlayerID().equals(playerID)
+                        && card.getDestination1().equals(curCard.getDestination1())
+                        && card.getDestination2().equals(curCard.getDestination2())) {
+                    card.setState(CardState.IN_PLAYER_HAND);
+                    card.setSequencePosition(0);
+                }
+            }
+        }
+    }
+
+    private void updateDataManagerOffered(PlayerID playerID, GameID gameID, Collection<DestinationCard> cards){
+        for (var curCard : cards) {
+            for (DestinationCard card: destinationCardList) {
+                if (card.getPlayerID().equals(playerID)
+                        && card.getDestination1().equals(curCard.getDestination1())
+                        && card.getDestination2().equals(curCard.getDestination2())) {
+                    card.setState(CardState.IN_DECK);
+                    card.setPlayerID(null);
+                    card.setSequencePosition(getMaxSequencePosition(gameID) + 1);
+                }
+            }
+        }
     }
 
     private DestinationCard buildCardFromDocument(Document doc) {
@@ -242,7 +291,14 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
         var destination1 = City.valueOf(doc.getString("destination1"));
         var destination2 = City.valueOf(doc.getString("destination2"));
         var pointValue = DestinationCard.Value.fromInt(doc.getInteger("pointValue"));
+        var gameID = GameID.fromString(doc.getString("gameid"));
+        var sequencePosition = doc.getInteger("sequenceposition");
+        var state = CardState.valueOf(doc.getString("state"));
+        var playerID = PlayerID.fromString(doc.getString("playerid"));
+        if (playerID.toString().equals("NULL")){
+            playerID = null;
+        }
 
-        return new DestinationCard(destination1, destination2, pointValue);
+        return new DestinationCard(destination1, destination2, gameID, sequencePosition, state, playerID, pointValue);
     }
 }

@@ -61,7 +61,33 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
     public void addDeck(GameID gameID, TrainCardDeck deck) throws DatabaseException {
         addFaceDown(gameID, deck.getFaceDownDeck());
         addFaceUp(gameID, deck.getFaceUpDeck());
-        // TODO: Add Discard? Just in case deck is initialized with 3 wild cards
+        addDiscard(gameID, deck.getDiscardPile());
+    }
+
+    private void addDiscard(GameID gameID, List<TrainCard> discard) throws DatabaseException{
+        if (discard.size() == 0) {
+            return;
+        }
+        String sql = "INSERT INTO TrainCards " +
+                "(gameID, color, state)" +
+                "VALUES (?, ?, 'inDiscard')";
+
+        try (var statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, gameID.toString());
+
+            for (TrainCard card:discard) {
+
+                statement.setString(2, getColorAsString(card.getColor()));
+
+                statement.executeUpdate();
+
+            }
+
+        } catch (SQLException e) {
+            logger.catching(e);
+            throw new DatabaseException("Could not add the deck!", e);
+        }
     }
 
     @Override

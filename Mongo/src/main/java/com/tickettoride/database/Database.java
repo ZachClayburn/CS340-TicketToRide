@@ -52,6 +52,7 @@ public class Database implements IDatabase {
     public static final String RETRIEVE_COLLECTION_METHOD_NAME = "find";
     public static final String UPDATE_METHOD_NAME = "updateOne";
     public static final String DELETE_METHOD_NAME = "deleteOne";
+    public static final String DELETE_MANY_METHOD_NAME = "deleteMany";
 
     public Database() {
         HashMap<String, Object> databaseParameters = extractParametersFromConfigFile();
