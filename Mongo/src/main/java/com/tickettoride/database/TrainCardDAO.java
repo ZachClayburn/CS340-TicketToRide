@@ -73,7 +73,7 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
             var card = faceUpDeck.get(deckPosition);
 
             Document document = new Document();
-            document.append("gameid", gameID);
+            document.append("gameid", gameID.toString());
             document.append("color", card.getColor().name());
             document.append("sequenceposition", deckPosition);
             document.append("state", CardState.FACE_UP.name());
@@ -110,7 +110,7 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
             var card = faceDownDeck.get(deckPosition);
 
             Document document = new Document();
-            document.append("gameid", gameID);
+            document.append("gameid", gameID.toString());
             document.append("color", card.getColor().name());
             document.append("sequenceposition", deckPosition);
             document.append("state", CardState.IN_DECK.name());
@@ -135,7 +135,7 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
             var card = discard.get(deckPosition);
 
             Document document = new Document();
-            document.append("gameid", gameID);
+            document.append("gameid", gameID.toString());
             document.append("color", card.getColor().name());
             document.append("sequenceposition", 0);
             document.append("state", CardState.IN_DISCARD.name());
@@ -277,7 +277,7 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
 
     private void clearDiscard(GameID gameID){
         Bson filters = Filters.and(
-                Filters.eq("gameid", gameID),
+                Filters.eq("gameid", gameID.toString()),
                 Filters.eq("state", CardState.IN_DISCARD));
 
         MongoCollection collection = getCollection();
