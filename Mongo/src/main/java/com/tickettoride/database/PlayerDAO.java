@@ -12,6 +12,7 @@ import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.UserID;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
@@ -55,6 +56,7 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
         document.append("playerID", player.getPlayerID().toString());
         document.append("userID", player.getUserID().toString());
         document.append("gameID", player.getGameID().toString());
+        document.append("username", "");
         document.append("turn", player.getTurn());
         document.append("trainCarCount", player.getTrainCarCount());
         document.append("points", player.getPoints());
@@ -100,27 +102,73 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
 
     @Override
     public void setTurn(PlayerID playerID, int turn) throws DatabaseException {
+        Bson filters = Filters.eq("playerID", playerID);
+        Bson updates = Updates.set("turn", turn);
         MongoCollection collection = getCollection();
-        collection.updateOne(Filters.eq("playerID", playerID), Updates.set("turn", turn));
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filters);
+        parameters.add(updates);
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        for (Player player : playerList) {
+            if (player.getPlayerID().equals(playerID)) {
+                player.setTurn(turn);
+            }
+        }
     }
 
     @Override
     public void setPoints(PlayerID playerID, int points) throws DatabaseException {
+        Bson filters = Filters.eq("playerID", playerID);
+        Bson updates = Updates.set("points", points);
         MongoCollection collection = getCollection();
-        collection.updateOne(Filters.eq("playerID", playerID), Updates.set("points", points));
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filters);
+        parameters.add(updates);
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        for (Player player : playerList) {
+            if (player.getPlayerID().equals(playerID)) {
+                player.setPoints(points);
+            }
+        }
     }
 
     @Override
     public void setTrainCarCount(PlayerID playerID, int trainCarCount) throws DatabaseException {
+        Bson filters = Filters.eq("playerID", playerID);
+        Bson updates = Updates.set("trainCarCount", trainCarCount);
         MongoCollection collection = getCollection();
-        collection.updateOne(Filters.eq("playerID", playerID), Updates.set("trainCarCount", trainCarCount));
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filters);
+        parameters.add(updates);
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        for (Player player : playerList) {
+            if (player.getPlayerID().equals(playerID)) {
+                player.setTrainCarCount(trainCarCount);
+            }
+        }
+        //MongoCollection collection = getCollection();
+        //collection.updateOne(Filters.eq("playerID", playerID), Updates.set("trainCarCount", trainCarCount));
     }
 
     @Override
     public void setPlayersUserName(List<Player> players) throws DatabaseException {
-        MongoCollection collection = getCollection();
         for (Player player : players) {
-            collection.updateOne(Filters.eq("playerID", player.getPlayerID()), Updates.set("userID", player.getUserID()));
+            Bson filters = Filters.eq("playerID", player.getPlayerID());
+            Bson updates = Updates.set("username", player.getUsername());
+            MongoCollection collection = getCollection();
+            List<Object> parameters = new ArrayList<>();
+            parameters.add(filters);
+            parameters.add(updates);
+            MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+            Database.addCommand(mongoCommand);
+            for (Player player1 : playerList) {
+                if (player1.getPlayerID().equals(player.getPlayerID())) {
+                    player1.setUsername(player.getUsername());
+                }
+            }
         }
     }
 
