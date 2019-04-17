@@ -104,7 +104,7 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
 
     @Override
     public Queue<DestinationCard> getDeckForGame(GameID gameID) throws DatabaseException {
-        Queue<DestinationCard> deck = new ArrayDeque<>();
+        List<DestinationCard> deck = new ArrayList<>();
 
         for (DestinationCard card: destinationCardList) {
             if (card.getGameID().equals(gameID)
@@ -112,7 +112,21 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
                 deck.add(card);
             }
         }
-        return deck;
+        return reorderCards(deck);
+    }
+
+    private Queue<DestinationCard> reorderCards(List<DestinationCard> unordered){
+        Queue<DestinationCard> ordered = new ArrayDeque<>();
+
+        while (ordered.size() != unordered.size()){
+            for (DestinationCard card: unordered){
+                if (card.getSequencePosition() == ordered.size()){
+                    ordered.add(card);
+                }
+            }
+        }
+
+        return ordered;
     }
 
     @Override
