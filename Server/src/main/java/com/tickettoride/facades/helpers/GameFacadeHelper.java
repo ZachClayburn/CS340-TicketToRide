@@ -79,6 +79,8 @@ public class GameFacadeHelper extends BaseFacade {
         ArrayList<Game> rejoinGames = new ArrayList<>();
         for (Game game : games) {
             Player alreadyPlayer = PlayerHelper.getSingleton().isAlreadyPlayer(user, game);
+            logger.debug("GFH");
+            logger.debug(alreadyPlayer);
             if (alreadyPlayer != null) { rejoinGames.add(game); } }
         return rejoinGames;
     }

@@ -168,6 +168,8 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         parameters.add(updates);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
         Database.addCommand(mongoCommand);
+
+        updateDataManagerStarted(gameID);
     }
 
     private void updateDataManagerStarted(GameID gameID){
