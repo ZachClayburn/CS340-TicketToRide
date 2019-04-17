@@ -14,6 +14,7 @@ import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.RouteID;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -76,8 +77,19 @@ public class RouteDAO extends Database.DataAccessObject implements IRouteDAO {
 
     @Override
     public void updateRoute(Route route) throws DatabaseException {
+        Bson filters = Filters.eq("routeID", route.getRouteID());
+        Bson updates = Updates.set("claimedByPlayerID", route.getClaimedByPlayerID());
         MongoCollection collection = getCollection();
-        collection.updateOne(Filters.eq("routeID", route.getRouteID()), Updates.set("claimedByPlayerID", route.getClaimedByPlayerID()));
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filters);
+        parameters.add(updates);
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        for (Route route1 : routes) {
+            if (route1.getRouteID().equals(route.getRouteID())) {
+                route1.setClaimedByPlayerID(route.getClaimedByPlayerID());
+            }
+        }
     }
 
     @Override
