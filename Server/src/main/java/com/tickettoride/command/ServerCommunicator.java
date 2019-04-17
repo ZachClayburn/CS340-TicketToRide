@@ -427,12 +427,16 @@ public class ServerCommunicator extends WebSocketServer {
     private static void processCLArgs(String[] args){
 
         try {
-            if (args.length != 2)
+            if (args.length > 2 || args.length < 1)
                 throw new IllegalArgumentException("Expected 2 command line arguments, got " + args.length + " instead!");
             String databasePluginJarFile = args[0];
             DatabaseProvider.intiDatabasePlugin(databasePluginJarFile);
 
-            int delta = Integer.parseInt(args[1]);
+            int delta = 4;
+            if(args.length == 2){
+                delta = Integer.parseInt(args[1]);
+            }
+            
             DatabaseProvider.getDatabase().setSyncInterval(delta);
 
         } catch (DatabaseException e) {
@@ -440,7 +444,7 @@ public class ServerCommunicator extends WebSocketServer {
             System.exit(1);
         } catch (IllegalArgumentException e) {
             System.err.println(e.getMessage());
-            System.err.println("Usage: java SeverCommunicator <database plugin jar> <database sync interval>");
+            System.err.println("Usage: java SeverCommunicator <database plugin jar> [database sync interval]");
             System.exit(1);
         }
 
