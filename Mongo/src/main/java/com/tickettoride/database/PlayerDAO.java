@@ -102,7 +102,7 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
 
     @Override
     public void setTurn(PlayerID playerID, int turn) throws DatabaseException {
-        Bson filters = Filters.eq("playerID", playerID);
+        Bson filters = Filters.eq("playerID", playerID.toString());
         Bson updates = Updates.set("turn", turn);
         MongoCollection collection = getCollection();
         List<Object> parameters = new ArrayList<>();
@@ -119,7 +119,7 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
 
     @Override
     public void setPoints(PlayerID playerID, int points) throws DatabaseException {
-        Bson filters = Filters.eq("playerID", playerID);
+        Bson filters = Filters.eq("playerID", playerID.toString());
         Bson updates = Updates.set("points", points);
         MongoCollection collection = getCollection();
         List<Object> parameters = new ArrayList<>();
@@ -136,7 +136,7 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
 
     @Override
     public void setTrainCarCount(PlayerID playerID, int trainCarCount) throws DatabaseException {
-        Bson filters = Filters.eq("playerID", playerID);
+        Bson filters = Filters.eq("playerID", playerID.toString());
         Bson updates = Updates.set("trainCarCount", trainCarCount);
         MongoCollection collection = getCollection();
         List<Object> parameters = new ArrayList<>();
@@ -156,7 +156,7 @@ public class PlayerDAO extends Database.DataAccessObject implements IPlayerDAO {
     @Override
     public void setPlayersUserName(List<Player> players) throws DatabaseException {
         for (Player player : players) {
-            Bson filters = Filters.eq("playerID", player.getPlayerID());
+            Bson filters = Filters.eq("playerID", player.getPlayerID().toString());
             Bson updates = Updates.set("username", player.getUsername());
             MongoCollection collection = getCollection();
             List<Object> parameters = new ArrayList<>();

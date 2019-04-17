@@ -98,7 +98,7 @@ public class PlayerStateDAO extends Database.DataAccessObject implements IPlayer
     public void updatePlayerState(PlayerState playerState) throws DatabaseException {
         MongoCollection collection = getCollection();
         
-        Bson filter=Filters.eq("playerStateID", playerState.getPlayerStateID());
+        Bson filter=Filters.eq("playerStateID", playerState.getPlayerStateID().toString());
         Bson updates=Updates.set("type", playerState.getClass().getName());
 
         List<Object> parameters = new ArrayList<>();

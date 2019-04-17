@@ -74,7 +74,7 @@ public class SessionDAO extends Database.DataAccessObject implements ISessionDAO
     public void deleteSession(SessionID sessionID) throws SQLException {
         MongoCollection collection = getCollection();
 
-        Bson filter=Filters.eq("sessionID", sessionID);
+        Bson filter=Filters.eq("sessionID", sessionID.toString());
         List<Object> parameters = new ArrayList<>();
         parameters.add(filter);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.DELETE_METHOD_NAME, parameters);
