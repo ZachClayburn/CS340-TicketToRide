@@ -8,6 +8,11 @@ import com.tickettoride.models.idtypes.PlayerID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,11 +30,8 @@ public class HistoryDAO extends Database.DataAccessObject implements IHistoryDAO
             "CREATE TABLE Histories" +
                     "(" +
                     "gameID TEXT NOT NULL CHECK ( length(gameID) > 0 )," +
-                    "playerID TEXT NOT NULL," +
-                    "dateTime TIMESTAMP NOT NULL," +
-                    "message TEXT NOT NULL," +
-                    "FOREIGN KEY (gameID) REFERENCES games(gameid)," +
-                    "FOREIGN KEY (playerID) REFERENCES players(playerid) " +
+                    "message BYTEA NOT NULL," +
+                    "FOREIGN KEY (gameID) REFERENCES games(gameid)" +
                     ");";
 
     /**constructor
@@ -64,15 +66,21 @@ public class HistoryDAO extends Database.DataAccessObject implements IHistoryDAO
      */
     @Override
     public void addEvent(GameID gameID, Message message) throws DatabaseException {
-        final String sql = "INSERT INTO Histories (gameID, playerID, dateTime, message) VALUES (?, ?, ?, ?)";
+        final String sql = "INSERT INTO Histories (gameID, message) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setString(1, gameID.toString());
-            statement.setString(2, message.getPlayerID().toString());
-            LocalDateTime ldt = LocalDateTime.ofInstant(message.getTime(), ZoneOffset.UTC);
-            statement.setObject(3, ldt);
-            statement.setString(4, message.getMessage());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(message);
+            byte[] messageByteArray = baos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(messageByteArray);
+            
+            statement.setBinaryStream(2, bais, messageByteArray.length);
             statement.executeUpdate();
         } catch (SQLException e) { throw new DatabaseException("Could not add new message to Database!", e); }
+        catch(IOException e){
+            throw new DatabaseException("Could not serialize new message into Database!", e);
+        }
     }
 
     /** Method for retrieving the chat for a game from the database
@@ -90,19 +98,27 @@ public class HistoryDAO extends Database.DataAccessObject implements IHistoryDAO
     @Override
     public List<Message> getHistory(GameID gameID) throws DatabaseException{
         List<Message> messages=new ArrayList<>();
-        String sql = "SELECT * FROM Histories WHERE gameID = ?";
+        String sql = "SELECT message FROM Histories WHERE gameID = ?";
         try (var statement = connection.prepareStatement(sql)) {
             statement.setString(1, gameID.toString());
             var result = statement.executeQuery();
             while (result.next()) {
-                PlayerID tablePlayerID = PlayerID.fromString(result.getString("playerID"));
-                String message=result.getString("message");
-                LocalDateTime ldt=result.getObject("dateTime", LocalDateTime.class);
-                messages.add(new Message(message, tablePlayerID, ldt.toInstant(ZoneOffset.UTC)));
+                byte[] st = (byte[]) result.getObject(1);
+                ByteArrayInputStream baip = new ByteArrayInputStream(st);
+                ObjectInputStream ois = new ObjectInputStream(baip);
+                Message message=(Message)ois.readObject();
+                //PlayerID tablePlayerID = PlayerID.fromString(result.getString("playerID"));
+                //String message=result.getString("message");
+                //LocalDateTime ldt=result.getObject("dateTime", LocalDateTime.class);
+                messages.add(message);
             }
 
         } catch (SQLException e) {
-            throw new DatabaseException("Could not retrieve chat for game", e);
+            throw new DatabaseException("Could not retrieve history for game", e);
+        } catch (IOException e){
+            throw new DatabaseException("Could not parse message for history for game", e);
+        } catch (ClassNotFoundException e){
+            throw new DatabaseException("Could not deserialize message for history for game", e);
         }
         return messages;
     }

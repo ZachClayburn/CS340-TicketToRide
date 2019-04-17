@@ -82,7 +82,7 @@ public class Command {
         this.parameterTypeNames.add(0,connid.getClass().getName());
     }
 
-    public void execute() throws Throwable {
+    public final void execute() throws Throwable {//for security purposes this should be final
         try {
             Class targetClass = null;
             try {
@@ -90,7 +90,7 @@ public class Command {
             }
             catch (ClassNotFoundException e) {}
 
-            if (targetClass == null)
+            if (targetClass == null)//fixme: this should be in a try catch too in case someone tries any funny business 
                 targetClass = Class.forName("com.tickettoride.controllers." + facadeName);
 
             Method getSingletonMethod = targetClass.getMethod(GET_SINGLETON_METHOD_NAME);

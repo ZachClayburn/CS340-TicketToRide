@@ -1,8 +1,9 @@
 package com.tickettoride.models.idtypes;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-abstract class AbstractID implements Comparable<AbstractID> {
+abstract class AbstractID implements Comparable<AbstractID>, Serializable {
 
     private UUID uuid;
 

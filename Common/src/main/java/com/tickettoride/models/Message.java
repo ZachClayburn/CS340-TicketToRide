@@ -2,13 +2,14 @@ package com.tickettoride.models;
 
 import com.tickettoride.models.idtypes.PlayerID;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
 
 /**
  * 
  */
-public class Message {
+public class Message implements Serializable {
     private String time;
     private String message;
     private PlayerID playerID;
