@@ -11,6 +11,7 @@ import com.tickettoride.models.idtypes.SessionID;
 import com.tickettoride.models.idtypes.UserID;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -72,7 +73,20 @@ public class SessionDAO extends Database.DataAccessObject implements ISessionDAO
     @Override
     public void deleteSession(SessionID sessionID) throws SQLException {
         MongoCollection collection = getCollection();
-        collection.deleteOne(Filters.eq("sessionID", sessionID));
+
+        Bson filter=Filters.eq("sessionID", sessionID);
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filter);
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.DELETE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        
+        for(Session session:sessions){
+            if(session.getSessionID().equals(sessionID)){
+                sessions.remove(session);
+                return;
+            }
+        }
+        //collection.deleteOne(Filters.eq("sessionID", sessionID));
     }
 
     private Session buildSessionFromDocument(Document doc) {
