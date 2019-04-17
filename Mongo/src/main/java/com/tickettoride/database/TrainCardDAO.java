@@ -214,11 +214,15 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         Hand hand = new Hand();
 
         for (TrainCard card: trainCardList) {
+            if (card.getPlayerID() == null) {
+                continue;
+            }
             if (card.getPlayerID().equals(playerID)) {
                 hand.addCard(card);
             }
         }
 
+        logger.debug("DAO: Hand size " + Integer.toString(hand.getHandSize()));
         return hand;
     }
 
@@ -257,6 +261,9 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         int maxPos = 0;
 
         for (TrainCard card: trainCardList) {
+            if (card.getPlayerID() == null) {
+                continue;
+            }
             if (card.getPlayerID().equals(playerID) && card.getColor().equals(color)) {
                 if (card.getSequencePosition() > maxPos){
                     maxPos = card.getSequencePosition();
@@ -410,6 +417,9 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         int pos = 0;
 
         for (TrainCard card: trainCardList) {
+            if (card.getPlayerID() == null) {
+                continue;
+            }
             if (card.getPlayerID().equals(playerID)
                     && card.getColor().equals(playerCard.getColor())) {
                 pos++;
@@ -527,6 +537,9 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
 
     private void updateDataManager(PlayerID playerID, Color color, int oldPos){
         for (TrainCard card: trainCardList) {
+            if (card.getPlayerID() == null){
+                continue;
+            }
             if (card.getPlayerID().equals(playerID)
                     && card.getColor().equals(color)
                     && card.getSequencePosition() == oldPos) {

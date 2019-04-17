@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 
 import exceptions.DatabaseException;
 
@@ -109,8 +110,6 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
             if (card.getGameID().equals(gameID)
                     && card.getState().equals(CardState.IN_DECK)) {
                 deck.add(card);
-                logger.debug("Dest Position: " + Integer.toString(card.getSequencePosition()));
-                // TODO: Order by sequenceposition? Is it doing it?
             }
         }
         return deck;
@@ -158,6 +157,9 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
         List<DestinationCard> hand = new ArrayList<>();
 
         for (DestinationCard card: destinationCardList) {
+            if (card.getPlayerID() == null) {
+                continue;
+            }
             if (card.getPlayerID().equals(player.getPlayerID())
                     && card.getState().equals(CardState.IN_PLAYER_HAND)) {
                 hand.add(card);
@@ -226,8 +228,10 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     @Override
     public List<DestinationCard> getOfferedCards(Player player) throws DatabaseException {
         List<DestinationCard> offeredCards = new ArrayList<>();
-
         for (DestinationCard card: destinationCardList) {
+            if (card.getPlayerID() == null){
+                continue;
+            }
             if (card.getPlayerID().equals(player.getPlayerID())
                     && card.getState().equals(CardState.OFFERED_TO_PLAYER)) {
                 offeredCards.add(card);
@@ -261,6 +265,9 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     private void updateDataManagerAccepted(PlayerID playerID, Collection<DestinationCard> cards){
         for (var curCard : cards) {
             for (DestinationCard card: destinationCardList) {
+                if (card.getPlayerID() == null) {
+                    continue;
+                }
                 if (card.getState().equals(CardState.OFFERED_TO_PLAYER)
                         && card.getPlayerID().equals(playerID)
                         && card.getDestination1().equals(curCard.getDestination1())
@@ -275,6 +282,9 @@ public class DestinationCardDAO extends Database.DataAccessObject implements IDe
     private void updateDataManagerOffered(PlayerID playerID, GameID gameID, Collection<DestinationCard> cards){
         for (var curCard : cards) {
             for (DestinationCard card: destinationCardList) {
+                if (card.getPlayerID() == null) {
+                    continue;
+                }
                 if (card.getPlayerID().equals(playerID)
                         && card.getDestination1().equals(curCard.getDestination1())
                         && card.getDestination2().equals(curCard.getDestination2())) {

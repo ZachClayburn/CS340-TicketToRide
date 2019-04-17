@@ -69,6 +69,8 @@ public class TrainCardFacade extends BaseFacade {
             for (Player player: PlayerHelper.getSingleton().getGamePlayers(gameID)){
                 Hand hand = dao.getPlayerHand(player.getPlayerID());
 
+                logger.debug("FACADE: Hand size " + Integer.toString(hand.getHandSize()));
+
                 Command command = new Command(CONTROLLER_NAME, "initializeHand", player.getPlayerID(), hand);
                 sendResponseToRoom(connID, command);
             }
