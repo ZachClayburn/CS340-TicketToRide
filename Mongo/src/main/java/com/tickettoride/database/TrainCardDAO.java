@@ -171,13 +171,26 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         for (TrainCard card: trainCardList) {
             if (card.getGameID().equals(gameID)
                     && card.getState().equals(CardState.FACE_UP)) {
-                // TODO: Check if ordered by sequence position
                 logger.debug("faceup pos: " + Integer.toString(card.getSequencePosition()));
                 faceUp.add(card);
             }
         }
 
-        return faceUp;
+        return reorderCards(faceUp);
+    }
+
+    private List<TrainCard> reorderCards(List<TrainCard> unordered){
+        List<TrainCard> ordered = new ArrayList<>();
+
+        while (ordered.size() != unordered.size()){
+            for (TrainCard card: unordered){
+                if (card.getSequencePosition() == ordered.size()){
+                    ordered.add(card);
+                }
+            }
+        }
+
+        return ordered;
     }
 
     @Override
@@ -187,12 +200,11 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
         for (TrainCard card: trainCardList) {
             if (card.getGameID().equals(gameID)
                     && card.getState().equals(CardState.IN_DECK)) {
-                // TODO: Check if ordered by sequence position
                 faceDown.add(card);
             }
         }
 
-        return faceDown;
+        return reorderCards(faceDown);
     }
 
     @Override
@@ -306,6 +318,8 @@ public class TrainCardDAO extends Database.DataAccessObject implements ITrainCar
                     && card.getState().equals(CardState.FACE_UP)
                     && card.getSequencePosition() == pos) {
                 cardDrawn = card;
+                logger.debug(Integer.toString(pos));
+                logger.debug(card.getColor());
                 break;
             }
         }
