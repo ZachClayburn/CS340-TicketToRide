@@ -14,6 +14,7 @@ import com.tickettoride.models.idtypes.PlayerID;
 import com.tickettoride.models.idtypes.PlayerStateID;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
@@ -96,9 +97,27 @@ public class PlayerStateDAO extends Database.DataAccessObject implements IPlayer
     @Override
     public void updatePlayerState(PlayerState playerState) throws DatabaseException {
         MongoCollection collection = getCollection();
-        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("type", playerState.getClass().getName()));
-        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("gameID", playerState.getGameID()));
-        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("playerID", playerState.getPlayerID()));
+        
+        Bson filter=Filters.eq("playerStateID", playerState.getPlayerStateID());
+        Bson updates=Updates.set("type", playerState.getClass().getName());
+
+        List<Object> parameters = new ArrayList<>();
+        parameters.add(filter);
+        parameters.add(updates);
+
+        MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
+        Database.addCommand(mongoCommand);
+        
+        for(PlayerState ps:playerStates){
+            if(ps.getPlayerID().equals(playerState.getPlayerID())){
+                playerStates.remove(ps);
+                playerStates.add(playerState);
+                return;
+            }
+        }
+//        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("type", playerState.getClass().getName()));
+//        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("gameID", playerState.getGameID()));
+//        collection.updateOne(Filters.eq("playerStateID", playerState.getPlayerStateID()), Updates.set("playerID", playerState.getPlayerID()));
     }
 
     @Override
