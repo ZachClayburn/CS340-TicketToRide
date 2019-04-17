@@ -15,7 +15,10 @@ import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.SynchronousQueue;
@@ -38,7 +41,7 @@ public class Database implements IDatabase {
 
     protected MongoDatabase database;
 
-    private static Queue<MongoCommand> mongoCommands;
+    private static List<MongoCommand> mongoCommands;
     private static int queDelay = 4;
     private boolean doCommit = false;
 
@@ -54,12 +57,12 @@ public class Database implements IDatabase {
         initializeDAOs();
         createAllCollections();
         initializeDataManagerData();
-        mongoCommands = new SynchronousQueue<>();
+        mongoCommands = (List) Collections.synchronizedList(new LinkedList<MongoCommand>());
     }
 
     private void executeCommands() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         while (mongoCommands.size() > 0) {
-            MongoCommand mongoCommand = mongoCommands.poll();
+            MongoCommand mongoCommand = mongoCommands.remove(0);
             mongoCommand.execute();
         }
     }
