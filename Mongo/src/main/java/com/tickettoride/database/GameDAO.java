@@ -85,6 +85,16 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         parameters.add(updates);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
         Database.addCommand(mongoCommand);
+
+        updateDataManagerPlayerCount(gameID, numberPlayers);
+    }
+
+    private void updateDataManagerPlayerCount(GameID gameID, int numberPlayers) {
+        for (Game game: gameList) {
+            if (game.getGameID().equals(gameID)) {
+                game.setNumPlayer(numberPlayers);
+            }
+        }
     }
 
     @Override
@@ -98,6 +108,16 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         parameters.add(updates);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
         Database.addCommand(mongoCommand);
+
+        updateDataManagerTurn(game);
+    }
+
+    private void updateDataManagerTurn(Game curGame){
+        for (Game game: gameList) {
+            if (game.getGameID().equals(curGame.getGameID())) {
+                game.setCurTurn(curGame.getCurTurn());
+            }
+        }
     }
 
     @Override
@@ -111,6 +131,16 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         parameters.add(updates);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
         Database.addCommand(mongoCommand);
+
+        updateDataManagerFinished(game);
+    }
+
+    private void updateDataManagerFinished(Game curGame){
+        for (Game game: gameList) {
+            if (game.getGameID().equals(curGame.getGameID())) {
+                game.setFinished(true);
+            }
+        }
     }
 
     @Override
@@ -138,6 +168,14 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         parameters.add(updates);
         MongoCommand mongoCommand = new MongoCommand(collection, Database.UPDATE_METHOD_NAME, parameters);
         Database.addCommand(mongoCommand);
+    }
+
+    private void updateDataManagerStarted(GameID gameID){
+        for (Game game: gameList) {
+            if (game.getGameID().equals(gameID)) {
+                game.setStarted(true);
+            }
+        }
     }
 
     private Game buildGameFromDocument(Document doc){
