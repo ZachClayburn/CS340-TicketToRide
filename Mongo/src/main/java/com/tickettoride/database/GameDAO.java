@@ -145,7 +145,7 @@ public class GameDAO extends Database.DataAccessObject implements IGameDAO {
         var tableGroupName = doc.getString("groupname");
         var tableNumPlayer = doc.getInteger("numplayer");
         var tableMaxPlayer = doc.getInteger("maxplayer");
-        var tableIsStarted = doc.getBoolean("istarted");
+        var tableIsStarted = doc.getBoolean("isstarted");
         var tableCurrentTurn = doc.getInteger("curturn");
         var finished = doc.getBoolean("finished");
         return new Game(tableGameID, tableGroupName, tableNumPlayer, tableMaxPlayer, tableIsStarted, tableCurrentTurn, finished);
